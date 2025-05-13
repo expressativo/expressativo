@@ -1,6 +1,19 @@
 <div>
-  <div class="bg-white shadow-md rounded-2xl px-8 pt-6 pb-8 mb-4 w-5xl mx-auto">
+  <div class="bg-white shadow-md rounded-2xl px-0 pt-6 pb-8 mb-4 md:w-5xl mx-auto">
     <h1 class="text-2xl text-center font-semibold"><%= @project.title %></h1>
+    <section class="mt-4">
+      <div class="grid grid-cols-3 divide-x divide-gray-300 justify-around gap-0 border-x-0 border border-gray-300">
+        <div>
+          <%= render 'projects/messages_board' %>
+        </div>
+        <div>
+          <%= render 'projects/todo' %>
+        </div>
+        <div>
+          <%= render 'projects/docs' %>
+        </div>
+      </div>
+    </section>
     <div class="flex items-center mt-6 gap-2">
       <div class="mb-4">
         <%= link_to "Editar", edit_project_path(@project), class: "button is-primary" %>
