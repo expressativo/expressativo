@@ -32,3 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     menu.classList.add("hidden");
   }
 });
+
+import "trix"
+import "@rails/actiontext"

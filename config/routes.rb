@@ -12,5 +12,6 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   resources :projects
+  resources :registers, only: %i[new create]
   root to: "projects#index"
 end
