@@ -1,0 +1,13 @@
+<div>
+  <h1 class="title">Project: <%= @project.title %></h1>
+  <p class="subtitle">Description: <%= @project.description %></p>
+  <div class="mb-4">
+    <%= link_to "Edit", edit_project_path(@project), class: "button is-primary" %>
+  </div>
+  <div class="mb-4">
+    <%= link_to "Back to Projects", projects_path, class: "button" %>
+  </div>
+  <div class="mb-4">
+    <%= link_to "Delete Project", project_path(@project), method: :delete, data: { confirm: "Are you sure?" }, class: "button is-danger" %>
+  </div>
+</div>

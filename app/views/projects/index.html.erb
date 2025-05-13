@@ -1,3 +1,24 @@
 <div>
-projects
-</div>
+  <h2 class="text-2xl font-bold text-center mb-4">
+    Expressativo
+  </h2>
+  <section class="mb-4 flex justify-center">
+    <div class="mt-2">
+      <%= link_to "Crear proyecto", new_project_path, class: "p-4 rounded-3xl bg-purple-500 text-white" %>
+    </div>
+  </section>
+  <section class="mt-4">
+    <% if @projects.any? %>
+      <%= render 'projects/list', projects: @projects %>
+    <% else %>
+      <h3 class="text-xl font-semibold mb-2">
+        No Projects Available
+      </h3>
+      <p class="text-gray-700 mb-4">
+        It seems like there are no projects to display at the moment.
+      </p>
+      <p class="text-gray-700 mb-4">
+        Please check back later or contact us for more information.
+      </p>
+    <% end %>
+  </section >

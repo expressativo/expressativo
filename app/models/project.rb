@@ -1,5 +1,3 @@
-module Project
-  def self.table_name_prefix
-    "project_"
-  end
+class Project < ApplicationRecord
+  validates :title, presence: true
 end
