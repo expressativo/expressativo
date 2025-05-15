@@ -1,0 +1,16 @@
+<!-- Actualiza la lista de tareas -->
+<%= turbo_stream.update "#{dom_id(@todo)}_tasks" do %>
+  <%= render 'todos/todo_item', tasks: @todo.tasks, todo: @todo %>
+<% end %>
+<!-- Actualiza el contador de tareas -->
+<%= turbo_stream.update "#{dom_id(@todo)}_header" do %>
+  <span class="text-gray-500 text-xs"> <%= @todo.tasks.where(done: true).count %> / <%= @todo.tasks.count %> </span>
+<% end %>
+<!-- Restaura el enlace de "Agregar tarea" -->
+<%= turbo_stream.update "#{dom_id(@todo)}_task_form" do %>
+  <footer class="mt-4">
+    <%= link_to 'Agregar tarea', new_project_todo_task_path(@project, @todo), 
+        data: { turbo_frame: "#{dom_id(@todo)}_task_form" }, 
+        class: "button-outline mt-4" %>
+  </footer>
+<% end %>

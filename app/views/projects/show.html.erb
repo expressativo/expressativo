@@ -3,15 +3,9 @@
     <h1 class="text-2xl text-center font-semibold"><%= @project.title %></h1>
     <section class="mt-4">
       <div class="grid grid-cols-3 divide-x divide-gray-300 justify-around gap-0 border-x-0 border border-gray-300 min-h-[150px]">
-        <div>
-          <%= render 'projects/messages_board' %>
-        </div>
-        <div>
-          <%= render 'projects/todo'%>
-        </div>
-        <div>
-          <%= render 'projects/docs' %>
-        </div>
+        <%= render 'projects/messages_board' %>
+        <%= render 'projects/todo'%>
+        <%= render 'projects/docs' %>
       </div>
     </section>
     <div class="flex items-center mt-6 gap-2 ml-4">

@@ -12,11 +12,17 @@
               </span>
               <%= link_to todo.name, edit_project_todo_path(@project, todo) , class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
             </li>
-            <%= render 'todos/todo_item', tasks: todo.tasks, todo: todo%>
+            <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
+              <%= render 'todos/todo_item', tasks: todo.tasks, todo: todo%>
+            <% end %>
           </ul>
-          <footer class="mt-4">
-            <%= link_to 'Agregar tarea', new_project_todo_task_path(@project, todo), class: "button-outline mt-4" %>
-          </footer>
+          <%= turbo_frame_tag "#{dom_id(todo)}_task_form" do %>
+            <footer class="mt-4">
+              <%= link_to 'Agregar tarea', new_project_todo_task_path(@project, todo), 
+                  data: { turbo_frame: "#{dom_id(todo)}_task_form" }, 
+                  class: "button-outline mt-4" %>
+            </footer>
+          <% end %>
         </div>
       </article>
     <% end %>

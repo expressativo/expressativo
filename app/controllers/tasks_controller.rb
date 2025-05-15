@@ -5,16 +5,25 @@ class TasksController < ApplicationController
     @tasks = @todo.tasks
   end
 
+  def show
+    @task = Task.find(params[:id])
+    @todo = Todo.find(params[:todo_id])
+    @project = Project.find(params[:project_id])
+  end
+
   def new
     @task = Task.new
   end
 
   def create
     @task = @todo.tasks.new(tasks_params)
-    if @task.save
-      redirect_to project_todos_path(@project), notice: "Task has been created successfully."
-    else
-      render :new
+    respond_to do |format|
+      if @task.save
+        format.turbo_stream
+        format.html { redirect_to project_todos_path(@project), notice: "Task has been created successfully." }
+      else
+        render :new
+      end
     end
   end
 
@@ -28,6 +37,12 @@ class TasksController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @task = Task.find(params[:id])
+    @task.destroy
+    redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
   end
 
   def set_context

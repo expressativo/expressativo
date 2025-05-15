@@ -3,7 +3,11 @@
     <li class="flex items-center mb-2">
       <%= form_with class: "flex items-center", model: [@project, todo, task] , method: :patch, data: { turbo_frame: dom_id(todo) } do |f| %>
         <%= f.check_box :done, { class: "mr-2 w-5 h-5", onchange: "this.form.requestSubmit()" } %>
-        <label class="cursor-pointer <%= 'line-through' if task.done %>"><%= task.title %></label>
+        <%= link_to project_todo_task_path(@project, todo, task), class: "cursor-pointer #{'line-through' if task.done}", data: {
+          turbo_frame: "_top"
+        } do %>
+          <%= task.title %>
+        <% end %>
       <% end %>
     </li>
   <% end %>
