@@ -18,6 +18,18 @@ class TasksController < ApplicationController
     end
   end
 
+  def edit
+    @task = Task.find(params[:id])
+  end
+  def update
+    @task = Task.find(params[:id])
+    if @task.update(tasks_params)
+      redirect_to project_todos_path(@project), notice: "Task has been updated successfully."
+    else
+      render :edit
+    end
+  end
+
   def set_context
     puts "params: #{params.inspect}"
     @todo = Todo.find(params[:todo_id])
@@ -25,6 +37,6 @@ class TasksController < ApplicationController
   end
 
   def tasks_params
-    params.require(:task).permit(:title, :completed)
+    params.require(:task).permit(:title, :done)
   end
 end
