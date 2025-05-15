@@ -11,7 +11,6 @@ class TodosController < ApplicationController
     end
 
     def create
-      puts "params: #{params.inspect}"
       @todo = @project.todos.new(todo_params)
       if @todo.save
         redirect_to project_todos_path(@project), notice: "Todo has sido creado con éxito."

@@ -11,18 +11,10 @@
             </span>
             <%= link_to todo.name, edit_project_todo_path(@project, todo) , class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
           </li>
-          <li class="flex items-center mb-2">
-            <input type="checkbox" class="mr-2 w-5 h-5">
-            <label class="cursor-pointer">
-              Task 1
-            </label>
-            <span>Comments</span>
-          </li>
+          <%= render 'todos/todo_item', tasks: todo.tasks %>
         </ul>
-        <footer>
-          <button class="button-outline mt-4">
-            Agregar tarea
-          </button>
+        <footer class="mt-4">
+          <%= link_to 'Agregar tarea', new_project_todo_task_path(@project, todo), class: "button-outline mt-4" %>
         </footer>
       </div>
     </article>

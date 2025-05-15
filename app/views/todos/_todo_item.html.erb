@@ -1,0 +1,9 @@
+<% tasks.each do |task| %>
+  <li class="flex items-center mb-2">
+    <input type="checkbox" class="mr-2 w-5 h-5">
+    <label class="cursor-pointer">
+      <%= task.title %>
+    </label>
+    <span></span>
+  </li>
+<% end %>
