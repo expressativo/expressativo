@@ -9,9 +9,7 @@
           <li class="flex items-center mb-2">
             <span class="bg-green-500 rounded-full w-5 h-5 inline-block mr-2">
             </span>
-            <h3 class="text-gray-800 text-lg font-semibold underline cursor-pointer">
-              <%= todo.name %>
-            </h3>
+            <%= link_to todo.name, edit_project_todo_path(@project, todo) , class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
           </li>
           <li class="flex items-center mb-2">
             <input type="checkbox" class="mr-2 w-5 h-5">
