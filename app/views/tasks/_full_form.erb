@@ -9,7 +9,10 @@
 <% end %>
 <%= form_with model: [@project, @todo, @task] do |form| %>
   <div class="mb-4 ">
+    <%= form.label :title, 'Título' , class: "label"%>
     <%= form.text_field :title, class: "input mt-2", placeholder: "Describe esta tarea" %>
-  </div>
+  </div>  <div class="mb-4 ">
+    <%= form.label :notes, 'Título' , class: "label"%>
+    <%= form.richt_text_area :notes, class: "input mt-2", placeholder: "Notas"
   <%= form.submit "Guardar", class: "button" %>
 <% end %>
