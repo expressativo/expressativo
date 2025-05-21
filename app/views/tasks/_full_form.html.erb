@@ -1,0 +1,17 @@
+<%= form_with model: [@project, @todo, @task], data: { turbo_frame: "#{dom_id(@task)}_show" } do |form| %>
+  <%= hidden_field_tag :redirect_to, "show" %>
+  <div class="mb-4">
+    <%= form.label :title, 'Título', class: "label" %>
+    <%= form.text_field :title, class: "input mt-2", placeholder: "Describe esta tarea" %>
+  </div>  
+  <div class="mb-4">
+    <%= form.label :notes, 'Notas', class: "label" %>
+    <%= form.rich_text_area :notes, class: "input mt-2", placeholder: "Notas" %>
+  </div>
+  <div class="flex gap-2">
+    <%= form.submit "Guardar", class: "button" %>
+    <%= link_to "Cancelar", project_todo_task_path(@project, @todo, @task), 
+                class: "button-outline",
+                data: { turbo_frame: "#{dom_id(@task)}_show" } %>
+  </div>
+<% end %>

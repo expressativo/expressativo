@@ -1,3 +1,5 @@
-<div>
-  <%= render 'tasks/form' %>
-</div>
+<%= turbo_frame_tag "#{dom_id(@task)}_show" do%>
+  <section>
+    <%=  render 'tasks/full_form' %>
+  </section>
+<% end %>

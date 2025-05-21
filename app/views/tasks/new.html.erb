@@ -1,5 +1,5 @@
 <div>
-  <%= turbo_frame_tag "#{ dom_id(@todo)}_task_form" do %>
+  <%= turbo_frame_tag dom_id(@todo) do %>
     <%= render 'tasks/form' %>
   <% end %>
 </div>

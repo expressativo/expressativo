@@ -52,6 +52,6 @@ class TasksController < ApplicationController
   end
 
   def tasks_params
-    params.require(:task).permit(:title, :done)
+    params.require(:task).permit(:title, :done, :redirect_to, :notes)
   end
 end
