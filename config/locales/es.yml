@@ -1,0 +1,6 @@
+es:
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M:%S"
+      short: "%d/%m/%Y"
+      long: "%d de %B de %Y %H:%M"

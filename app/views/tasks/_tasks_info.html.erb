@@ -30,7 +30,7 @@
       </div>
       <div class="col-span-">
         <div class="flex justify-start items-center gap-2">
-          Fecha
+          <%= l(task.due_date, format: :short) if task.due_date.present? %>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
       </div>
       <div class="col-span-4">
         <div class="flex justify-start items-center gap-2">
-          Notes
+          <%= task.notes %>
         </div>
       </div>
     </div>

@@ -1,12 +1,29 @@
 <%= form_with model: [@project, @todo, @task], data: { turbo_frame: "#{dom_id(@task)}_show" } do |form| %>
-  <%= hidden_field_tag :redirect_to, "show" %>
-  <div class="mb-4">
-    <%= form.label :title, 'Título', class: "label" %>
-    <%= form.text_field :title, class: "input mt-2", placeholder: "Describe esta tarea" %>
-  </div>  
-  <div class="mb-4">
-    <%= form.label :notes, 'Notas', class: "label" %>
-    <%= form.rich_text_area :notes, class: "input mt-2", placeholder: "Notas" %>
+  <%= hidden_field_tag :from, "full_form" %>
+  <div class="grid grid-cols-6 gap-4 mt-4">
+    <div class="col-span-1 flex justify-end items-center">
+      <%= form.checkbox :done, class: "w-8 h-8" %>
+    </div>
+    <div class="col-span-4">
+      <div class="flex justify-start items-center gap-2">
+        <%= form.text_field :title, class: "input mt-2", placeholder: "Describe esta tarea" %>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-6 gap-4 mt-4">
+    <div class="col-span-1 flex justify-end">
+      <div class="flex justify-end items-center gap-2">
+        Vence el:
+      </div>
+    </div>
+    <div class="col-span-4">
+      <div class="flex justify-start items-center gap-2">
+        <%= form.date_field :due_date, class: "input" %>
+      </div>
+    </div>
+  </div>
+  <div class="my-6">
+    <%= form.rich_text_area :notes, class: "mt-2", placeholder: "Notas" %>
   </div>
   <div class="flex gap-2">
     <%= form.submit "Guardar", class: "button" %>
