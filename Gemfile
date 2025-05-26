@@ -67,3 +67,7 @@ gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.2"
 
 gem "net-pop", require: false
+
+group :production do
+  gem "mysql2"
+end

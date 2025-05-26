@@ -25,8 +25,12 @@ test:
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
   primary:
-    <<: *default
-    database: storage/production.sqlite3
+    adapter: mysql2
+    encoding: utf8mb4
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    url: <%= ENV['DATABASE_URL'] %>
+    database: todo_expressativo_production
+    port: 3306
   cache:
     <<: *default
     database: storage/production_cache.sqlite3
