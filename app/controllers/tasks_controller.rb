@@ -16,7 +16,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = @todo.tasks.new(tasks_params)
+    @task = @todo.tasks.new(tasks_params.merge(created_by: current_user))
     respond_to do |format|
       if @task.save
         format.turbo_stream

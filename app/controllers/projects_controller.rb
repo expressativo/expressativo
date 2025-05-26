@@ -3,7 +3,6 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    puts ">>>> current user #{current_user}"
   end
 
   def create
