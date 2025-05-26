@@ -6,5 +6,9 @@
     <%= turbo_frame_tag "#{dom_id(@task)}_show" do %>
       <%= render 'tasks/tasks_info', task: @task %>
     <% end %>
+    <section class="max-w-4xl m-auto mt-4">
+      <%= render 'tasks/comments/form' %>
+      <%= render 'tasks/comments/list' %>
+    </section>
   </div>
 </div>

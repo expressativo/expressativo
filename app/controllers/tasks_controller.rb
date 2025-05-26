@@ -45,6 +45,21 @@ class TasksController < ApplicationController
     end
   end
 
+  def add_comment
+    @task = Task.find(params[:id])
+    @comment = @task.comments.new(comment_params)
+    @comment.user = current_user
+    if @comment.save
+      redirect_to project_todo_task_path(@project, @todo, @task), notice: "Comment has been added successfully."
+    else
+      render :show
+    end
+  end
+
+  def comment_params
+    params.require(:comment).permit(:content)
+  end
+
   def destroy
     @task = Task.find(params[:id])
     @task.destroy

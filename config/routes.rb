@@ -13,7 +13,11 @@ Rails.application.routes.draw do
 
   resources :projects do
     resources :todos do
-      resources :tasks
+      resources :tasks do
+        member do
+          post :add_comment
+        end
+      end
     end
   end
   resources :registers, only: %i[new create]
