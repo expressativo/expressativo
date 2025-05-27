@@ -69,5 +69,5 @@ gem "tailwindcss-rails", "~> 4.2"
 gem "net-pop", require: false
 
 group :production do
-  gem "mysql2"
+  gem "pg"
 end

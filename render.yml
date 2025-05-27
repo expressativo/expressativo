@@ -16,5 +16,13 @@ services:
       - key: WEB_CONCURRENCY
         value: 2 # Recommended default
 databases:
-  - name: todo-expressativo
-    plan: free
+- name: todo-expressativo-db
+  databaseName: todo_expressativo_db
+  user: root
+  plan: free
+  region: oregon
+  ipAllowList:
+  - source: 0.0.0.0/0
+    description: everywhere
+  postgresMajorVersion: "16"
+version: "1"
