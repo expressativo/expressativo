@@ -408,8 +408,10 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  net-imap
   net-pop
   net-protocol (~> 0)
+  net-smtp
   pg
   propshaft
   puma (>= 5.0)

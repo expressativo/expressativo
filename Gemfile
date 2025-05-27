@@ -72,6 +72,10 @@ gem "net-pop", require: false
 
 gem "net-protocol", "~> 0", require: false
 
+gem 'net-smtp', require: false
+gem 'net-imap', require: false
+
+
 group :production do
   gem "pg"
 end
