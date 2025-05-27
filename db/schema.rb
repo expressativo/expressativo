@@ -49,15 +49,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_26_180126) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "announcements", force: :cascade do |t|
-    t.integer "author_id", null: false
-    t.string "title"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_announcements_on_author_id"
-  end
-
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.integer "task_id", null: false
@@ -93,11 +84,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_26_180126) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "notes"
-    t.integer "created_by_id"
-    t.integer "assigned_to_id"
     t.datetime "due_date"
-    t.index ["assigned_to_id"], name: "index_tasks_on_assigned_to_id"
-    t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
     t.index ["todo_id"], name: "index_tasks_on_todo_id"
   end
 
@@ -119,13 +106,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_26_180126) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "announcements", "authors"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "todos"
-  add_foreign_key "tasks", "users", column: "assigned_to_id"
-  add_foreign_key "tasks", "users", column: "created_by_id"
   add_foreign_key "todos", "projects"
 end
