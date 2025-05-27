@@ -409,7 +409,7 @@ DEPENDENCIES
   jbuilder
   kamal
   net-pop
-  net-protocol
+  net-protocol (~> 0)
   pg
   propshaft
   puma (>= 5.0)
