@@ -66,7 +66,9 @@ gem "tailwindcss-ruby", "~> 4.1"
 
 gem "tailwindcss-rails", "~> 4.2"
 
-gem "net-pop", require: false
+gem "net-pop"
+
+gem "net-protocol"
 
 group :production do
   gem "pg"
