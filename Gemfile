@@ -70,7 +70,7 @@ gem "tailwindcss-rails", "~> 4.2"
 
 gem "net-pop"
 
-gem "net-protocol"
+gem "net-protocol", "~> 0"
 
 group :production do
   gem "pg"
