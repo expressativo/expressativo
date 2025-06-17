@@ -73,8 +73,9 @@ gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.2"
 
 # Net gems
-gem "net-pop"
-gem "net-smtp"
-gem "net-imap"
-gem "net-protocol"
-gem "net-http", "~> 0.2.0"
+group :production do
+  gem "net-pop"
+  gem "net-smtp"
+  gem "net-imap"
+  gem "net-protocol"
+end
