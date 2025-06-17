@@ -6,8 +6,12 @@ ruby '3.3.3'  # o la versión que estés usando localmente
 gem "rails", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", ">= 2.1"
+# Use sqlite3 as the database for Active Record in development
+gem "sqlite3", ">= 2.1", groups: [:development, :test]
+# Use MySQL as the database for Active Record in production
+group :production do
+  gem "mysql2"
+end
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -74,8 +78,3 @@ gem "net-protocol", "~> 0", require: false
 
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
-
-
-group :production do
-  gem "pg"
-end
