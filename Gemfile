@@ -78,4 +78,5 @@ group :production do
   gem "net-smtp"
   gem "net-imap"
   gem "net-protocol"
+  gem "net-http"
 end
