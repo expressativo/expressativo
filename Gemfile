@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 
-ruby '3.3.3'  # o la versión que estés usando localmente
+ruby "3.3.3"  # o la versión que estés usando localmente
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record in development
-gem "sqlite3", ">= 2.1", groups: [:development, :test]
+gem "sqlite3", ">= 2.1", groups: [ :development, :test ]
 # Use MySQL as the database for Active Record in production
 group :production do
   gem "mysql2"
@@ -72,9 +72,8 @@ gem "tailwindcss-ruby", "~> 4.1"
 
 gem "tailwindcss-rails", "~> 4.2"
 
-gem "net-pop", require: false
-
-gem "net-protocol", "~> 0", require: false
-
-gem 'net-smtp', require: false
-gem 'net-imap', require: false
+# Net gems
+gem "net-pop", "~> 0.1.2"
+gem "net-smtp", "~> 0.3.1"
+gem "net-imap", "~> 0.3.1"
+gem "net-protocol", "~> 0.2.1"
