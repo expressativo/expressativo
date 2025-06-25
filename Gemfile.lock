@@ -411,7 +411,7 @@ DEPENDENCIES
   jbuilder
   kamal
   mysql2
-  net-http (~> 0.2.0)
+  net-http
   net-imap
   net-pop
   net-protocol
@@ -427,7 +427,6 @@ DEPENDENCIES
   sqlite3 (>= 2.1)
   stimulus-rails
   tailwindcss-rails (~> 4.2)
-  tailwindcss-ruby (~> 4.1)
   thruster
   turbo-rails
   tzinfo-data
