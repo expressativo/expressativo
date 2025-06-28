@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   private
    def current_user
       @current_user = Current.session&.user
+      puts @current_user
       if @current_user.nil?
         Rails.logger.debug(">>>> No current user found")
         nil
