@@ -5,10 +5,8 @@ class RegistersController < ApplicationController
     @user = User.new
   end
 
-
-
   def create
-    @user = User.new(user_params)
+    @user = User.new(**user_params, role: "user")
     Rails.logger.debug @user.inspect
     if @user.save
       start_new_session_for @user
@@ -21,6 +19,6 @@ class RegistersController < ApplicationController
   private
 
   def user_params
-    params.permit(:email_address, :password, :password_confirmation)
+    params.permit(:email_address, :password, :password_confirmation, :first_name, :last_name)
   end
 end
