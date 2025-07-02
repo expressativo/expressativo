@@ -80,3 +80,4 @@ end
 
 # active storage 
 gem "active_storage_validations"
+gem "tailwindcss-ruby", "~> 4.1"

@@ -1,0 +1,8 @@
+<div>
+  <% if notice %>
+    <div class="success">
+      <%= notice %>
+    </div>
+  <% end %>
+  <%= render 'users/form', user: @current_user %>
+</div>

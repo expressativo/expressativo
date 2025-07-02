@@ -1,8 +1,4 @@
 @import "tailwindcss";
-
-
-
-
 @layer components {
     .input {
         @apply border-gray-300 border rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 h-12 w-full p-4 bg-white;

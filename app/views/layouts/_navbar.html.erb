@@ -56,7 +56,7 @@
             </button>
           </div>
           <div data-navbar-dropdown-target="menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <%= link_to "Tu perfil", profiles_path , id:"user-menu-item-0" , tabindex:"-1", class: "block px-4 py-2 text-sm text-gray-700" %>
+            <%= link_to "Tu perfil", edit_profile_path(current_user.id), id:"user-menu-item-0" , tabindex:"-1", class: "block px-4 py-2 text-sm text-gray-700" %>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Configuraciones</a>
             <%= render 'layouts/logout_button'%>
           </div>
