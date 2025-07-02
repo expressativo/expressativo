@@ -6,19 +6,19 @@
   </div>
   <div class="card">
     <div class="p-4 border-b border-gray-200">
-      <div class="flex justify-between items-center">
+      <div class="grid grid-cols-3">
         <div>
           <%= link_to 'Nueva lista', new_project_todo_path, class: "button-outline" %>
         </div>
-        <div>
+        <div class="flex justify-center">
           <h2 class="text-xl font-bold text-gray-800">
             Listas de tareas
           </h2>
         </div>
         <div>
-          <button class="button-outline">
+          <%# <button class="button-outline">
             Ver como
-          </button>
+          </button> %>
         </div>
       </div>
     </div>

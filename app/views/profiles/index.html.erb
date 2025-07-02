@@ -1,4 +1,9 @@
 <div>
-  <h1 class="font-bold text-4xl">Profiles#show</h1>
-  <p>Find me in app/views/profiles/show.html.erb</p>
+  <% if notice %>
+    <div>
+      <%= notice %>
+    </div>
+  <% end %>
+  <h1 class="font-bold text-4xl">Mi perfil</h1>
+  <%= render 'profiles/form' , user: @user %>
 </div>

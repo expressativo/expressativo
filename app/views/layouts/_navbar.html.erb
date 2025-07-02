@@ -28,11 +28,10 @@
         <div class="flex shrink-0 items-center">
           <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
         </div>
-        <%= @current_user %>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-purple-500">Team</a>
-            <%= link_to "Projects", projects_path,  class: "rounded-md px-3 py-2 text-sm font-medium text-purple-500" %>
+            <%# <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-purple-500">Team</a> %>
+            <%= link_to "Proyectos", projects_path,  class: "rounded-md px-3 py-2 text-sm font-medium text-purple-500" %>
             <%# <a href="#" class="rounded-md px-3 py-2 text-sm font-medium  text-purple-500">Calendar</a> %>
           </div>
         </div>
@@ -57,7 +56,7 @@
             </button>
           </div>
           <div data-navbar-dropdown-target="menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <%= link_to "Tu perfil", profiles_path , id:"user-menu-item-0" , tabindex:"-1", class: "rounded-md px-3 py-2 text-sm font-medium text-purple-500" %>
+            <%= link_to "Tu perfil", profiles_path , id:"user-menu-item-0" , tabindex:"-1", class: "block px-4 py-2 text-sm text-gray-700" %>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Configuraciones</a>
             <%= render 'layouts/logout_button'%>
           </div>

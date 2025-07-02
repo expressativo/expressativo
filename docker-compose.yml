@@ -20,7 +20,7 @@ services:
       - MYSQL_USER=expressativo
       - MYSQL_PASSWORD=expressativo
       - MYSQL_DATABASE=expressativo_development
-      - RAILS_MASTER_KEY=209e7f67ed33542d1bf74ea8906eac03
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
     volumes:
       - .:/rails
     depends_on:
