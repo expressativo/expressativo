@@ -1,0 +1,27 @@
+<div>
+  <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
+    <div class="flex items-center justify-center">
+      <%= link_to @project.title, project_path(@project),  class: "text-2xl underline font-semibold capitalize"%>
+    </div>
+  </div>
+  <div class="card">
+    <div class="p-4 border-b border-gray-200">
+      <div class="grid grid-cols-3">
+        <div>
+          <%= link_to "Crear anuncio", new_project_announcement_path(@project) , class: "button"%>
+        </div>
+        <div class="flex justify-center">
+          <h2 class="text-xl font-bold text-gray-800">
+            Anuncios del proyecto
+          </h2>
+        </div>
+        <div>
+          <%# <button class="button-outline">
+            Ver como
+          </button> %>
+        </div>
+      </div>
+    </div>
+    <%= render 'announcements/list' %>
+  </div>
+</div>

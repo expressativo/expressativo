@@ -1,0 +1,9 @@
+<div>
+  <%= @announcements.each do |announcement| %>
+    <% if announcement.content.present? %>
+      <div>
+        <h3><%= announcement.content %></h3>
+      </div>
+    <% end %>
+  <% end %>
+</div>

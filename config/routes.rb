@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :announcements
   end
   resources :registers, only: %i[new create]
   root to: "projects#index"

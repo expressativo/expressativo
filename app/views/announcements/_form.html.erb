@@ -1,0 +1,17 @@
+<% if @announcement.errors.any? %>
+  <div>
+    <ul>
+      <% @announcement.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<%= form_with model: [@project, @announcement], local: true do |form| %>
+  <div class="mb-4">
+    <%= form.label :content, class: "label" %>
+    <%= form.text_field :content, class: "input" %>
+  </div>
+  <%= form.submit "Guardar", class: "button" %>
+  <%= link_to "Cancelar", project_announcements_path(@project) %>
+<% end %>
