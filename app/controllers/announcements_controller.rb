@@ -17,6 +17,30 @@ class AnnouncementsController < ApplicationController
     end
   end
 
+  def edit
+    @announcement = @project.announcements.find(params[:id])
+  end
+
+  def update
+    @announcement = @project.announcements.find(params[:id])
+    if @announcement.update(announcement_params)
+      redirect_to project_announcements_path(@project), notice: "Anuncio actualizado correctamente"
+    else
+      render :edit
+    end
+  end
+
+  def show
+    @announcement = @project.announcements.find(params[:id])
+  end
+
+  def destroy
+    @announcement = @project.announcements.find(params[:id])
+    @announcement.destroy
+    redirect_to project_announcements_path(@project), notice: "Anuncio eliminado correctamente"
+  end
+
+
   private
 
   def set_project

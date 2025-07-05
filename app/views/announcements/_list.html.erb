@@ -1,8 +1,13 @@
 <div>
-  <%= @announcements.each do |announcement| %>
+  <% @announcements.each do |announcement| %>
     <% if announcement.content.present? %>
-      <div>
-        <h3><%= announcement.content %></h3>
+      <div class="p-4 border-gray-200 border-b flex justify-between items-center">
+        <%= link_to project_announcement_path(@project, announcement) do %>
+         <h3><%= announcement.content %></h3>
+        <% end %>
+         <%= form_with model: [ @project, announcement ], method: :delete, data: { turbo_confirm: "¿Estás seguro?" } do |form|%>
+          <%= form.submit "Eliminar", class: "button-outline" %>
+        <% end %>
       </div>
     <% end %>
   <% end %>
