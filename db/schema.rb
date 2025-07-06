@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_04_175649) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_06_155851) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -47,6 +47,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_175649) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "announcement_comments", force: :cascade do |t|
+    t.text "content"
+    t.integer "announcement_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id"], name: "index_announcement_comments_on_announcement_id"
+    t.index ["user_id"], name: "index_announcement_comments_on_user_id"
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -119,6 +129,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_175649) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "announcement_comments", "announcements"
+  add_foreign_key "announcement_comments", "users"
   add_foreign_key "announcements", "projects"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"

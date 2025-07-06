@@ -10,7 +10,8 @@
             <li class="flex items-center mb-2">
               <span class="bg-green-500 rounded-full w-5 h-5 inline-block mr-2">
               </span>
-              <%= link_to todo.name, edit_project_todo_path(@project, todo) , class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
+              <%= link_to todo.name, edit_project_todo_path(@project, todo),
+              data:{ turbo_frame: "modal", turbo: false }, class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
             </li>
             <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
               <%= render 'todos/todo_item', tasks: todo.tasks, todo: todo%>

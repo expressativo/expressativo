@@ -1,18 +1,23 @@
 @import "tailwindcss";
+
 @layer components {
     .input {
         @apply border-gray-300 border rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 h-12 w-full p-4 bg-white;
     }
+
     .label {
         @apply text-gray-700 text-sm font-medium;
     }
+
     .error {
         @apply text-red-500 text-sm font-medium;
     }
+
     .error-message {
         @apply text-red-500 text-sm font-medium;
     }
-    .button{
+
+    .button {
         @apply bg-purple-400 border border-transparent py-2 px-4 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 rounded-3xl cursor-pointer
     }
 
@@ -30,5 +35,13 @@
 
     .errors {
         @apply text-red-500 text-sm font-medium;
+    }
+
+    .custom_container {
+        @apply mx-auto md:w-2/3 w-full;
+    }
+
+    .title {
+        @apply text-2xl font-bold text-center text-gray-700;
     }
 }

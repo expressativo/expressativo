@@ -32,6 +32,7 @@ class AnnouncementsController < ApplicationController
 
   def show
     @announcement = @project.announcements.find(params[:id])
+    @comments = @announcement.announcement_comments.all
   end
 
   def destroy

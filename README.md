@@ -25,3 +25,12 @@ The best way to run the project is using Docker
 navigate to 
 
 http://localhost:3000/registers/new
+
+
+If you have problems with styles
+
+```bash
+bin/rails tmp:cache:clear
+bin/rails assets:clobber
+bin/rails assets:precompile
+```

@@ -17,6 +17,8 @@
     <div class="my-5">
       <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "input" %>
     </div>
+  <div class="flex justify-between items-center">
+
 
     <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
       <div class="inline">
@@ -24,8 +26,14 @@
       </div>
 
       <div class="mt-4 text-sm text-gray-500 sm:mt-0">
-        <%= link_to "Forgot password?", new_password_path, class: "text-gray-700 underline hover:no-underline" %>
+        <%= link_to "Olvidaste tu contraseña?", new_password_path, class: "text-gray-700 underline hover:no-underline" %>
       </div>
+      
     </div>
+    <div>
+      <%= link_to "Regístrate", new_register_path, class: "text-gray-700 underline hover:no-underline" %>
+    </div>
+  </div>
+
   <% end %>
 </div>

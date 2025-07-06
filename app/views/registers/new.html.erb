@@ -1,4 +1,4 @@
-<div>
+<div class="custom_container">
   <% if @user.errors.any? %>
     <div class="error_messages">
       <ul>
@@ -8,5 +8,8 @@
       </ul>
     </div>
   <% end %>
+  <h2 class="text-2xl font-semibold mb-4">
+    Registro de usuario
+  </h2>
   <%= render 'registers/form'%>
 </div>
