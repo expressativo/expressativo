@@ -5,8 +5,6 @@
 # docker build -t reservio .
 # docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name reservio reservio
 
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.3
 FROM ruby:$RUBY_VERSION-bullseye AS base
@@ -35,7 +33,12 @@ RUN apt-get update -qq && \
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
+
+# SOLUCIÓN ALTERNATIVA: Si el problema persiste, usa bundle update completo
 RUN rm -rf ~/.bundle/ && \
+    bundle config set deployment false && \
+    bundle update net-pop net-protocol && \
+    bundle config set deployment true && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
@@ -48,9 +51,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
 
 # Final stage for app image
 FROM base AS production
