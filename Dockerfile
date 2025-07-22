@@ -1,4 +1,5 @@
-FROM ruby:3.3.3-slim
+# Etapa de construcción
+FROM ruby:3.3.3-slim AS builder
 
 WORKDIR /rails
 
@@ -15,11 +16,6 @@ RUN apt-get update -qq && \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Configurar variables de entorno para producción
-ENV RAILS_ENV=production
-ENV RAILS_SERVE_STATIC_FILES=true
-ENV RAILS_LOG_TO_STDOUT=true
-
 # Copiar Gemfile y instalar dependencias
 COPY Gemfile Gemfile.lock ./
 RUN bundle config set --local without 'development test' && \
@@ -30,6 +26,27 @@ COPY . .
 
 # Precompilar assets
 RUN bundle exec rails assets:precompile
+
+# Etapa de producción
+FROM ruby:3.3.3-slim AS production
+
+WORKDIR /rails
+
+# Instalamos solo las dependencias necesarias para ejecutar la aplicación
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    default-libmysqlclient-dev \
+    libvips \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configurar variables de entorno para producción
+ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+
+# Copiar gemas y aplicación desde la etapa de construcción
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /rails /rails
 
 # Exponer puerto
 EXPOSE 3000
