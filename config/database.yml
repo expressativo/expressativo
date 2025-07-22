@@ -39,3 +39,23 @@ production:
     host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
     port: <%= ENV.fetch("DB_PORT") { 3306 } %>
 
+  queue:
+    adapter: mysql2
+    encoding: utf8mb4
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+    port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+  
+  cache:
+    adapter: mysql2
+    encoding: utf8mb4
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+    port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+
