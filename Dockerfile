@@ -24,6 +24,9 @@ RUN bundle config set --local without 'development test' && \
 # Copiar el resto de la aplicación
 COPY . .
 
+# Configurar entorno para precompilar assets
+ENV RAILS_ENV=production
+
 # Precompilar assets
 RUN bundle exec rails assets:precompile
 
