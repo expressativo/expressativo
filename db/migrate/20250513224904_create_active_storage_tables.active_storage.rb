@@ -1,6 +1,11 @@
 # This migration comes from active_storage (originally 20170806125915)
 class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
-  def change
+  def up
+    # Desactivar verificación de claves foráneas para MySQL
+    if connection.adapter_name.downcase.starts_with?("mysql")
+      execute("SET FOREIGN_KEY_CHECKS=0;")
+    end
+
     # Use Active Record's configured type for primary and foreign keys
     primary_key_type, foreign_key_type = primary_and_foreign_key_types
 
@@ -43,6 +48,28 @@ class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
 
       t.index [ :blob_id, :variation_digest ], name: :index_active_storage_variant_records_uniqueness, unique: true
       t.foreign_key :active_storage_blobs, column: :blob_id
+    end
+
+    # Reactivar verificación de claves foráneas para MySQL
+    if connection.adapter_name.downcase.starts_with?("mysql")
+      execute("SET FOREIGN_KEY_CHECKS=1;")
+    end
+  end
+
+  def down
+    # Desactivar verificación de claves foráneas para MySQL
+    if connection.adapter_name.downcase.starts_with?("mysql")
+      execute("SET FOREIGN_KEY_CHECKS=0;")
+    end
+
+    # Eliminar tablas en orden inverso (primero las dependientes)
+    drop_table :active_storage_variant_records if table_exists?(:active_storage_variant_records)
+    drop_table :active_storage_attachments if table_exists?(:active_storage_attachments)
+    drop_table :active_storage_blobs if table_exists?(:active_storage_blobs)
+
+    # Reactivar verificación de claves foráneas para MySQL
+    if connection.adapter_name.downcase.starts_with?("mysql")
+      execute("SET FOREIGN_KEY_CHECKS=1;")
     end
   end
 
