@@ -69,14 +69,6 @@ group :test do
 end
 
 gem "tailwindcss-rails", "~> 4.2"
-# Net gems
-group :production do
-  gem "net-pop"
-  gem "net-smtp"
-  gem "net-imap"
-  gem "net-protocol"
-  gem "net-http"
-end
 
 # active storage 
 gem "active_storage_validations"
