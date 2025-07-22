@@ -414,6 +414,8 @@ DEPENDENCIES
   jbuilder
   kamal
   mysql2
+  net-pop (~> 0.1.2)
+  net-protocol (~> 0.2.2)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
