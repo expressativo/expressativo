@@ -9,7 +9,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.3
-FROM docker.io/library/ruby:$RUBY_VERSION AS base
+FROM rubylang/ruby:$RUBY_VERSION-focal AS base
 
 # Rails app lives here
 WORKDIR /rails
