@@ -9,7 +9,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.3
-FROM rubylang/ruby:$RUBY_VERSION-focal AS base
+FROM ruby:$RUBY_VERSION-bullseye AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -35,9 +35,7 @@ RUN apt-get update -qq && \
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN gem install net-protocol && \
-    gem install net-pop && \
-    bundle install && \
+RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
