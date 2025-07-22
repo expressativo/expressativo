@@ -12,12 +12,27 @@ RUN apt-get update -qq && \
     libyaml-dev \
     libssl-dev \
     zlib1g-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY Gemfile Gemfile.lock ./
-RUN bundle install
+# Configurar variables de entorno para producción
+ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
 
+# Copiar Gemfile y instalar dependencias
+COPY Gemfile Gemfile.lock ./
+RUN bundle config set --local without 'development test' && \
+    bundle install --jobs 4 --retry 3
+
+# Copiar el resto de la aplicación
 COPY . .
 
+# Precompilar assets
+RUN bundle exec rails assets:precompile
+
+# Exponer puerto
 EXPOSE 3000
+
+# Comando para iniciar la aplicación
 CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
