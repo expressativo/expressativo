@@ -3,39 +3,40 @@ default: &default
   timeout: 5000
 
 development:
+  <<: *default
   adapter: mysql2
   encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: <%= ENV.fetch("DB_NAME") { "tebookdb" } %>
-  username: <%= ENV.fetch("DB_USERNAME") { "j4viermora" } %>
-  password: <%= ENV.fetch("DB_PASSWORD") { "tebook2025.." } %>
-  host: <%= ENV.fetch("DB_HOST") { "91.98.18.179" } %>
-  port: <%= ENV.fetch("DB_PORT") { 1515 } %>
+  database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
+  username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
+  host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+  port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+
 
 test:
-  adapter: sqlite3
-  database: db/test.sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+
 
 production:
   primary:
     adapter: mysql2
     encoding: utf8mb4
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
     username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
-    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
     host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
     port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+
 
   cable:
     adapter: mysql2
     encoding: utf8mb4
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
     username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
-    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
     host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
     port: <%= ENV.fetch("DB_PORT") { 3306 } %>
 
