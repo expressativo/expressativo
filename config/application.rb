@@ -25,9 +25,11 @@ module TodoExpressativo
     config.i18n.default_locale = :es
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.logger = Logtail::Logger.create_default_logger(
-      ENV["LOGTAIL_SOURCE_TOKEN"],
-      ingesting_host: ENV["LOGTAIL_INGESTING_HOST"],
-    )
+    if ENV['LOGTAIL_SOURCE_TOKEN'].present?
+      config.logger = Logtail::Logger.create_default_logger(
+        ENV['LOGTAIL_SOURCE_TOKEN'],
+        ingesting_host: ENV['LOGTAIL_INGESTING_HOST']
+      )
+    end
   end
 end
