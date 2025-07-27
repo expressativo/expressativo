@@ -1,6 +1,6 @@
  
 <div class="flex items-center justify-center">
-  <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+  <ul id="migaja_de_pan" class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-revers">
     <li class="inline-flex items-center">
       <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
         <%= link_to @project.title, project_path(@project),  class: "text-xl underline font-semibold capitalize"%>
@@ -22,5 +22,13 @@
         <%= link_to @todo.name , project_todos_path(@project),  class: "text-xl underline  capitalize"%>
       </div>
     </li>
-  </ol>
+  </ul>
 </div>
+
+<style>
+  #migaja_de_pan {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+</style>

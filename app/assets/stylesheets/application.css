@@ -8,3 +8,30 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+
+
+ul, ol {
+  list-style-type: revert;
+  padding-left: revert;
+  margin: revert;
+}
+
+blockquote {
+  margin: revert;
+}
+
+
+h1 {
+  font-size: 2em;        /* 32px aprox */
+  font-weight: bold;     /* o 700 */
+  margin: 0.67em 0;      /* ~21px arriba y abajo */
+  display: block;
+}
+
+h2 {
+  font-size: 1.5em;      /* 24px aprox */
+  font-weight: bold;     /* o 700 */
+  margin: 0.83em 0;      /* ~20px arriba y abajo */
+  display: block;
+}

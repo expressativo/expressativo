@@ -5,8 +5,8 @@
         <header class="pl-6">
           <span class="text-gray-500 text-xs"> <%= todo.tasks.where(done: true).count %> / <%= todo.tasks.count %> </span>
         </header>
-        <div>
-          <ul>
+        <section class="mb-4">
+          <ul style="padding: 0px">
             <li class="flex items-center mb-2">
               <span class="bg-green-500 rounded-full w-5 h-5 inline-block mr-2">
               </span>
