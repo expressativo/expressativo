@@ -77,3 +77,5 @@ gem "tailwindcss-rails", "~> 4.2"
 gem "active_storage_validations"
 gem "tailwindcss-ruby", "~> 4.1"
 
+
+gem "logtail-rails", "~> 0.2.10"
