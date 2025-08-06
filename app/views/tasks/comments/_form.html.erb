@@ -5,7 +5,9 @@
         <%= f.label :content, "Comentario", class: "label" %>
         <%= f.text_area :content, class: "input h-[150px]" %>
       </div>
-      <%= f.submit "Agregar Comentario", class: "button" %>
+      <%= f.submit "Agregar Comentario", class: "button", data: {
+        turbo_submits_with: "Comentando..."
+      } %>
     </div>
   <% end %>
 </div>
