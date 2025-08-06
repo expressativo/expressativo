@@ -1,7 +1,7 @@
 <div>
   <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), method: :post do |f| %>
     <div>
-      <div class="mb-3">
+      <div class="input-wrapper">
         <%= f.label :content, "Comentario", class: "label" %>
         <%= f.text_area :content, class: "input h-[150px]" %>
       </div>

@@ -9,6 +9,18 @@
         @apply text-gray-700 text-sm font-medium;
     }
 
+    .input-wrapper {
+        @apply mb-4 space-y-2;
+    }
+
+    .form-field {
+        @apply mb-4 space-y-1;
+    }
+
+    .form-field .label {
+        @apply block;
+    }
+
     .error {
         @apply text-red-500 text-sm font-medium;
     }

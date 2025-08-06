@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Script para limpiar caché de assets y recompilar Tailwind en desarrollo
+echo "🧹 Limpiando caché de assets..."
+
+# Eliminar archivos de caché de Rails
+rm -rf tmp/cache/assets/
+rm -rf tmp/cache/webpacker/
+rm -rf public/assets/
+
+echo "🎨 Recompilando Tailwind CSS..."
+
+# Recompilar Tailwind dentro del contenedor Docker
+docker compose exec web bin/rails tailwindcss:build
+
+echo "🔄 Reiniciando contenedor web..."
+docker compose restart web
+
+echo "✅ ¡Listo! Los cambios en assets deberían reflejarse ahora."
+echo "💡 Tip: Refresca la página con Cmd+Shift+R (hard refresh) para forzar la recarga de assets."

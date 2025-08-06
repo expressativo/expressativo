@@ -23,10 +23,17 @@ Rails.application.configure do
     config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
+    # Desactivar caché de assets para desarrollo
+    config.public_file_server.headers = { "cache-control" => "no-cache, no-store, must-revalidate" }
   end
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
+  
+  # Configuración optimizada para assets en desarrollo
+  config.assets.debug = true
+  config.assets.digest = false
+  config.assets.check_precompiled_asset = false
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local

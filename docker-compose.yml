@@ -26,10 +26,35 @@ services:
       - DB_USERNAME=expressativo
       - DB_PASSWORD=expressativo
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - RAILS_ENV=development
+      - DISABLE_SPRING=1
     volumes:
       - .:/rails
+      - rails_cache:/rails/tmp/cache
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
     depends_on:
       - db
+    stdin_open: true
+    tty: true
+
+  tailwind:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        RAILS_ENV: development
+    environment:
+      - RAILS_ENV=development
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+    command: bin/rails tailwindcss:watch
+    depends_on:
+      - web
 
 volumes:
   mysql_data:
+  rails_cache:
+  bundle_cache:
+  node_modules:
