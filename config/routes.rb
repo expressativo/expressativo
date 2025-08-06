@@ -24,6 +24,6 @@ Rails.application.routes.draw do
       resources :announcement_comments
     end
   end
-  resources :registers, only: %i[new create]
+  # resources :registers, only: %i[new create]
   root to: "projects#index"
 end
