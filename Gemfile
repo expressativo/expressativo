@@ -11,7 +11,7 @@ gem "sqlite3", ">= 2.1", groups: [ :development, :test ]
 # Use MySQL as the database for Active Record in production
 group :production do
   gem "mysql2"
-# Añadir estas dependencias para resolver el problema de net-pop
+  # Añadir estas dependencias para resolver el problema de net-pop
   gem "net-protocol", "~> 0.2.2"
   gem "net-pop", "~> 0.1.2"
 end
@@ -73,7 +73,7 @@ end
 
 gem "tailwindcss-rails", "~> 4.2"
 
-# active storage 
+# active storage
 gem "active_storage_validations"
 gem "tailwindcss-ruby", "~> 4.1"
 

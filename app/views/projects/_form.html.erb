@@ -16,5 +16,7 @@
     <%= form.label :description, class: "label" %>
     <%= form.text_field :description, class:"input" , placeholder: "Type more info"%>
   </div>
-  <%= form.submit "Guardar", class: "button" %>
+  <%= form.submit "Guardar", class: "button", id:"submit_project", data: {
+    turbo_submits_with: "Guardando..."
+  } %>
 <% end %>

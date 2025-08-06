@@ -9,7 +9,9 @@
 <% end %>
 <%= form_with model: [@project, @todo, @task] do |form| %>
   <div class="mb-4 ">
-    <%= form.text_field :title, class: "mt-2", placeholder: "Describe esta tarea" %>
+    <%= form.text_field :title, class: "mt-2 input", placeholder: "Describe esta tarea" %>
   </div>
-  <%= form.submit "Guardar", class: "button" %>
+  <%= form.submit "Guardar", class: "button", id: "submit_task", data: {
+    turbo_submits_with: "Guardando..."
+  } %>
 <% end %>

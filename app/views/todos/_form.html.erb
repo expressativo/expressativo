@@ -12,5 +12,7 @@
     <%= form.label 'Título' , class: "label"%>
     <%= form.text_field :name, class: "input mt-2", placeholder: "Describe esta lista de tareas" %>
   </div>
-  <%= form.submit "Guardar", class: "button" %>
+  <%= form.submit "Guardar", class: "button", id:"submit_todo", data: {
+    turbo_submits_with: "Guardando..."
+  } %>
 <% end %>
