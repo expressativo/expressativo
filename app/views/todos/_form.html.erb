@@ -10,7 +10,7 @@
 <%= form_with model: [project, todo], local: true do |form| %>
   <div class="mb-4 ">
     <%= form.label 'Título' , class: "label"%>
-    <%= form.text_field :name, class: "input mt-2", placeholder: "Describe esta lista de tareas" %>
+    <%= form.text_field :name, class: "input mt-2", placeholder: "Describe esta lista de tareas", autofocus: true %>
   </div>
   <%= form.submit "Guardar", class: "button", id:"submit_todo", data: {
     turbo_submits_with: "Guardando..."

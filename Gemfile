@@ -79,3 +79,5 @@ gem "tailwindcss-ruby", "~> 4.1"
 
 
 gem "logtail-rails", "~> 0.2.10"
+
+gem "htmlbeautifier", "~> 1.4"
