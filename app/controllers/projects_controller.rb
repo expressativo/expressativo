@@ -9,7 +9,8 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.user = current_user
     if @project.save
-      redirect_to projects_path, notice: "Project was successfully created."
+      flash[:notice] = "Project was successfully created."
+      redirect_to projects_path
     else
       Rails.logger.debug(@project.errors.full_messages)
       render :new
