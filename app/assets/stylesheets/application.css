@@ -11,7 +11,8 @@
 
 
 
-ul, ol {
+ul,
+ol {
   list-style-type: revert;
   padding-left: revert;
   margin: revert;
@@ -23,17 +24,56 @@ blockquote {
 
 
 h1 {
-  font-size: 1.6em;        /* 32px aprox */
-  font-weight: bold;     /* o 700 */
-  margin: 0.67em 0;      /* ~21px arriba y abajo */
+  font-size: 1.6em;
+  /* 32px aprox */
+  font-weight: bold;
+  /* o 700 */
+  margin: 0.67em 0;
+  /* ~21px arriba y abajo */
   display: block;
 }
 
 .trix-content a {
-  color: #4f46e5; /* Indigo-700 */
+  color: #4f46e5;
+  /* Indigo-700 */
   text-decoration: underline;
+  cursor: pointer;
 }
 
 trix-editor {
-  min-height: 500px;
+  min-height: 400px;
+}
+
+trix-editor a {
+  color: #4f46e5;
+  /* Indigo-700 */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+blockquote {
+  border-left: 4px solid #d1d5db;
+  /* Gray-300 */
+  padding-left: 1em;
+  color: #6b7280;
+  /* Gray-500 */
+  margin: 1em 0;
+}
+
+pre {
+  background-color: #f0b3ff;
+  /* Fondo lila pastel */
+  color: #003366;
+  /* Azul oscuro para el texto */
+  border: 2px dashed #ff6600;
+  /* Borde naranja en guiones */
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 12px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
 }

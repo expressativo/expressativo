@@ -40,10 +40,8 @@
           Notas:
         </div>
       </div>
-      <div class="col-span-4">
-        <div class="flex justify-start items-center gap-2 overflow-hidden text-nowrap text-overflow-hidden w-[250px] text-xs">
-          <%= task.notes %>
-        </div>
+      <div class="overflow-hidden text-nowrap text-overflow-hidden text-xs min-w-[300px]">
+        <%= task.notes %>
       </div>
     </div>
     <div class="grid grid-cols-6 gap-4 mt-4">
@@ -52,10 +50,8 @@
           Agregado por:
         </div>
       </div>
-      <div class="col-span-4">
-        <div class="flex justify-start items-center text-xs text-gray-500">
-          <%= task.created_by&.email_address || 'Sin usuario' %>
-        </div>
+      <div class="flex justify-start items-center text-xs text-gray-500">
+        <%= task.created_by&.email_address || 'Sin usuario' %>
       </div>
     </div>
   </div>
