@@ -77,3 +77,9 @@ pre {
   word-break: break-word;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
 }
+
+#migaja_de_pan {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

@@ -31,6 +31,11 @@ class TodosController < ApplicationController
       end
     end
 
+    def completed_tasks
+      @todo = @project.todos.find(params[:id])
+      @completed_tasks = @todo.tasks.where(done: true)
+    end
+
     private
     def set_project
       @project = Project.find(params[:project_id])
