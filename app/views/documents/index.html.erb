@@ -1,0 +1,32 @@
+<div>
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <%= link_to "Nuevo Documento", new_project_document_path, class: "button" %>
+    </div>
+    <div>
+      <h2 class="title">
+      Documentos y Archivos
+      </h2>
+    </div>
+    <div>
+      <select name="" id="" class="input">
+        <option value="">Sin orden</option>
+        <option value="">
+          Ordenar por nombre
+        </option>
+        <option value="">
+          Ordenar por fecha
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="flex justify-center items-start gap-2 flex-wrap">
+    <% @documents.each do |document| %>
+      <div class="border p-4 rounded overflow-hidden w-64">
+        <h3 class="font-bold"><%= document.name %></h3>
+        <p><%= document.description %></p>
+        <%= link_to "Ver", document, class: "text-blue-500" %>
+      </div>
+    <% end %>
+  </div>
+</div>
