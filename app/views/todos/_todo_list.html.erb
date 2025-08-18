@@ -14,7 +14,15 @@
               data:{ turbo_frame: "modal", turbo: false }, class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
             </li>
             <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
-              <%= render 'todos/todo_item', tasks: todo.tasks, todo: todo%>
+              <%= render 'todos/todo_item', tasks: todo.tasks.where(done: false), todo: todo%>
+              <%= render 'todos/todo_item', tasks: todo.tasks.where(done: true).limit(5), todo: todo%>
+              <% if todo.tasks.where(done: true).count > 5 %>
+                <li class="flex items-center mb-2">
+                  <span class="bg-gray-500 rounded-full w-3 h-3 inline-block mr-2">
+                  </span>
+                  <%= link_to 'Ver más', completed_tasks_project_todo_path(@project, todo), class:"text-gray-800 text-sm font-semibold underline cursor-pointer", data: { turbo_frame: "_top"} %>
+                </li>
+              <% end %>
             <% end %>
           </ul>
           <%= turbo_frame_tag "#{dom_id(todo)}_task_form" do %>

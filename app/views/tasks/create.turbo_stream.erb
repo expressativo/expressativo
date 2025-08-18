@@ -1,6 +1,7 @@
 <!-- Actualiza la lista de tareas -->
 <%= turbo_stream.update "#{dom_id(@todo)}_tasks" do %>
-  <%= render 'todos/todo_item', tasks: @todo.tasks, todo: @todo %>
+  <%= render 'todos/todo_item', tasks: @todo.tasks.where(done: false), todo: @todo %>
+  <%= render 'todos/todo_item', tasks: @todo.tasks.where(done: true).limit(5), todo: @todo %>
 <% end %>
 <!-- Actualiza el contador de tareas -->
 <%= turbo_stream.update "#{dom_id(@todo)}_header" do %>

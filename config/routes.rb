@@ -19,6 +19,9 @@ Rails.application.routes.draw do
           post :add_comment
         end
       end
+      member do
+        get :completed_tasks, to: "todos#completed_tasks"
+      end
     end
     resources :announcements do
       resources :announcement_comments
