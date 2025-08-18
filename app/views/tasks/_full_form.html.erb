@@ -26,7 +26,9 @@
     <%= form.rich_text_area :notes, class: "mt-2", placeholder: "Notas", data: { controller: "trix" } %>
   </div>
   <div class="flex gap-2">
-    <%= form.submit "Guardar", class: "button" %>
+    <%= form.submit "Guardar", class: "button", data: {
+      turbo_submits_with: "Guardando..."
+    }%>
     <%= link_to "Cancelar", project_todo_task_path(@project, @todo, @task), 
                 class: "button-outline",
                 data: { turbo_frame: "#{dom_id(@task)}_show" } %>

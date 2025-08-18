@@ -2,7 +2,7 @@
   <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
     <%= render 'tasks/bread_crumbs'%>
   </div>
-  <div class="card py-4">
+  <div class="card py-4 px-2">
     <div class="flex justify-end items-center px-4">
       <%= link_to 'Delete',  project_todo_task_path(@project, @todo, @task), class: 'text-purple-500 underline', data: {
         turbo_method: :delete,
@@ -12,7 +12,7 @@
     <%= turbo_frame_tag "#{dom_id(@task)}_show" do %>
       <%= render 'tasks/tasks_info', task: @task %>
     <% end %>
-    <section class="max-w-4xl m-auto mt-4">
+    <section class="md:max-w-4xl m-auto mt-4">
       <%= render 'tasks/comments/form' %>
       <%= render 'tasks/comments/list' %>
     </section>
