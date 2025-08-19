@@ -15,7 +15,7 @@
             </li>
             <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
               <%= render 'todos/todo_item', tasks: todo.tasks.where(done: false), todo: todo%>
-              <%= render 'todos/todo_item', tasks: todo.tasks.where(done: true).limit(5), todo: todo%>
+              <%= render 'todos/todo_item', tasks: todo.tasks.order(updated_at: :desc).where(done: true).limit(5), todo: todo%>
               <% if todo.tasks.where(done: true).count > 5 %>
                 <li class="flex items-center mb-2">
                   <span class="bg-gray-500 rounded-full w-3 h-3 inline-block mr-2">

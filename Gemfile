@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.3.3"  # o la versión que estés usando localmente
+ruby "3.3.4"  # o la versión que estés usando localmente
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2"
