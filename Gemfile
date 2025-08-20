@@ -11,9 +11,6 @@ gem "sqlite3", ">= 2.1", groups: [ :development, :test ]
 # Use MySQL as the database for Active Record in production
 group :production do
   gem "mysql2"
-  # Añadir estas dependencias para resolver el problema de net-pop
-  gem "net-protocol", "~> 0.2.2"
-  gem "net-pop", "~> 0.1.2"
 end
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -76,7 +73,6 @@ gem "tailwindcss-rails", "~> 4.2"
 # active storage
 gem "active_storage_validations"
 gem "tailwindcss-ruby", "~> 4.1"
-
 
 gem "logtail-rails", "~> 0.2.10"
 
