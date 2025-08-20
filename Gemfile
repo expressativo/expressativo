@@ -81,3 +81,5 @@ gem "tailwindcss-ruby", "~> 4.1"
 gem "logtail-rails", "~> 0.2.10"
 
 gem "htmlbeautifier", "~> 1.4"
+
+gem "aws-sdk-s3", "~> 1.197"
