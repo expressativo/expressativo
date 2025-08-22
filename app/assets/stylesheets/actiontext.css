@@ -438,3 +438,31 @@ trix-editor .attachment__metadata {
   padding: 0 !important;
   max-width: 100% !important;
 }
+
+
+
+
+.trix-button--icon-strike,
+.trix-button-group--block-tools,
+.trix-button--icon-decrease-nesting-level,
+.trix-button--icon-increase-nesting-level,
+.trix-button-group--file-tools,
+.trix-button-group--history-tools {
+  display: none;
+}
+
+.trix-button-group{
+  border: none !important;
+}
+
+.trix-button {
+  border-bottom: none !important;
+  border-left: none !important;
+}
+
+
+.trix-button-row {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  padding-top: 0.5em;
+}

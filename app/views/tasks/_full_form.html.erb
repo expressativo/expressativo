@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="my-6">
-    <%= form.rich_text_area :notes, class: "mt-2", placeholder: "Notas", data: { controller: "trix" } %>
+    <%= form.rich_text_area :notes, class: "mt-2", placeholder: "Escribe la descripción de tu tarea aquí", autofocus: true, data: { controller: "trix" } %>
   </div>
   <div class="flex gap-2">
     <%= form.submit "Guardar", class: "button", data: {
