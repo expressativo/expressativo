@@ -43,9 +43,9 @@ export default class TrixController extends Controller {
 
 
     // remove file upload handling
-    addEventListener("trix-file-accept", function (event) {
-      event.preventDefault();
-    }, true);
+    // addEventListener("trix-file-accept", function (event) {
+    //   event.preventDefault();
+    // }, true);
 
   }
 }
