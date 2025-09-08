@@ -177,7 +177,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email_address` varchar(255) NOT NULL,
-  `password_digest` varchar(255) NOT NULL,
+  `encrypted_password` varchar(255) NOT NULL,
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
   `first_name` varchar(255) DEFAULT NULL,
