@@ -24,7 +24,7 @@ The best way to run the project is using Docker
 
 navigate to 
 
-http://localhost:3000/registers/new
+http://localhost:3000/users/sign_up
 
 
 If you have problems with styles
