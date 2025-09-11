@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="flex justify-start items-center text-xs text-gray-500">
-        <%= task.created_by&.email_address || 'Sin usuario' %>
+        <%= task.created_by&.email || 'Sin usuario' %>
       </div>
     </div>
   </div>
