@@ -1,6 +1,8 @@
 class DocumentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_document, only: %i[ show edit update destroy ]
   before_action :set_project, only: %i[index new create]
+  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive]
 
   # GET /documents or /documents.json
   def index
@@ -22,7 +24,7 @@ class DocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    @document = Document.new(document_params)
+    @document = Document.new(*document_params.merge(project: @project))
 
     respond_to do |format|
       if @document.save
@@ -91,6 +93,10 @@ class DocumentsController < ApplicationController
     end
     # Only allow a list of trusted parameters through.
     def document_params
-      params.fetch(:document, {})
+      params.require(:document).permit(:title, :body)
+    end
+
+    def set_project_from_document
+      @project = @document.project
     end
 end

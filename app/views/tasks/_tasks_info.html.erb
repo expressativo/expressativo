@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="col-span-">
-        <div class="flex justify-start items-center gap-2">
+       <div class="flex justify-start items-center gap-2">
           <%= l(task.due_date, format: :short) if task.due_date.present? %>
         </div>
       </div>
@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="overflow-hidden text-nowrap text-overflow-hidden text-xs min-w-[200px] md:min-w-[300px]">
-        <%= task.notes %>
+        <%= sanitize task.notes %>
       </div>
     </div>
     <div class="grid grid-cols-6 gap-4 mt-4">

@@ -10,8 +10,16 @@
       </ul>
     </div>
   <% end %>
+    <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
+      <div class="flex items-center justify-center">
+         <%= form.text_field :title, class: "document_input",  placeholder: "Escribe un titulo", autofocus: true %>
+      </div>
+    </div>
+    <div class="card p-4 mb-4">
+      <%= form.rich_text_area :body, class: 'textarea', placeholder: "Escrite tu documento aqui...", data: { controller: "trix" } %>
+    </div>
 
   <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit class: "button" %>
   </div>
 <% end %>
