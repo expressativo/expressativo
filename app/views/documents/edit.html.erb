@@ -2,5 +2,5 @@
 
 <div class="app_container">
   <%= render "form", document: @document %>
-  <%= link_to "Ir a documentos", request.referrer, class: "button-outline" %>
+  <%= link_to "Cancelar", project_documents_path(@project), class: "button-outline" %>
 </div>

@@ -2,7 +2,6 @@
   <% if document.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= pluralize(document.errors.count, "error") %> prohibited this document from being saved:</h2>
-
       <ul class="list-disc ml-6">
         <% document.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -15,11 +14,11 @@
          <%= form.text_field :title, class: "document_input",  placeholder: "Escribe un titulo", autofocus: true %>
       </div>
     </div>
-    <div class="card p-4 mb-4">
+    <div class="card py-6 px-16 mb-4">
       <%= form.rich_text_area :body, class: 'textarea', placeholder: "Escrite tu documento aqui...", data: { controller: "trix" } %>
     </div>
 
   <div class="inline">
-    <%= form.submit class: "button" %>
+    <%= form.submit "Guardar", class: "button" %>
   </div>
 <% end %>

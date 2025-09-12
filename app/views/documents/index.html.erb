@@ -5,7 +5,7 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
+  <div class="main_header">
     <header>
       <h1 class="font-bold text-4xl text-center">
         <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
@@ -14,12 +14,12 @@
     </header>
   </div>
 
-  <div id="documents" class="card p-4">
+  <div id="documents" class="main_content">
     <div class="flex items-center justify-end mb-4">
        <%= link_to "Nuevo documento", new_project_document_path, class: "button" %>
     </div>
     <% if @documents.any? %>
-    <div class="flex gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <% @documents.each do |document| %>
           <%= render document %>
       <% end %>
