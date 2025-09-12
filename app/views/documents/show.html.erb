@@ -4,14 +4,24 @@
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
-
-  <h1 class="font-bold text-4xl">Showing document</h1>
-
-  <%= render @document %>
-
-  <%= link_to "Edit this document", edit_document_path(@document), class: "button" %>
-  <%= link_to "Back to documents", project_documents_path(@project) , class: "button-outline" %>
-  <%= button_to @document, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2" , class: "button-outline", data: { turbo_confirm: "Esta seguro?" }  do %>
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-  <% end %>
+  <div class="main_header">
+    <header>
+      <h2 class="font-bold text-xl text-center">
+        <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
+        <span class="text-2xl font-normal"> - Documentos</span>
+      </h2>
+    </header>
+  </div>
+  <div class="main_content">
+    <h1 class="font-bold text-4xl text-center">
+        <%= @document.title %>
+    </h1>
+    <hr/ class="max-w-[100px] mx-auto text-gray-300">
+    <div class="text-center my-2">
+      @document.author - <%= l(@document.created_at, format: :long) %>
+    </div>
+    <div>
+      <%= simple_format(@document.body, sanitize: true) %>
+    </div>
+  </div>
 </div>

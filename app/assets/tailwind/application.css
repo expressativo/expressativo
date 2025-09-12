@@ -72,4 +72,12 @@
     .document_input {
         @apply border-none focus:border-none focus:ring-purple-500 w-full p-4 bg-white text-2xl font-bold;
     }
+
+    .main_header {
+        @apply bg-white shadow-md rounded-lg border border-gray-200 max-w-[95%] mx-auto mb-[-10px] p-4;
+    }
+    
+    .main_content {
+        @apply  card p-4;
+    }
 }
