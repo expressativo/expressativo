@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_013257) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_11_203355) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -78,10 +78,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_013257) do
   end
 
   create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "draft", null: false
+    t.string "title"
+    t.text "body"
+    t.bigint "project_id", null: false
+    t.index ["project_id"], name: "index_documents_on_project_id"
+    t.index ["status"], name: "index_documents_on_status"
   end
 
   create_table "projects", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -145,6 +149,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_013257) do
   add_foreign_key "announcements", "projects"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
+  add_foreign_key "documents", "projects"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "todos"

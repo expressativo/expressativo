@@ -1,0 +1,28 @@
+<% content_for :title, "Ver documento" %>
+
+<div class="app_container">
+  <div class="main_header">
+    <header>
+      <h2 class="font-bold text-xl text-center">
+        <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
+        <span>-</span>
+        <%= link_to "Documentos", project_documents_path(@project), class: "underline font-semibold capitalize" %>
+      </h2>
+    </header>
+  </div>
+  <div class="main_content">
+    <div class="relative">
+      <h1 class="font-bold text-4xl text-center">
+          <%= @document.title %>
+      </h1>
+      <%= link_to "Editar", edit_document_path(@document), class: "absolute top-4 right-4 text-sm text-gray-500 hover:text-gray-700" %>
+    </div>
+    <hr/ class="max-w-[100px] mx-auto text-gray-300">
+    <div class="text-center my-2">
+      @document.author - <%= l(@document.created_at, format: :long) %>
+    </div>
+    <div>
+      <%= simple_format(@document.body, sanitize: true) %>
+    </div>
+  </div>
+</div>

@@ -3,4 +3,5 @@ class Project < ApplicationRecord
   validates :title, presence: true
   has_many :todos, dependent: :destroy
   has_many :announcements, dependent: :destroy
+  has_many :documents, dependent: :nullify
 end

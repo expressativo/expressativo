@@ -1,0 +1,6 @@
+<% content_for :title, "Editing document" %>
+
+<div class="app_container">
+  <%= render "form", document: @document %>
+  <%= link_to "Cancelar", project_documents_path(@project), class: "button-outline" %>
+</div>
