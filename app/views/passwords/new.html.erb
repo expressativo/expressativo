@@ -2,14 +2,11 @@
   <% if alert = flash[:alert] %>
     <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg inline-block" id="alert"><%= alert %></p>
   <% end %>
-
   <h1 class="font-bold text-4xl">Forgot your password?</h1>
-
   <%= form_with url: passwords_path, class: "contents" do |form| %>
     <div class="my-5">
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input" %>
+      <%= form.email_field :email, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email], class: "input" %>
     </div>
-
     <div class="inline">
       <%= form.submit "Enviar instrucciones al email", class: "button" %>
     </div>

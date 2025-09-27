@@ -6,7 +6,7 @@
     <% @task.comments.includes(:user).order(created_at: :desc).each do |comment| %>
       <div class="bg-white p-4 border-b border-gray-300">
         <div class="flex justify-between items-start">
-          <p class="text-sm text-gray-600"><%= comment.user.email_address %></p>
+          <p class="text-sm text-gray-600"><%= comment.user.email %></p>
           <p class="text-xs text-gray-500"><%= comment.created_at %></p>
         </div>
         <p class="mt-2 text-gray-900"><%= comment.content %></p>
