@@ -73,13 +73,8 @@ gem "tailwindcss-rails", "~> 4.2"
 # active storage
 gem "active_storage_validations"
 gem "tailwindcss-ruby", "~> 4.1"
-
-gem "logtail-rails", "~> 0.2.10"
-
-gem "htmlbeautifier", "~> 1.4"
-
 gem "aws-sdk-s3", "~> 1.197"
-
 gem "devise", "~> 4.9"
-
 gem "devise-i18n", "~> 1.15"
+gem "sentry-ruby"
+gem "sentry-rails"
