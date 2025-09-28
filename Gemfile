@@ -76,5 +76,6 @@ gem "tailwindcss-ruby", "~> 4.1"
 gem "aws-sdk-s3", "~> 1.197"
 gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
+# Sentry GEMS
 gem "sentry-ruby"
 gem "sentry-rails"
