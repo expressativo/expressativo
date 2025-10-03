@@ -24,12 +24,5 @@ module TodoExpressativo
     config.time_zone = "America/Argentina/Buenos_Aires"
     config.i18n.default_locale = :en
     # config.eager_load_paths << Rails.root.join("extras")
-
-    if ENV["LOGTAIL_SOURCE_TOKEN"].present?
-      config.logger = Logtail::Logger.create_default_logger(
-        ENV["LOGTAIL_SOURCE_TOKEN"],
-        ingesting_host: ENV["LOGTAIL_INGESTING_HOST"]
-      )
-    end
   end
 end
