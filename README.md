@@ -34,3 +34,7 @@ bin/rails tmp:cache:clear
 bin/rails assets:clobber
 bin/rails assets:precompile
 ```
+
+## Production stuffs
+
+In production you will into terminal in dock ploy and run manual migration

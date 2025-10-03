@@ -6,8 +6,8 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
-    @project.user = current_user
     if @project.save
+      @project.project_users.create!(user: current_user, role: "owner")
       flash[:notice] = "Project was successfully created."
       redirect_to projects_path
     else
@@ -17,19 +17,19 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.all
+    @projects = Project.for_user(current_user)
   end
 
   def show
-    @project = Project.find(params[:id])
+    @project = Project.for_user(current_user).find(params[:id])
   end
 
   def edit
-    @project = Project.find(params[:id])
+    @project = Project.for_user(current_user).find(params[:id])
   end
 
   def update
-    @project = Project.find(params[:id])
+    @project = Project.for_user(current_user).find(params[:id])
     if @project.update(project_params)
       redirect_to project_path(@project), notice: "Project was successfully updated."
     else
@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
     end
   end
   def destroy
-    @project = Project.find(params[:id])
+    @project = Project.for_user(current_user).find(params[:id])
     @project.destroy
     redirect_to projects_path, notice: "Project was successfully destroyed."
   end

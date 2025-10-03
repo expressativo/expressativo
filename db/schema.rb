@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_11_203355) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_03_041348) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -88,13 +88,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_11_203355) do
     t.index ["status"], name: "index_documents_on_status"
   end
 
+  create_table "project_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role", default: "member", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_users_on_project_id"
+    t.index ["user_id"], name: "index_project_users_on_user_id"
+  end
+
   create_table "projects", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -150,7 +158,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_11_203355) do
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "projects"
-  add_foreign_key "projects", "users"
+  add_foreign_key "project_users", "projects"
+  add_foreign_key "project_users", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "todos"
   add_foreign_key "tasks", "users", column: "created_by_id"
