@@ -12,12 +12,15 @@
     </section>
     <div class="flex items-center mt-6 gap-2 ml-4">
       <div class="mb-4">
+        <%= link_to "Miembros", project_members_path(@project), class: "button" %>
+      </div>
+      <div class="mb-4">
         <%= link_to "Editar", edit_project_path(@project), class: "button is-primary" %>
       </div>
       <div class="mb-4">
         <%= button_to project_path(@project),
         method: :delete,
-        form: { 
+        form: {
           data: { turbo_confirm: "Esta seguro " },
         },
         class: "button-outline" do %>

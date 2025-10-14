@@ -1,0 +1,60 @@
+<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold">
+      Miembros de <%= @project.title %>
+    </h1>
+    <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
+  </div>
+
+  <div class="mb-6">
+    <%= link_to "Invitar nuevo miembro", new_project_member_path(@project), class: "button" %>
+  </div>
+
+  <div class="space-y-4">
+    <% if @owner %>
+      <div class="border border-gray-300 rounded-lg p-4 bg-blue-50">
+        <div class="flex justify-between items-center">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold text-lg"><%= @owner.email %></h3>
+              <span class="inline-block bg-blue-600 text-white text-xs px-2 py-1 rounded">Propietario</span>
+            </div>
+            <% if @owner.first_name.present? || @owner.last_name.present? %>
+              <p class="text-gray-600 text-sm"><%= [@owner.first_name, @owner.last_name].compact.join(' ') %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @members.any? %>
+      <h2 class="text-lg font-semibold mt-6 mb-3">Miembros</h2>
+      <% @members.each do |project_user| %>
+        <div class="border border-gray-300 rounded-lg p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold"><%= project_user.user.email %></h3>
+              <% if project_user.user.first_name.present? || project_user.user.last_name.present? %>
+                <p class="text-gray-600 text-sm"><%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ') %></p>
+              <% end %>
+            </div>
+            <div>
+              <%= button_to "Eliminar",
+                project_member_path(@project, project_user),
+                method: :delete,
+                form: {
+                  data: { turbo_confirm: "¿Estás seguro de eliminar este miembro?" }
+                },
+                class: "button-outline text-red-600 hover:bg-red-50" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-8 text-gray-500">
+        <p>No hay miembros adicionales en este proyecto.</p>
+        <p class="text-sm mt-2">Invita a personas para colaborar en este proyecto.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

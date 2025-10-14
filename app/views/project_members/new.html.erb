@@ -1,0 +1,35 @@
+<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
+  <h1 class="text-2xl font-semibold mb-6">
+    Invitar miembro a <%= @project.title %>
+  </h1>
+
+  <%= form_with url: project_members_path(@project), method: :post, local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :email, "Email del usuario", class: "label" %>
+      <%= form.email_field :email,
+          class: "input",
+          placeholder: "correo@ejemplo.com",
+          required: true,
+          autocomplete: "email" %>
+      <p class="text-sm text-gray-600 mt-1">
+        Ingresa el email de un usuario registrado en Tebook
+      </p>
+    </div>
+
+    <div class="flex gap-2">
+      <%= form.submit "Enviar invitación",
+          class: "button",
+          data: { turbo_submits_with: "Enviando..." } %>
+      <%= link_to "Cancelar", project_members_path(@project), class: "button-outline" %>
+    </div>
+  <% end %>
+
+  <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="font-semibold mb-2">Nota:</h3>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1">
+      <li>El usuario debe estar registrado en Tebook</li>
+      <li>Los miembros podrán ver y participar en todos los aspectos del proyecto</li>
+      <li>Solo el propietario puede eliminar miembros</li>
+    </ul>
+  </div>
+</div>

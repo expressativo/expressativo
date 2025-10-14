@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :announcements do
       resources :announcement_comments
     end
+    resources :members, controller: "project_members", only: %i[index new create destroy]
   end
 
   resources :documents, only: %i[show edit update destroy] do
