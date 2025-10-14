@@ -3,6 +3,7 @@ class DocumentsController < ApplicationController
   before_action :set_document, only: %i[ show edit update destroy ]
   before_action :set_project, only: %i[index new create]
   before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive]
+  before_action :set_documents, only: %i[index]
 
   # GET /documents or /documents.json
   def index
@@ -94,6 +95,10 @@ class DocumentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def document_params
       params.require(:document).permit(:title, :body)
+    end
+
+    def set_documents
+      @documents = @project.documents.where(archived: false)
     end
 
     def set_project_from_document
