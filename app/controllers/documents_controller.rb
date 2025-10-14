@@ -24,7 +24,7 @@ class DocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    @document = Document.new(*document_params.merge(project: @project))
+    @document = Document.new(document_params.merge(project: @project))
 
     respond_to do |format|
       if @document.save
