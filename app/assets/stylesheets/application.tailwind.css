@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer components {
     .input {
@@ -76,7 +78,7 @@
     .main_header {
         @apply bg-white shadow-md rounded-lg border border-gray-200 max-w-[95%] mx-auto mb-[-10px] p-4;
     }
-    
+
     .main_content {
         @apply bg-white shadow-md rounded-lg border border-gray-200 px-16 py-6;
     }

@@ -68,11 +68,12 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "tailwindcss-rails", "~> 4.2"
+# tailwind
+gem "tailwindcss-rails", "~> 3.3.1"
+gem "tailwindcss-ruby", "~> 3.0"
 
 # active storage
 gem "active_storage_validations"
-gem "tailwindcss-ruby", "~> 4.1"
 gem "aws-sdk-s3", "~> 1.197"
 gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
