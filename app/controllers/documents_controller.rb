@@ -7,7 +7,7 @@ class DocumentsController < ApplicationController
 
   # GET /documents or /documents.json
   def index
-    @documents = Document.all
+    @documents = @project.documents.all
   end
 
   # GET /documents/1 or /documents/1.json
