@@ -1,0 +1,87 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Timeline</h1>
+    <p class="text-gray-600">Recent activity for <%= @project.title %></p>
+  </div>
+
+  <% if @activities_by_date.any? %>
+    <div class="space-y-12">
+      <% @activities_by_date.each_with_index do |(date, activities), index| %>
+        <% is_left = index.even? %>
+
+        <div class="relative">
+          <!-- Date Header -->
+          <div class="flex items-center mb-6">
+            <% if is_left %>
+              <h2 class="text-xl font-semibold text-gray-800 mr-4">
+                <%= date == Date.today ? "Today" : date == Date.yesterday ? "Yesterday" : date.strftime("%A, %B %d") %>
+              </h2>
+              <div class="flex-1 h-px bg-gray-300"></div>
+            <% else %>
+              <div class="flex-1 h-px bg-gray-300"></div>
+              <h2 class="text-xl font-semibold text-gray-800 ml-4">
+                <%= date == Date.today ? "Today" : date == Date.yesterday ? "Yesterday" : date.strftime("%A, %B %d") %>
+              </h2>
+            <% end %>
+          </div>
+
+          <!-- Activities for this date -->
+          <div class="space-y-4 <%= is_left ? 'pr-0 md:pr-12' : 'pl-0 md:pl-12' %>">
+            <% activities.each do |activity| %>
+              <div class="<%= is_left ? 'md:text-left' : 'md:text-right' %>">
+                <div class="inline-block <%= is_left ? 'md:mr-auto' : 'md:ml-auto' %> max-w-2xl">
+                  <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4">
+                    <div class="flex items-start gap-3 <%= is_left ? '' : 'md:flex-row-reverse' %>">
+                      <!-- Avatar -->
+                      <div class="flex-shrink-0">
+                        <% if activity.user.avatar.attached? %>
+                          <%= image_tag activity.user.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+                        <% else %>
+                          <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                            <%= activity.user.email.first.upcase %>
+                          </div>
+                        <% end %>
+                      </div>
+
+                      <!-- Activity Content -->
+                      <div class="flex-1 min-w-0 <%= is_left ? '' : 'md:text-right' %>">
+                        <div class="flex items-baseline gap-2 flex-wrap <%= is_left ? '' : 'md:flex-row-reverse md:justify-end' %>">
+                          <span class="font-semibold text-gray-900">
+                            <%= activity.user.email.split('@').first.capitalize %>
+                          </span>
+                          <span class="text-gray-600">
+                            <%= activity.description %>
+                          </span>
+                        </div>
+
+                        <% if activity.trackable.present? %>
+                          <div class="mt-2 text-sm">
+                            <%= render partial: "timelines/activity_details", locals: { activity: activity, is_left: is_left } %>
+                          </div>
+                        <% end %>
+
+                        <div class="mt-2 text-xs text-gray-500">
+                          <%= activity.created_at.strftime("%I:%M %p") %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-gray-50 rounded-lg border border-gray-200 p-12 text-center">
+      <div class="text-gray-400 mb-4">
+        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No activity yet</h3>
+      <p class="text-gray-600">Activity will appear here as you and your team work on this project.</p>
+    </div>
+  <% end %>
+</div>

@@ -12,6 +12,9 @@
     </section>
     <div class="flex items-center mt-6 gap-2 ml-4">
       <div class="mb-4">
+        <%= link_to "Timeline", project_timeline_path(@project), class: "button" %>
+      </div>
+      <div class="mb-4">
         <%= link_to "Miembros", project_members_path(@project), class: "button" %>
       </div>
       <div class="mb-4">

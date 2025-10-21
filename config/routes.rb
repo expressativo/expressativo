@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       resources :announcement_comments
     end
     resources :members, controller: "project_members", only: %i[index new create destroy]
+    resource :timeline, only: [:show], controller: "timelines"
   end
 
   resources :documents, only: %i[show edit update destroy] do

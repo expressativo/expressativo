@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_03_165415) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -49,6 +49,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_165415) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
+    t.string "action", null: false
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "created_at"], name: "index_activities_on_project_id_and_created_at"
+    t.index ["project_id"], name: "index_activities_on_project_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable"
+    t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
+    t.index ["user_id"], name: "index_activities_on_user_id"
+  end
+
   create_table "announcement_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
     t.bigint "announcement_id", null: false
@@ -77,6 +93,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_165415) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "dashboards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "name", default: "Tablero Kanban", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_dashboards_on_project_id", unique: true
+  end
+
   create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -86,6 +110,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_165415) do
     t.bigint "project_id", null: false
     t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["status"], name: "index_documents_on_status"
+  end
+
+  create_table "kanban_cards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "kanban_column_id", null: false
+    t.string "title", null: false
+    t.bigint "assigned_to_id"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assigned_to_id"], name: "index_kanban_cards_on_assigned_to_id"
+    t.index ["kanban_column_id", "position"], name: "index_kanban_cards_on_kanban_column_id_and_position"
+    t.index ["kanban_column_id"], name: "index_kanban_cards_on_kanban_column_id"
+  end
+
+  create_table "kanban_columns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "dashboard_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dashboard_id", "position"], name: "index_kanban_columns_on_dashboard_id_and_position"
+    t.index ["dashboard_id"], name: "index_kanban_columns_on_dashboard_id"
   end
 
   create_table "project_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -152,12 +198,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_165415) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activities", "projects"
+  add_foreign_key "activities", "users"
   add_foreign_key "announcement_comments", "announcements"
   add_foreign_key "announcement_comments", "users"
   add_foreign_key "announcements", "projects"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
+  add_foreign_key "dashboards", "projects"
   add_foreign_key "documents", "projects"
+  add_foreign_key "kanban_cards", "kanban_columns"
+  add_foreign_key "kanban_cards", "users", column: "assigned_to_id"
+  add_foreign_key "kanban_columns", "dashboards"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "sessions", "users"

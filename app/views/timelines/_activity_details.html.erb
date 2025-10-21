@@ -1,0 +1,35 @@
+<% case activity.trackable_type %>
+<% when "Todo" %>
+  <div class="<%= is_left ? 'text-left' : 'md:text-right' %> text-gray-700 bg-blue-50 rounded px-3 py-2 inline-block">
+    <span class="font-medium">Todo:</span> <%= activity.metadata["name"] || "Unnamed" %>
+  </div>
+
+<% when "Task" %>
+  <div class="<%= is_left ? 'text-left' : 'md:text-right' %> text-gray-700 bg-green-50 rounded px-3 py-2 inline-block">
+    <span class="font-medium">Task:</span> <%= activity.metadata["title"] || "Unnamed" %>
+  </div>
+
+<% when "Document" %>
+  <div class="<%= is_left ? 'text-left' : 'md:text-right' %> text-gray-700 bg-purple-50 rounded px-3 py-2 inline-block">
+    <span class="font-medium">Document:</span> <%= activity.metadata["title"] || "Unnamed" %>
+  </div>
+
+<% when "Announcement" %>
+  <div class="<%= is_left ? 'text-left' : 'md:text-right' %> text-gray-700 bg-yellow-50 rounded px-3 py-2 inline-block">
+    <span class="font-medium">Announcement</span>
+    <% if activity.metadata["content"].present? %>
+      <div class="mt-1 text-sm text-gray-600 italic">
+        "<%= activity.metadata["content"] %>"
+      </div>
+    <% end %>
+  </div>
+
+<% when "Comment", "AnnouncementComment" %>
+  <div class="<%= is_left ? 'text-left' : 'md:text-right' %> text-gray-700 bg-gray-50 rounded px-3 py-2 inline-block">
+    <% if activity.metadata["content"].present? %>
+      <div class="text-sm italic">
+        "<%= activity.metadata["content"] %>"
+      </div>
+    <% end %>
+  </div>
+<% end %>

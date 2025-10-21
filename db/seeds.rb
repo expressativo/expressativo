@@ -9,4 +9,21 @@
 #   end
 
 
-User.create!(email_address: 'test@example.com', password: 'password123', password_confirmation: 'password123')
+user = User.find_or_create_by!(email: 'test@example.com') do |u|
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+  u.first_name = 'Test'
+  u.last_name = 'User'
+end
+
+project = Project.find_or_create_by!(title: 'Sample Project') do |p|
+  p.description = 'A sample project for testing'
+end
+
+# Create the project-user relationship
+ProjectUser.find_or_create_by!(project: project, user: user) do |pu|
+  pu.role = 'owner'
+end
+
+puts "Created user: #{user.email}"
+puts "Created project: #{project.title}"

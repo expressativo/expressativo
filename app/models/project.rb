@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   has_many :todos, dependent: :destroy
   has_many :announcements, dependent: :destroy
   has_many :documents, dependent: :nullify
+  has_many :activities, dependent: :destroy
   validates :title, presence: true
 
   scope :for_user, ->(user) { joins(:project_users).where(project_users: { user_id: user.id }) }
