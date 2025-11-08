@@ -301,6 +301,37 @@ end
 - Cualquier usuario puede unirse con el link
 - El owner puede regenerar el token
 
+### Tableros Kanban
+
+**Modelos:**
+- `Board` - Tablero Kanban pertenece a un proyecto
+- `Column` - Columnas del tablero (Por hacer, En progreso, Completado)
+- `Task` - Las tareas pueden asociarse opcionalmente a una columna
+
+**Características:**
+- Drag and drop con Sortable.js
+- Stimulus controller `kanban_controller.js`
+- Stimulus controller `task_card_controller.js` para clicks en tarjetas
+- 3 columnas por defecto al crear tablero
+- Agregar tareas existentes desde todo lists
+- Actualización de posición en tiempo real
+- Click en tarjeta para ver detalle (no interfiere con drag and drop)
+
+**Ejemplo de uso:**
+```erb
+<div data-controller="kanban">
+  <div data-kanban-target="column" data-column-id="<%= column.id %>">
+    <!-- Tareas arrastrables y clickeables -->
+    <div 
+      data-controller="task-card"
+      data-task-card-url-value="<%= task_path %>"
+      data-action="click->task-card#open">
+      <!-- Contenido de la tarjeta -->
+    </div>
+  </div>
+</div>
+```
+
 ---
 
 **Última actualización:** Noviembre 2024

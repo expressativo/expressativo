@@ -1,0 +1,73 @@
+<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold">
+      Agregar tareas a <%= @board.title %>
+    </h1>
+    <%= link_to "Volver al tablero", project_board_path(@project, @board), class: "button-outline" %>
+  </div>
+
+  <% if @todos.any? %>
+    <% @todos.each do |todo| %>
+      <div class="mb-6 border border-gray-300 rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
+          <%= todo.name %>
+        </h3>
+
+        <% available_tasks = todo.tasks.where(column_id: nil) %>
+        
+        <% if available_tasks.any? %>
+          <div class="space-y-2">
+            <% available_tasks.each do |task| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-medium text-gray-900">
+                      <%= task.title %>
+                    </h4>
+                    <% if task.done %>
+                      <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                        ✓
+                      </span>
+                    <% end %>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                    <% if task.due_date.present? %>
+                      <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /></svg>
+                        <%= l(task.due_date, format: :short) %>
+                      </span>
+                    <% end %>
+                    <span class="flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                      <%= task.created_by.email.split('@').first %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex gap-2">
+                  <% @board.columns.each do |column| %>
+                    <%= button_to column.title,
+                        attach_task_project_boards_path(@project, board_id: @board.id, task_id: task.id, column_id: column.id),
+                        method: :post,
+                        class: "button-outline text-sm whitespace-nowrap" %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500 text-sm">Todas las tareas de esta lista ya están en el tablero</p>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-12 text-gray-500">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
+      <p class="text-lg mb-2">No hay listas de tareas</p>
+      <p class="text-sm mb-4">Crea listas de tareas primero para poder agregarlas al tablero</p>
+      <%= link_to "Ir a listas de tareas", project_path(@project), class: "button" %>
+    </div>
+  <% end %>
+</div>

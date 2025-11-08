@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_08_210627) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_08_212105) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -83,6 +83,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_210627) do
     t.index ["project_id"], name: "index_announcements_on_project_id"
   end
 
+  create_table "boards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_boards_on_project_id"
+  end
+
+  create_table "columns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.integer "position"
+    t.bigint "board_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_columns_on_board_id"
+  end
+
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
     t.bigint "task_id", null: false
@@ -141,6 +159,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_210627) do
     t.text "notes"
     t.datetime "due_date"
     t.bigint "created_by_id"
+    t.bigint "column_id"
+    t.integer "position", default: 0
+    t.index ["column_id"], name: "index_tasks_on_column_id"
     t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
     t.index ["todo_id"], name: "index_tasks_on_todo_id"
   end
@@ -175,12 +196,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_210627) do
   add_foreign_key "announcement_comments", "announcements"
   add_foreign_key "announcement_comments", "users"
   add_foreign_key "announcements", "projects"
+  add_foreign_key "boards", "projects"
+  add_foreign_key "columns", "boards"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "projects"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "tasks", "columns"
   add_foreign_key "tasks", "todos"
   add_foreign_key "tasks", "users", column: "created_by_id"
   add_foreign_key "todos", "projects"

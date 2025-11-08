@@ -26,8 +26,27 @@ Rails.application.routes.draw do
     end
     resources :members, controller: "project_members", only: %i[index new create destroy]
     resource :timeline, only: [:show], controller: "timelines"
+    
+    # Tableros Kanban
+    resources :boards do
+      member do
+        get :add_tasks
+      end
+      collection do
+        post :attach_task
+      end
+    end
+    
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
+    end
+  end
+
+  # Rutas para actualizar posición de tareas en tableros
+  resources :board_tasks, only: [] do
+    member do
+      patch :update_position
+      delete :remove_from_board
     end
   end
 

@@ -1,0 +1,42 @@
+<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
+  <h1 class="text-2xl font-semibold mb-6">
+    Nuevo tablero para <%= @project.title %>
+  </h1>
+
+  <%= form_with model: [@project, @board], local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :title, "Título", class: "label" %>
+      <%= form.text_field :title,
+          class: "input",
+          placeholder: "Ej: Sprint 1, Desarrollo, etc.",
+          required: true,
+          autofocus: true %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :description, "Descripción (opcional)", class: "label" %>
+      <%= form.text_area :description,
+          class: "input",
+          rows: 4,
+          placeholder: "Describe el propósito de este tablero..." %>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <p class="text-sm text-gray-700">
+        <strong>Nota:</strong> Se crearán automáticamente 3 columnas por defecto:
+      </p>
+      <ul class="text-sm text-gray-600 list-disc list-inside mt-2">
+        <li>Por hacer</li>
+        <li>En progreso</li>
+        <li>Completado</li>
+      </ul>
+    </div>
+
+    <div class="flex gap-2">
+      <%= form.submit "Crear tablero",
+          class: "button",
+          data: { turbo_submits_with: "Creando..." } %>
+      <%= link_to "Cancelar", project_boards_path(@project), class: "button-outline" %>
+    </div>
+  <% end %>
+</div>
