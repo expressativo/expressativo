@@ -1,7 +1,7 @@
 class PublicationsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_publication, only: [:update, :destroy, :create_task]
+  before_action :set_publication, only: [:update, :destroy, :create_task, :update_date]
 
   def index
     @year = params[:year]&.to_i || Date.today.year
@@ -85,6 +85,27 @@ class PublicationsController < ApplicationController
         errors: task.errors.full_messages 
       }, status: :unprocessable_entity
     end
+  end
+
+  def update_date
+    new_date = Date.parse(params[:new_date])
+    
+    if @publication.update(publication_date: new_date)
+      render json: { 
+        success: true, 
+        message: "Fecha actualizada exitosamente" 
+      }
+    else
+      render json: { 
+        success: false, 
+        errors: @publication.errors.full_messages 
+      }, status: :unprocessable_entity
+    end
+  rescue ArgumentError
+    render json: { 
+      success: false, 
+      errors: ["Fecha inválida"] 
+    }, status: :unprocessable_entity
   end
 
   private

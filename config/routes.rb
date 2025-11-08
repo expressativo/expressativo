@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :publications do
       member do
         post :create_task
+        patch :update_date
       end
     end
     

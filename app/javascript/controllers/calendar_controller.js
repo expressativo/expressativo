@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import Sortable from "sortablejs";
 
 // Connects to data-controller="calendar"
 export default class extends Controller {
@@ -12,16 +13,81 @@ export default class extends Controller {
     "descriptionInput",
     "dateInput",
     "deleteButton",
-    "createTaskButton"
+    "createTaskButton",
+    "day"
   ];
 
   connect() {
     this.projectId = window.location.pathname.split('/')[2];
     this.isEditing = false;
+    this.initializeSortable();
+  }
+
+  disconnect() {
+    // Destruir instancias de Sortable al desconectar
+    if (this.sortableInstances) {
+      this.sortableInstances.forEach(sortable => sortable.destroy());
+    }
+  }
+
+  initializeSortable() {
+    this.sortableInstances = [];
+    
+    // Inicializar Sortable en cada día del calendario
+    this.dayTargets.forEach(dayElement => {
+      const publicationsContainer = dayElement.querySelector('[data-publications-container]');
+      
+      if (publicationsContainer) {
+        const sortable = new Sortable(publicationsContainer, {
+          group: 'publications',
+          animation: 150,
+          ghostClass: 'opacity-50',
+          dragClass: 'shadow-lg',
+          handle: '.publication-item',
+          onEnd: this.handleDrop.bind(this)
+        });
+        
+        this.sortableInstances.push(sortable);
+      }
+    });
+  }
+
+  async handleDrop(event) {
+    const publicationElement = event.item;
+    const publicationId = publicationElement.dataset.publicationId;
+    const newDayElement = event.to.closest('[data-calendar-target="day"]');
+    const newDate = newDayElement.dataset.date;
+    
+    try {
+      const response = await fetch(`/projects/${this.projectId}/publications/${publicationId}/update_date`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': this.getCSRFToken()
+        },
+        body: JSON.stringify({ new_date: newDate })
+      });
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        alert('Error: ' + result.errors.join(', '));
+        // Recargar para revertir el cambio visual
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Ocurrió un error al mover la publicación');
+      window.location.reload();
+    }
   }
 
   openModal(event) {
-    const date = event.currentTarget.dataset.date;
+    // Buscar el elemento day más cercano para obtener la fecha
+    const dayElement = event.currentTarget.closest('[data-calendar-target="day"]');
+    const date = dayElement ? dayElement.dataset.date : null;
+    
+    if (!date) return;
     
     // Resetear el formulario
     this.resetForm();
