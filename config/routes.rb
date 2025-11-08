@@ -37,6 +37,13 @@ Rails.application.routes.draw do
       end
     end
     
+    # Calendario de Publicaciones
+    resources :publications do
+      member do
+        post :create_task
+      end
+    end
+    
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
     end

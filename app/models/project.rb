@@ -6,6 +6,7 @@ class Project < ApplicationRecord
   has_many :documents, dependent: :nullify
   has_many :activities, dependent: :destroy
   has_many :boards, dependent: :destroy
+  has_many :publications, dependent: :destroy
   validates :title, presence: true
 
   before_create :generate_invitation_token
