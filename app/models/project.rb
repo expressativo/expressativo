@@ -7,6 +7,8 @@ class Project < ApplicationRecord
   has_many :activities, dependent: :destroy
   validates :title, presence: true
 
+  before_create :generate_invitation_token
+
   scope :for_user, ->(user) { joins(:project_users).where(project_users: { user_id: user.id }) }
 
   def owner
@@ -15,5 +17,22 @@ class Project < ApplicationRecord
 
   def members
     users.where(project_users: { role: "member" })
+  end
+
+  def regenerate_invitation_token!
+    update(invitation_token: generate_unique_token)
+  end
+
+  private
+
+  def generate_invitation_token
+    self.invitation_token = generate_unique_token
+  end
+
+  def generate_unique_token
+    loop do
+      token = SecureRandom.urlsafe_base64(32)
+      break token unless Project.exists?(invitation_token: token)
+    end
   end
 end

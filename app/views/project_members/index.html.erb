@@ -6,8 +6,45 @@
     <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
   </div>
 
-  <div class="mb-6">
+  <div class="mb-6 space-y-4">
     <%= link_to "Invitar nuevo miembro", new_project_member_path(@project), class: "button" %>
+    
+    <!-- Link de invitación -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4" data-controller="clipboard">
+      <h3 class="font-semibold mb-3 text-gray-700">Link de invitación</h3>
+      <p class="text-sm text-gray-600 mb-3">
+        Comparte este link para que cualquier persona pueda unirse al proyecto:
+      </p>
+      
+      <div class="flex gap-2 items-center">
+        <input 
+          type="text" 
+          readonly 
+          value="<%= project_invitation_url(token: @project.invitation_token) %>"
+          data-clipboard-target="source"
+          class="input flex-1 bg-white text-sm"
+        />
+        <button 
+          data-clipboard-target="button"
+          data-action="click->clipboard#copy"
+          class="button whitespace-nowrap">
+          Copiar link
+        </button>
+        <% if @project.owner == current_user %>
+          <%= button_to "Regenerar", 
+              regenerate_invitation_project_path(@project), 
+              method: :post,
+              form: {
+                data: { turbo_confirm: "¿Estás seguro? El link anterior dejará de funcionar." }
+              },
+              class: "button-outline whitespace-nowrap" %>
+        <% end %>
+      </div>
+      
+      <p class="text-xs text-gray-500 mt-2">
+        💡 Cualquier persona con este link podrá unirse al proyecto
+      </p>
+    </div>
   </div>
 
   <div class="space-y-4">

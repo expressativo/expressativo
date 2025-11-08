@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_08_210627) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -93,14 +93,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "dashboards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.string "name", default: "Tablero Kanban", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_dashboards_on_project_id", unique: true
-  end
-
   create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -110,28 +102,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
     t.bigint "project_id", null: false
     t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["status"], name: "index_documents_on_status"
-  end
-
-  create_table "kanban_cards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "kanban_column_id", null: false
-    t.string "title", null: false
-    t.bigint "assigned_to_id"
-    t.integer "position", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["assigned_to_id"], name: "index_kanban_cards_on_assigned_to_id"
-    t.index ["kanban_column_id", "position"], name: "index_kanban_cards_on_kanban_column_id_and_position"
-    t.index ["kanban_column_id"], name: "index_kanban_cards_on_kanban_column_id"
-  end
-
-  create_table "kanban_columns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "dashboard_id", null: false
-    t.string "name", null: false
-    t.integer "position", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["dashboard_id", "position"], name: "index_kanban_columns_on_dashboard_id_and_position"
-    t.index ["dashboard_id"], name: "index_kanban_columns_on_dashboard_id"
   end
 
   create_table "project_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -149,6 +119,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "invitation_token"
+    t.index ["invitation_token"], name: "index_projects_on_invitation_token", unique: true
   end
 
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -205,11 +177,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_220505) do
   add_foreign_key "announcements", "projects"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
-  add_foreign_key "dashboards", "projects"
   add_foreign_key "documents", "projects"
-  add_foreign_key "kanban_cards", "kanban_columns"
-  add_foreign_key "kanban_cards", "users", column: "assigned_to_id"
-  add_foreign_key "kanban_columns", "dashboards"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "sessions", "users"

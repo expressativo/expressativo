@@ -11,14 +11,14 @@
 
 
 
-ul,
-ol {
+trix-editor ul,
+trix-editor ol {
   list-style-type: revert;
   padding-left: revert;
   margin: revert;
 }
 
-blockquote {
+trix-editor blockquote {
   margin: revert;
 }
 

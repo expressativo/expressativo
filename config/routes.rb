@@ -26,7 +26,14 @@ Rails.application.routes.draw do
     end
     resources :members, controller: "project_members", only: %i[index new create destroy]
     resource :timeline, only: [:show], controller: "timelines"
+    member do
+      post :regenerate_invitation, to: "project_invitations#regenerate"
+    end
   end
+
+  # Rutas de invitación (fuera del namespace de projects para URLs más limpias)
+  get "invite/:token", to: "project_invitations#show", as: :project_invitation
+  post "invite/:token/accept", to: "project_invitations#accept", as: :accept_project_invitation
 
   resources :documents, only: %i[show edit update destroy] do
     member do

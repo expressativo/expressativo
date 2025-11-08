@@ -1,8 +1,13 @@
 <div>
   <div class="bg-white shadow-md rounded-2xl px-0 pt-6 pb-8 mb-4 sm:w-full md:w-5xl mx-auto">
-    <h1 class="text-2xl text-center font-semibold">
-      <%= link_to @project.title, edit_project_path(@project) %>
-    </h1>
+    <div class="relative">
+      <h1 class="text-2xl text-center font-semibold">
+        <%= link_to @project.title, edit_project_path(@project) %>
+      </h1>
+      <div class="absolute top-0 left-4">
+        <%= render 'projects/option_dropdown' %>
+      </div>
+    </div>
     <section class="mt-4">
       <div class="grid grid-cols-1 md:grid-cols-2 divide-gray-300 gap-0 border-x-0 border border-gray-300 min-h-[150px]">
           <%# <%= render 'projects/messages_board' %>
@@ -10,26 +15,5 @@
           <%= render 'projects/docs' %>
       </div>
     </section>
-    <div class="flex items-center mt-6 gap-2 ml-4">
-      <div class="mb-4">
-        <%= link_to "Timeline", project_timeline_path(@project), class: "button" %>
-      </div>
-      <div class="mb-4">
-        <%= link_to "Miembros", project_members_path(@project), class: "button" %>
-      </div>
-      <div class="mb-4">
-        <%= link_to "Editar", edit_project_path(@project), class: "button is-primary" %>
-      </div>
-      <div class="mb-4">
-        <%= button_to project_path(@project),
-        method: :delete,
-        form: {
-          data: { turbo_confirm: "Esta seguro " },
-        },
-        class: "button-outline" do %>
-          Eliminar
-        <% end %>
-      </div>
-    </div>
   </div>
 </div>
