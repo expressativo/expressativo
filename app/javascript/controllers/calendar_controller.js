@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import Sortable from "sortablejs";
+import html2canvas from "html2canvas";
 
 // Connects to data-controller="calendar"
 export default class extends Controller {
@@ -13,8 +14,8 @@ export default class extends Controller {
     "descriptionInput",
     "dateInput",
     "deleteButton",
-    "createTaskButton",
-    "day"
+    "day",
+    "calendar"
   ];
 
   connect() {
@@ -98,7 +99,6 @@ export default class extends Controller {
     this.publicationDateTarget.value = date;
     this.dateInputTarget.value = date;
     this.deleteButtonTarget.classList.add("hidden");
-    this.createTaskButtonTarget.classList.add("hidden");
     
     // Mostrar modal
     this.modalTarget.classList.remove("hidden");
@@ -130,13 +130,6 @@ export default class extends Controller {
     
     // Mostrar botones de edición
     this.deleteButtonTarget.classList.remove("hidden");
-    
-    // Mostrar botón de crear tarea solo si no tiene tarea
-    if (!hasTask) {
-      this.createTaskButtonTarget.classList.remove("hidden");
-    } else {
-      this.createTaskButtonTarget.classList.add("hidden");
-    }
     
     // Mostrar modal
     this.modalTarget.classList.remove("hidden");
@@ -228,37 +221,197 @@ export default class extends Controller {
     }
   }
 
-  async createTask() {
-    const publicationId = this.publicationIdTarget.value;
+  async exportCalendar(event) {
+    const format = event.currentTarget.dataset.format || 'png';
+    const calendarElement = this.calendarTarget;
     
-    if (!publicationId) {
-      alert("Primero debes guardar la publicación");
-      return;
-    }
-    
-    if (!confirm("¿Crear una tarea en la lista 'Publicaciones' para esta publicación?")) {
-      return;
-    }
+    // Mostrar mensaje de carga
+    const originalText = event.currentTarget.textContent;
+    event.currentTarget.textContent = 'Generando...';
+    event.currentTarget.disabled = true;
     
     try {
-      const response = await fetch(`/projects/${this.projectId}/publications/${publicationId}/create_task`, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": this.getCSRFToken()
+      // Crear un contenedor temporal para la captura
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      document.body.appendChild(tempContainer);
+      
+      // Clonar el calendario
+      const clone = calendarElement.cloneNode(true);
+      tempContainer.appendChild(clone);
+      
+      // Capturar usando ignoreElements para evitar problemas con oklch
+      const canvas = await html2canvas(clone, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        // Ignorar elementos SVG que pueden tener oklch
+        ignoreElements: (element) => {
+          return element.tagName === 'svg';
+        },
+        onclone: (clonedDoc) => {
+          // Remover todas las hojas de estilo SOLO del documento clonado
+          const styleSheets = clonedDoc.querySelectorAll('link[rel="stylesheet"], style');
+          styleSheets.forEach(sheet => sheet.remove());
+          
+          // Aplicar estilos básicos inline
+          const calendarClone = clonedDoc.querySelector('[data-calendar-target="calendar"]');
+          if (calendarClone) {
+            calendarClone.style.cssText = `
+              border: 1px solid #d1d5db;
+              border-radius: 8px;
+              overflow: hidden;
+              background: white;
+            `;
+            
+            // Estilos para el header de días
+            const daysHeader = calendarClone.querySelector('.grid.grid-cols-7');
+            if (daysHeader) {
+              daysHeader.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                background: #f9fafb;
+                border-bottom: 1px solid #d1d5db;
+              `;
+              
+              daysHeader.querySelectorAll('div').forEach(day => {
+                day.style.cssText = `
+                  padding: 12px;
+                  text-align: center;
+                  font-weight: 600;
+                  font-size: 14px;
+                  color: #374151;
+                  border-right: 1px solid #d1d5db;
+                `;
+              });
+            }
+            
+            // Estilos para los días del mes
+            const daysGrid = calendarClone.querySelectorAll('.grid.grid-cols-7')[1];
+            if (daysGrid) {
+              daysGrid.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+              `;
+              
+              // Aplicar estilos a TODAS las celdas (incluyendo las vacías del inicio)
+              const allCells = daysGrid.querySelectorAll('div');
+              allCells.forEach(dayCell => {
+                // Verificar si es una celda vacía del inicio del mes
+                const isEmpty = dayCell.classList.contains('bg-gray-50') || 
+                               (!dayCell.hasAttribute('data-calendar-target') && 
+                                !dayCell.hasAttribute('data-date'));
+                
+                if (isEmpty) {
+                  // Estilos para celdas vacías
+                  dayCell.style.cssText = `
+                    min-height: 120px;
+                    padding: 8px;
+                    background: #f9fafb;
+                    border-right: 1px solid #e5e7eb;
+                    border-bottom: 1px solid #e5e7eb;
+                  `;
+                } else if (dayCell.hasAttribute('data-calendar-target') || dayCell.hasAttribute('data-date')) {
+                  // Estilos para celdas con días
+                  dayCell.style.cssText = `
+                    min-height: 120px;
+                    padding: 8px;
+                    border-right: 1px solid #e5e7eb;
+                    border-bottom: 1px solid #e5e7eb;
+                    background: white;
+                  `;
+                  
+                  // Número del día
+                  const dayNumber = dayCell.querySelector('span');
+                  if (dayNumber) {
+                    if (dayNumber.classList.contains('bg-blue-600')) {
+                      dayNumber.style.cssText = `
+                        background: #2563eb;
+                        color: white;
+                        border-radius: 9999px;
+                        width: 28px;
+                        height: 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        font-weight: 600;
+                      `;
+                    } else {
+                      dayNumber.style.cssText = `
+                        color: #374151;
+                        font-weight: 500;
+                      `;
+                    }
+                  }
+                  
+                  // Publicaciones
+                  const publications = dayCell.querySelectorAll('.publication-item');
+                  publications.forEach(pub => {
+                    pub.style.cssText = `
+                      background: #eff6ff;
+                      border-left: 2px solid #3b82f6;
+                      padding: 4px 8px;
+                      font-size: 12px;
+                      border-radius: 4px;
+                      margin-bottom: 4px;
+                    `;
+                    
+                    const title = pub.querySelector('div');
+                    if (title) {
+                      title.style.cssText = `
+                        font-weight: 500;
+                        color: #1f2937;
+                      `;
+                    }
+                  });
+                }
+              });
+            }
+          }
         }
       });
       
-      const result = await response.json();
+      // Limpiar el contenedor temporal
+      document.body.removeChild(tempContainer);
       
-      if (result.success) {
-        alert(result.message);
-        window.location.reload();
-      } else {
-        alert("Error: " + result.errors.join(", "));
-      }
+      // Convertir a blob
+      canvas.toBlob((blob) => {
+        // Crear URL temporal
+        const url = URL.createObjectURL(blob);
+        
+        // Crear link de descarga
+        const link = document.createElement('a');
+        const monthYearText = this.element.querySelector('h2').textContent.trim();
+        // Convertir "Noviembre 2024" a "noviembre-2024"
+        const fileName = monthYearText.toLowerCase().replace(/\s+/g, '-');
+        link.download = `${fileName}.${format}`;
+        link.href = url;
+        link.click();
+        
+        // Limpiar
+        URL.revokeObjectURL(url);
+        
+        // Restaurar botón
+        event.currentTarget.textContent = originalText;
+        event.currentTarget.disabled = false;
+      }, `image/${format}`);
+      
     } catch (error) {
-      console.error("Error:", error);
-      alert("Ocurrió un error al crear la tarea");
+      console.error('Error al exportar calendario:', error);
+      alert('Ocurrió un error al exportar el calendario: ' + error.message);
+      
+      // Limpiar el contenedor temporal si existe
+      if (tempContainer && tempContainer.parentNode) {
+        document.body.removeChild(tempContainer);
+      }
+      
+      event.currentTarget.textContent = originalText;
+      event.currentTarget.disabled = false;
     }
   }
 

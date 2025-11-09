@@ -9,25 +9,45 @@
 
   <!-- Navegación del calendario -->
   <div class="flex justify-between items-center mb-6">
-    <%= link_to project_publications_path(@project, year: @date.prev_month.year, month: @date.prev_month.month), 
-        class: "button-outline flex items-center gap-2" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
-      Anterior
-    <% end %>
+    <div class="flex gap-2">
+      <%= link_to project_publications_path(@project, year: @date.prev_month.year, month: @date.prev_month.month), 
+          class: "button-outline flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+        Anterior
+      <% end %>
+      
+      <%= link_to project_publications_path(@project, year: @date.next_month.year, month: @date.next_month.month), 
+          class: "button-outline flex items-center gap-2" do %>
+        Siguiente
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+      <% end %>
+    </div>
     
     <h2 class="text-xl font-semibold">
       <%= @date.strftime('%B %Y').capitalize %>
     </h2>
     
-    <%= link_to project_publications_path(@project, year: @date.next_month.year, month: @date.next_month.month), 
-        class: "button-outline flex items-center gap-2" do %>
-      Siguiente
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
-    <% end %>
+    <div class="flex gap-2">
+      <button type="button"
+              data-action="click->calendar#exportCalendar"
+              data-format="png"
+              class="button-outline flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+        PNG
+      </button>
+      
+      <button type="button"
+              data-action="click->calendar#exportCalendar"
+              data-format="jpg"
+              class="button-outline flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+        JPG
+      </button>
+    </div>
   </div>
 
   <!-- Calendario -->
-  <div class="border border-gray-300 rounded-lg overflow-hidden">
+  <div class="border border-gray-300 rounded-lg overflow-hidden" data-calendar-target="calendar">
     <!-- Días de la semana -->
     <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-300">
       <% %w[Lun Mar Mié Jue Vie Sáb Dom].each do |day| %>
@@ -59,7 +79,7 @@
              data-date="<%= date.to_s %>">
           
           <!-- Número del día -->
-          <div class="flex justify-between items-start mb-2"
+          <div class="flex justify-between items-start mb-2 cursor-pointer border-2 border-dashed border-gray-200 rounded hover:border-purple-500 pl-2 transition-colors"
                data-action="click->calendar#openModal">
             <span class="<%= is_today ? 'bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-semibold cursor-pointer' : 'text-gray-700 font-medium cursor-pointer' %>">
               <%= date.day %>
@@ -168,13 +188,6 @@
                 data-action="click->calendar#deletePublication"
                 class="button-outline text-red-600 border-red-600 hover:bg-red-50 hidden">
           Eliminar
-        </button>
-        
-        <button type="button"
-                data-calendar-target="createTaskButton"
-                data-action="click->calendar#createTask"
-                class="button-outline hidden">
-          Crear Tarea
         </button>
         
         <button type="submit" class="button">

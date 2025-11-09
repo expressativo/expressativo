@@ -6,6 +6,7 @@ class Task < ApplicationRecord
   belongs_to :column, optional: true
   has_rich_text :notes
   has_many :comments, dependent: :destroy
+  has_one :publication, dependent: :destroy
 
   validates :title, presence: true
   validates :done, inclusion: { in: [ true, false ] }

@@ -1,7 +1,7 @@
 class PublicationsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_publication, only: [:update, :destroy, :create_task, :update_date]
+  before_action :set_publication, only: [:update, :destroy, :update_date]
 
   def index
     @year = params[:year]&.to_i || Date.today.year
@@ -20,6 +20,7 @@ class PublicationsController < ApplicationController
 
   def create
     @publication = @project.publications.build(publication_params)
+    @publication.created_by = current_user
     
     if @publication.save
       render json: { 
@@ -56,35 +57,6 @@ class PublicationsController < ApplicationController
       success: true, 
       message: "Publicación eliminada exitosamente" 
     }
-  end
-
-  def create_task
-    # Buscar o crear la todo list "Publicaciones"
-    todo = @project.todos.find_or_create_by(name: "Publicaciones")
-    
-    # Crear la tarea
-    task = todo.tasks.build(
-      title: @publication.title,
-      created_by: current_user,
-      done: false
-    )
-    
-    # Agregar la descripción como notes (rich text)
-    task.notes = @publication.description if @publication.description.present?
-    
-    if task.save
-      @publication.update(task: task)
-      render json: { 
-        success: true, 
-        task_id: task.id,
-        message: "Tarea creada exitosamente en la lista 'Publicaciones'"
-      }
-    else
-      render json: { 
-        success: false, 
-        errors: task.errors.full_messages 
-      }, status: :unprocessable_entity
-    end
   end
 
   def update_date
