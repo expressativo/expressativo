@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Tebook is a Rails 8 project management application that allows users to create, manage, and share tasks and projects. It's a collaborative platform with projects, todos, tasks, documents, and announcements.
+Tivo is a Rails 8 project management application that allows users to create, manage, and share tasks and projects. It's a collaborative platform with projects, todos, tasks, documents, and announcements.
 
 ## Database Configuration
 
@@ -170,6 +170,6 @@ Root path: `projects#index`
 First user registration: navigate to http://localhost:3000/users/sign_up
 
 ## Important Notes
-- The project was originally named "expressativo" but the app is called "Tebook"
+- The project was originally named "expressativo" but the app is called "Tivo"
 - Recent migrations (Sept-Oct 2025) migrated from has_secure_password to Devise and from direct User-Project association to ProjectUser join table
 - Database setup requires Docker MySQL container running (local.yml) for development

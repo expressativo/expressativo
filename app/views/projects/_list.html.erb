@@ -1,6 +1,6 @@
-<div class="mt-12">
+<div class="mt-12 flex grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
   <% @projects.each do |single| %>
-    <%= link_to project_path(single), class: "mb-4 shadow-lg p-4 rounded-2xl bg-white w-full max-w-md min-h-[200px] flex flex-col justify-between mx-auto" do %>
+    <%= link_to project_path(single), class: "mb-4 shadow-lg p-4 rounded-2xl bg-white min-h-[200px] flex justify-between" do %>
       <h3 class="text-xl font-semibold">
         <%= single.title %>
       </h3>
