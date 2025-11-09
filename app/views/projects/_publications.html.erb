@@ -1,10 +1,10 @@
-<div class="p-4 border-r border-gray-300">
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-semibold flex items-center gap-2">
+<div class="calendar-widget">
+  <div class="calendar-widget-header">
+    <h2 class="calendar-widget-title">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
       Publicaciones
     </h2>
-    <%= link_to project_publications_path(@project), class: "text-blue-600 hover:text-blue-800" do %>
+    <%= link_to project_publications_path(@project), class: "calendar-widget-icon" do %>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /></svg>
     <% end %>
   </div>
@@ -16,17 +16,17 @@
   %>
 
   <% if current_month_publications.any? %>
-    <ul class="space-y-2">
+    <ul class="calendar-widget-list">
       <% current_month_publications.limit(5).each do |publication| %>
-        <li class="border-l-2 border-blue-500 pl-2">
-          <div class="text-sm font-medium text-gray-900 truncate">
+        <li class="calendar-widget-item">
+          <div class="calendar-widget-item-title">
             <%= publication.title %>
           </div>
-          <div class="text-xs text-gray-500">
+          <div class="calendar-widget-item-date">
             <%= publication.publication_date.strftime('%d/%m/%Y') %>
           </div>
           <% if publication.task.present? %>
-            <div class="flex items-center gap-1 text-xs text-green-600 mt-1">
+            <div class="calendar-widget-item-task">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l2 2l4 -4" /></svg>
               Tarea creada
             </div>
@@ -35,11 +35,11 @@
       <% end %>
     </ul>
     
-    <div class="mt-3 pt-3 border-t border-gray-200">
-      <%= link_to "Ver calendario completo", project_publications_path(@project), class: "text-sm text-blue-600 hover:underline" %>
+    <div class="calendar-widget-footer">
+      <%= link_to "Ver calendario completo", project_publications_path(@project), class: "calendar-widget-link" %>
     </div>
   <% else %>
-    <p class="text-gray-500 text-sm">No hay publicaciones planificadas este mes</p>
-    <%= link_to "Ver calendario", project_publications_path(@project), class: "text-sm text-blue-600 hover:underline mt-2 inline-block" %>
+    <p class="calendar-widget-empty">No hay publicaciones planificadas este mes</p>
+    <%= link_to "Ver calendario", project_publications_path(@project), class: "calendar-widget-empty-link" %>
   <% end %>
 </div>

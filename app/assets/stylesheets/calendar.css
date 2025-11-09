@@ -1,0 +1,470 @@
+/* ============================================
+   CALENDARIO DE PUBLICACIONES - CSS VANILLA
+   ============================================ */
+
+/* Contenedor principal del calendario */
+.calendar-container {
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 1rem;
+  padding: 1.5rem 1.5rem 2rem 1.5rem;
+  margin-bottom: 1rem;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Header del calendario */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+/* Navegación del calendario */
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.calendar-month-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.75rem;
+}
+
+.calendar-export-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Grid del calendario */
+.calendar-grid-container {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Header de días de la semana */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #f9fafb;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.calendar-weekday {
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #374151;
+  border-right: 1px solid #d1d5db;
+}
+
+.calendar-weekday:last-child {
+  border-right: 0;
+}
+
+/* Grid de días del mes */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* Celda vacía (días del mes anterior/siguiente) */
+.calendar-empty-cell {
+  min-height: 120px;
+  padding: 0.5rem;
+  background-color: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Celda de día */
+.calendar-day-cell {
+  min-height: 120px;
+  padding: 0.5rem;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.calendar-day-cell:hover {
+  background-color: #f9fafb;
+}
+
+.calendar-day-cell:last-child {
+  border-right: 0;
+}
+
+/* Header del día (número y contador) */
+.calendar-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border: 2px dashed #e5e7eb;
+  border-radius: 0.25rem;
+  padding-left: 0.5rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.calendar-day-header:hover {
+  border-color: #a855f7;
+}
+
+/* Número del día */
+.calendar-day-number {
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Día actual */
+.calendar-day-today {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 9999px;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Contador de publicaciones */
+.calendar-pub-count {
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Contenedor de publicaciones */
+.calendar-publications-container {
+  min-height: 60px;
+}
+
+.calendar-publications-container > * + * {
+  margin-top: 0.25rem;
+}
+
+/* Item de publicación */
+.publication-item {
+  background-color: #eff6ff;
+  border-left: 2px solid #3b82f6;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 0.25rem;
+  cursor: move;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.publication-item:hover {
+  background-color: #dbeafe;
+}
+
+.publication-item-title {
+  font-weight: 500;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Indicador de tarea creada */
+.publication-task-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #16a34a;
+  margin-top: 0.25rem;
+}
+
+.publication-task-indicator svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Contador de más publicaciones */
+.calendar-more-count {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(75, 85, 99, 0.5);
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  z-index: 50;
+}
+
+.calendar-modal-overlay.hidden {
+  display: none;
+}
+
+.calendar-modal-container {
+  position: relative;
+  top: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.25rem;
+  border: 1px solid #e5e7eb;
+  width: 100%;
+  max-width: 28rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+}
+
+.calendar-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendar-modal-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.calendar-modal-close {
+  color: #9ca3af;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.15s ease-in-out;
+}
+
+.calendar-modal-close:hover {
+  color: #4b5563;
+}
+
+.calendar-modal-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Formulario del modal */
+.calendar-form-group {
+  margin-bottom: 1rem;
+}
+
+.calendar-form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.calendar-delete-button {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.calendar-delete-button:hover {
+  background-color: #fef2f2;
+}
+
+.calendar-delete-button.hidden {
+  display: none;
+}
+
+/* ============================================
+   PARTIAL DEL DASHBOARD
+   ============================================ */
+
+.calendar-widget {
+  padding: 1rem;
+  border-right: 1px solid #d1d5db;
+}
+
+.calendar-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendar-widget-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calendar-widget-icon {
+  color: #2563eb;
+  transition: color 0.15s ease-in-out;
+}
+
+.calendar-widget-icon:hover {
+  color: #1e40af;
+}
+
+.calendar-widget-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Lista de publicaciones en el widget */
+.calendar-widget-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.calendar-widget-list > li + li {
+  margin-top: 0.5rem;
+}
+
+.calendar-widget-item {
+  border-left: 2px solid #3b82f6;
+  padding-left: 0.5rem;
+}
+
+.calendar-widget-item-title {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-widget-item-date {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #6b7280;
+}
+
+.calendar-widget-item-task {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #16a34a;
+  margin-top: 0.25rem;
+}
+
+.calendar-widget-item-task svg {
+  width: 12px;
+  height: 12px;
+}
+
+.calendar-widget-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.calendar-widget-link {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.calendar-widget-link:hover {
+  text-decoration: underline;
+}
+
+.calendar-widget-empty {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.calendar-widget-empty-link {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #2563eb;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.calendar-widget-empty-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   UTILIDADES ESPECÍFICAS DEL CALENDARIO
+   ============================================ */
+
+/* Clase para cuando Sortable está arrastrando */
+.sortable-ghost {
+  opacity: 0.5;
+}
+
+.sortable-drag {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+  }
+  
+  .calendar-title {
+    font-size: 1.25rem;
+  }
+  
+  .calendar-month-title {
+    font-size: 1rem;
+  }
+  
+  .calendar-day-cell {
+    min-height: 100px;
+    padding: 0.25rem;
+  }
+  
+  .calendar-weekday {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .calendar-modal-container {
+    max-width: 90%;
+  }
+}

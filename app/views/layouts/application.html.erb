@@ -16,6 +16,7 @@
     <link rel="apple-touch-icon" href="<%= asset_path 'expressativo_logo.jpg' %>">
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "calendar", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <% if Rails.env.production? %>
       <%= Sentry.get_trace_propagation_meta.html_safe %>

@@ -1,15 +1,15 @@
-<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-7xl mx-auto" data-controller="calendar">
+<div class="calendar-container" data-controller="calendar">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold">
+  <div class="calendar-header">
+    <h1 class="calendar-title">
       Calendario de Publicaciones - <%= @project.title %>
     </h1>
     <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
   </div>
 
   <!-- Navegación del calendario -->
-  <div class="flex justify-between items-center mb-6">
-    <div class="flex gap-2">
+  <div class="calendar-nav">
+    <div class="calendar-nav-buttons">
       <%= link_to project_publications_path(@project, year: @date.prev_month.year, month: @date.prev_month.month), 
           class: "button-outline flex items-center gap-2" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
@@ -23,11 +23,11 @@
       <% end %>
     </div>
     
-    <h2 class="text-xl font-semibold">
+    <h2 class="calendar-month-title">
       <%= @date.strftime('%B %Y').capitalize %>
     </h2>
     
-    <div class="flex gap-2">
+    <div class="calendar-export-buttons">
       <button type="button"
               data-action="click->calendar#exportCalendar"
               data-format="png"
@@ -47,18 +47,18 @@
   </div>
 
   <!-- Calendario -->
-  <div class="border border-gray-300 rounded-lg overflow-hidden" data-calendar-target="calendar">
+  <div class="calendar-grid-container" data-calendar-target="calendar">
     <!-- Días de la semana -->
-    <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-300">
+    <div class="calendar-weekdays">
       <% %w[Lun Mar Mié Jue Vie Sáb Dom].each do |day| %>
-        <div class="p-3 text-center font-semibold text-sm text-gray-700 border-r border-gray-300 last:border-r-0">
+        <div class="calendar-weekday">
           <%= day %>
         </div>
       <% end %>
     </div>
 
     <!-- Días del mes -->
-    <div class="grid grid-cols-7">
+    <div class="calendar-days-grid">
       <% 
         first_day = @date.beginning_of_month
         last_day = @date.end_of_month
@@ -66,7 +66,7 @@
       %>
       
       <% (1...start_wday).each do %>
-        <div class="min-h-[120px] p-2 bg-gray-50 border-r border-b border-gray-200"></div>
+        <div class="calendar-empty-cell"></div>
       <% end %>
       
       <% (first_day..last_day).each do |date| %>
@@ -74,28 +74,28 @@
           publications = @publications_by_date[date] || []
           is_today = date == Date.today
         %>
-        <div class="min-h-[120px] p-2 border-r border-b border-gray-200 hover:bg-gray-50 transition-colors last:border-r-0"
+        <div class="calendar-day-cell"
              data-calendar-target="day"
              data-date="<%= date.to_s %>">
           
           <!-- Número del día -->
-          <div class="flex justify-between items-start mb-2 cursor-pointer border-2 border-dashed border-gray-200 rounded hover:border-purple-500 pl-2 transition-colors"
+          <div class="calendar-day-header"
                data-action="click->calendar#openModal">
-            <span class="<%= is_today ? 'bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-semibold cursor-pointer' : 'text-gray-700 font-medium cursor-pointer' %>">
+            <span class="<%= is_today ? 'calendar-day-today' : 'calendar-day-number' %>">
               <%= date.day %>
             </span>
             
             <% if publications.any? %>
-              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+              <span class="calendar-pub-count">
                 <%= publications.count %>
               </span>
             <% end %>
           </div>
           
           <!-- Publicaciones del día -->
-          <div class="space-y-1 min-h-[60px]" data-publications-container>
+          <div class="calendar-publications-container" data-publications-container>
             <% publications.first(3).each do |publication| %>
-              <div class="publication-item bg-blue-50 border-l-2 border-blue-500 px-2 py-1 text-xs rounded cursor-move hover:bg-blue-100 transition-colors"
+              <div class="publication-item"
                    data-action="click->calendar#editPublication:stop"
                    data-publication-id="<%= publication.id %>"
                    data-publication-title="<%= publication.title %>"
@@ -106,9 +106,9 @@
                      data-publication-task-id="<%= publication.task.id %>"
                      data-task-url="<%= project_todo_task_path(@project, publication.task.todo, publication.task, from: 'calendar') %>"
                    <% end %>>
-                <div class="font-medium text-gray-900 truncate"><%= publication.title %></div>
+                <div class="publication-item-title"><%= publication.title %></div>
                 <% if publication.task.present? %>
-                  <div class="flex items-center gap-1 text-green-600 mt-1">
+                  <div class="publication-task-indicator">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l2 2l4 -4" /></svg>
                     <span>Tarea creada</span>
                   </div>
@@ -117,7 +117,7 @@
             <% end %>
             
             <% if publications.count > 3 %>
-              <div class="text-xs text-gray-500 text-center">
+              <div class="calendar-more-count">
                 +<%= publications.count - 3 %> más
               </div>
             <% end %>
@@ -129,17 +129,17 @@
         end_wday = last_day.wday == 0 ? 7 : last_day.wday
       %>
       <% (end_wday...7).each do %>
-        <div class="min-h-[120px] p-2 bg-gray-50 border-r border-b border-gray-200 last:border-r-0"></div>
+        <div class="calendar-empty-cell"></div>
       <% end %>
     </div>
   </div>
 
   <!-- Modal para crear/editar publicación -->
-  <div data-calendar-target="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-  <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
-    <div class="flex justify-between items-center mb-4">
-      <h3 data-calendar-target="modalTitle" class="text-lg font-semibold">Nueva Publicación</h3>
-      <button data-action="click->calendar#closeModal" class="text-gray-400 hover:text-gray-600">
+  <div data-calendar-target="modal" class="calendar-modal-overlay hidden">
+  <div class="calendar-modal-container">
+    <div class="calendar-modal-header">
+      <h3 data-calendar-target="modalTitle" class="calendar-modal-title">Nueva Publicación</h3>
+      <button data-action="click->calendar#closeModal" class="calendar-modal-close">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
       </button>
     </div>
@@ -148,7 +148,7 @@
       <input type="hidden" data-calendar-target="publicationId" name="id">
       <input type="hidden" data-calendar-target="publicationDate" name="publication_date">
       
-      <div class="mb-4">
+      <div class="calendar-form-group">
         <label class="label">Título</label>
         <input type="text" 
                data-calendar-target="titleInput" 
@@ -158,7 +158,7 @@
                required>
       </div>
       
-      <div class="mb-4">
+      <div class="calendar-form-group">
         <label class="label">Descripción</label>
         <textarea data-calendar-target="descriptionInput" 
                   name="description"
@@ -167,7 +167,7 @@
                   placeholder="Describe el contenido de la publicación..."></textarea>
       </div>
       
-      <div class="mb-4">
+      <div class="calendar-form-group">
         <label class="label">Fecha de publicación</label>
         <input type="date" 
                data-calendar-target="dateInput" 
@@ -176,7 +176,7 @@
                required>
       </div>
       
-      <div class="flex gap-2 justify-end">
+      <div class="calendar-form-actions">
         <button type="button" 
                 data-action="click->calendar#closeModal" 
                 class="button-outline">
@@ -186,7 +186,7 @@
         <button type="button"
                 data-calendar-target="deleteButton"
                 data-action="click->calendar#deletePublication"
-                class="button-outline text-red-600 border-red-600 hover:bg-red-50 hidden">
+                class="button-outline calendar-delete-button hidden">
           Eliminar
         </button>
         

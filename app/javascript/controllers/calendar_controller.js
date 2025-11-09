@@ -42,8 +42,8 @@ export default class extends Controller {
         const sortable = new Sortable(publicationsContainer, {
           group: 'publications',
           animation: 150,
-          ghostClass: 'opacity-50',
-          dragClass: 'shadow-lg',
+          ghostClass: 'sortable-ghost',
+          dragClass: 'sortable-drag',
           handle: '.publication-item',
           onEnd: this.handleDrop.bind(this)
         });
@@ -221,14 +221,36 @@ export default class extends Controller {
     }
   }
 
+  // Helper para convertir colores a RGB
+  getRGBColor(color) {
+    if (!color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)') {
+      return color;
+    }
+    
+    // Si ya es RGB o hex, devolverlo
+    if (color.startsWith('rgb') || color.startsWith('#')) {
+      return color;
+    }
+    
+    // Convertir oklch u otros formatos a RGB usando un elemento temporal
+    const temp = document.createElement('div');
+    temp.style.color = color;
+    temp.style.display = 'none';
+    document.body.appendChild(temp);
+    const rgb = window.getComputedStyle(temp).color;
+    document.body.removeChild(temp);
+    return rgb || color;
+  }
+
   async exportCalendar(event) {
-    const format = event.currentTarget.dataset.format || 'png';
+    const button = event.currentTarget;
+    const format = button.dataset.format || 'png';
     const calendarElement = this.calendarTarget;
     
     // Mostrar mensaje de carga
-    const originalText = event.currentTarget.textContent;
-    event.currentTarget.textContent = 'Generando...';
-    event.currentTarget.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = 'Generando...';
+    button.disabled = true;
     
     try {
       // Crear un contenedor temporal para la captura
@@ -254,124 +276,164 @@ export default class extends Controller {
           return element.tagName === 'svg';
         },
         onclone: (clonedDoc) => {
-          // Remover todas las hojas de estilo SOLO del documento clonado
-          const styleSheets = clonedDoc.querySelectorAll('link[rel="stylesheet"], style');
-          styleSheets.forEach(sheet => sheet.remove());
+          // Remover hojas de estilo de Tailwind que contienen oklch
+          const tailwindSheets = clonedDoc.querySelectorAll('link[href*="tailwind"], style');
+          tailwindSheets.forEach(sheet => sheet.remove());
           
-          // Aplicar estilos básicos inline
+          // Aplicar estilos inline con colores RGB
           const calendarClone = clonedDoc.querySelector('[data-calendar-target="calendar"]');
           if (calendarClone) {
+            // Contenedor del calendario
             calendarClone.style.cssText = `
               border: 1px solid #d1d5db;
-              border-radius: 8px;
+              border-radius: 0.5rem;
               overflow: hidden;
-              background: white;
+              background: #ffffff;
             `;
             
-            // Estilos para el header de días
-            const daysHeader = calendarClone.querySelector('.grid.grid-cols-7');
-            if (daysHeader) {
-              daysHeader.style.cssText = `
+            // Header de días de la semana
+            const weekdays = calendarClone.querySelector('.calendar-weekdays');
+            if (weekdays) {
+              weekdays.style.cssText = `
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
-                background: #f9fafb;
+                background-color: #f9fafb;
                 border-bottom: 1px solid #d1d5db;
               `;
               
-              daysHeader.querySelectorAll('div').forEach(day => {
+              weekdays.querySelectorAll('.calendar-weekday').forEach(day => {
+                const computed = window.getComputedStyle(day);
                 day.style.cssText = `
-                  padding: 12px;
-                  text-align: center;
-                  font-weight: 600;
-                  font-size: 14px;
-                  color: #374151;
-                  border-right: 1px solid #d1d5db;
+                  padding: ${computed.padding};
+                  text-align: ${computed.textAlign};
+                  font-weight: ${computed.fontWeight};
+                  font-size: ${computed.fontSize};
+                  color: ${this.getRGBColor(computed.color)};
+                  background-color: ${this.getRGBColor(computed.backgroundColor)};
+                  border-right: ${computed.borderRightWidth} ${computed.borderRightStyle} ${this.getRGBColor(computed.borderRightColor)};
                 `;
               });
             }
             
-            // Estilos para los días del mes
-            const daysGrid = calendarClone.querySelectorAll('.grid.grid-cols-7')[1];
+            // Grid de días del mes
+            const daysGrid = calendarClone.querySelector('.calendar-days-grid');
             if (daysGrid) {
               daysGrid.style.cssText = `
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
               `;
-              
-              // Aplicar estilos a TODAS las celdas (incluyendo las vacías del inicio)
-              const allCells = daysGrid.querySelectorAll('div');
-              allCells.forEach(dayCell => {
-                // Verificar si es una celda vacía del inicio del mes
-                const isEmpty = dayCell.classList.contains('bg-gray-50') || 
-                               (!dayCell.hasAttribute('data-calendar-target') && 
-                                !dayCell.hasAttribute('data-date'));
-                
-                if (isEmpty) {
-                  // Estilos para celdas vacías
-                  dayCell.style.cssText = `
-                    min-height: 120px;
-                    padding: 8px;
-                    background: #f9fafb;
-                    border-right: 1px solid #e5e7eb;
-                    border-bottom: 1px solid #e5e7eb;
-                  `;
-                } else if (dayCell.hasAttribute('data-calendar-target') || dayCell.hasAttribute('data-date')) {
-                  // Estilos para celdas con días
-                  dayCell.style.cssText = `
-                    min-height: 120px;
-                    padding: 8px;
-                    border-right: 1px solid #e5e7eb;
-                    border-bottom: 1px solid #e5e7eb;
-                    background: white;
-                  `;
-                  
-                  // Número del día
-                  const dayNumber = dayCell.querySelector('span');
-                  if (dayNumber) {
-                    if (dayNumber.classList.contains('bg-blue-600')) {
-                      dayNumber.style.cssText = `
-                        background: #2563eb;
-                        color: white;
-                        border-radius: 9999px;
-                        width: 28px;
-                        height: 28px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 14px;
-                        font-weight: 600;
-                      `;
-                    } else {
-                      dayNumber.style.cssText = `
-                        color: #374151;
-                        font-weight: 500;
-                      `;
-                    }
-                  }
-                  
-                  // Publicaciones
-                  const publications = dayCell.querySelectorAll('.publication-item');
-                  publications.forEach(pub => {
-                    pub.style.cssText = `
-                      background: #eff6ff;
-                      border-left: 2px solid #3b82f6;
-                      padding: 4px 8px;
-                      font-size: 12px;
-                      border-radius: 4px;
-                      margin-bottom: 4px;
-                    `;
-                    
-                    const title = pub.querySelector('div');
-                    if (title) {
-                      title.style.cssText = `
-                        font-weight: 500;
-                        color: #1f2937;
-                      `;
-                    }
-                  });
-                }
-              });
             }
+            
+            // Celdas vacías
+            calendarClone.querySelectorAll('.calendar-empty-cell').forEach(cell => {
+              cell.style.cssText = `
+                min-height: 120px;
+                padding: 0.5rem;
+                background-color: #f9fafb;
+                border-right: 1px solid #e5e7eb;
+                border-bottom: 1px solid #e5e7eb;
+              `;
+            });
+            
+            // Celdas de días
+            calendarClone.querySelectorAll('.calendar-day-cell').forEach(cell => {
+              cell.style.cssText = `
+                min-height: 120px;
+                padding: 0.5rem;
+                background-color: #ffffff;
+                border-right: 1px solid #e5e7eb;
+                border-bottom: 1px solid #e5e7eb;
+              `;
+              
+              // Header del día
+              const dayHeader = cell.querySelector('.calendar-day-header');
+              if (dayHeader) {
+                dayHeader.style.cssText = `
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                  margin-bottom: 0.5rem;
+                  padding-left: 0.5rem;
+                  border: 2px dashed #e5e7eb;
+                  border-radius: 0.25rem;
+                `;
+              }
+              
+              // Número del día
+              const dayNumber = cell.querySelector('.calendar-day-number');
+              if (dayNumber) {
+                dayNumber.style.cssText = `
+                  color: #374151;
+                  font-weight: 500;
+                `;
+              }
+              
+              // Día actual
+              const dayToday = cell.querySelector('.calendar-day-today');
+              if (dayToday) {
+                dayToday.style.cssText = `
+                  background-color: #2563eb;
+                  color: #ffffff;
+                  border-radius: 9999px;
+                  width: 1.75rem;
+                  height: 1.75rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.875rem;
+                  font-weight: 600;
+                `;
+              }
+              
+              // Contador de publicaciones
+              const pubCount = cell.querySelector('.calendar-pub-count');
+              if (pubCount) {
+                pubCount.style.cssText = `
+                  background-color: #dbeafe;
+                  color: #1e40af;
+                  font-size: 0.75rem;
+                  padding: 0.25rem 0.5rem;
+                  border-radius: 9999px;
+                `;
+              }
+            });
+            
+            // Publicaciones
+            calendarClone.querySelectorAll('.publication-item').forEach(pub => {
+              pub.style.cssText = `
+                background-color: #eff6ff;
+                border-left: 2px solid #3b82f6;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+                border-radius: 0.25rem;
+                margin-bottom: 4px;
+              `;
+              
+              // Título de publicación
+              const title = pub.querySelector('.publication-item-title');
+              if (title) {
+                title.style.cssText = `
+                  font-weight: 500;
+                  color: #111827;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                `;
+              }
+              
+              // Indicador de tarea
+              const taskIndicator = pub.querySelector('.publication-task-indicator');
+              if (taskIndicator) {
+                taskIndicator.style.cssText = `
+                  display: flex;
+                  align-items: center;
+                  gap: 0.25rem;
+                  color: #16a34a;
+                  margin-top: 0.25rem;
+                  font-size: 0.75rem;
+                `;
+              }
+            });
           }
         }
       });
@@ -397,8 +459,8 @@ export default class extends Controller {
         URL.revokeObjectURL(url);
         
         // Restaurar botón
-        event.currentTarget.textContent = originalText;
-        event.currentTarget.disabled = false;
+        button.textContent = originalText;
+        button.disabled = false;
       }, `image/${format}`);
       
     } catch (error) {
@@ -410,8 +472,8 @@ export default class extends Controller {
         document.body.removeChild(tempContainer);
       }
       
-      event.currentTarget.textContent = originalText;
-      event.currentTarget.disabled = false;
+      button.textContent = originalText;
+      button.disabled = false;
     }
   }
 
