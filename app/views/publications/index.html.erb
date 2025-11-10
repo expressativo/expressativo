@@ -1,0 +1,200 @@
+<div class="calendar-container" data-controller="calendar">
+  <!-- Header -->
+  <div class="calendar-header">
+    <h1 class="calendar-title">
+      Calendario de Publicaciones - <%= @project.title %>
+    </h1>
+    <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
+  </div>
+
+  <!-- Navegación del calendario -->
+  <div class="calendar-nav">
+    <div class="calendar-nav-buttons">
+      <%= link_to project_publications_path(@project, year: @date.prev_month.year, month: @date.prev_month.month), 
+          class: "button-outline flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+        Anterior
+      <% end %>
+      
+      <%= link_to project_publications_path(@project, year: @date.next_month.year, month: @date.next_month.month), 
+          class: "button-outline flex items-center gap-2" do %>
+        Siguiente
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+      <% end %>
+    </div>
+    
+    <h2 class="calendar-month-title">
+      <%= @date.strftime('%B %Y').capitalize %>
+    </h2>
+    
+    <div class="calendar-export-buttons">
+      <button type="button"
+              data-action="click->calendar#exportCalendar"
+              data-format="png"
+              class="button-outline flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+        PNG
+      </button>
+      
+      <button type="button"
+              data-action="click->calendar#exportCalendar"
+              data-format="jpg"
+              class="button-outline flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+        JPG
+      </button>
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="calendar-grid-container" data-calendar-target="calendar">
+    <!-- Días de la semana -->
+    <div class="calendar-weekdays">
+      <% %w[Lun Mar Mié Jue Vie Sáb Dom].each do |day| %>
+        <div class="calendar-weekday">
+          <%= day %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Días del mes -->
+    <div class="calendar-days-grid">
+      <% 
+        first_day = @date.beginning_of_month
+        last_day = @date.end_of_month
+        start_wday = first_day.wday == 0 ? 7 : first_day.wday
+      %>
+      
+      <% (1...start_wday).each do %>
+        <div class="calendar-empty-cell"></div>
+      <% end %>
+      
+      <% (first_day..last_day).each do |date| %>
+        <% 
+          publications = @publications_by_date[date] || []
+          is_today = date == Date.today
+        %>
+        <div class="calendar-day-cell"
+             data-calendar-target="day"
+             data-date="<%= date.to_s %>">
+          
+          <!-- Número del día -->
+          <div class="calendar-day-header"
+               data-action="click->calendar#openModal">
+            <span class="<%= is_today ? 'calendar-day-today' : 'calendar-day-number' %>">
+              <%= date.day %>
+            </span>
+            
+            <% if publications.any? %>
+              <span class="calendar-pub-count">
+                <%= publications.count %>
+              </span>
+            <% end %>
+          </div>
+          
+          <!-- Publicaciones del día -->
+          <div class="calendar-publications-container" data-publications-container>
+            <% publications.first(3).each do |publication| %>
+              <div class="publication-item"
+                   data-action="click->calendar#editPublication:stop"
+                   data-publication-id="<%= publication.id %>"
+                   data-publication-title="<%= publication.title %>"
+                   data-publication-description="<%= publication.description %>"
+                   data-publication-date="<%= publication.publication_date %>"
+                   data-publication-has-task="<%= publication.task.present? %>"
+                   <% if publication.task.present? %>
+                     data-publication-task-id="<%= publication.task.id %>"
+                     data-task-url="<%= project_todo_task_path(@project, publication.task.todo, publication.task, from: 'calendar') %>"
+                   <% end %>>
+                <div class="publication-item-title"><%= publication.title %></div>
+                <% if publication.task.present? %>
+                  <div class="publication-task-indicator">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l2 2l4 -4" /></svg>
+                    <span>Tarea creada</span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+            
+            <% if publications.count > 3 %>
+              <div class="calendar-more-count">
+                +<%= publications.count - 3 %> más
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <% 
+        end_wday = last_day.wday == 0 ? 7 : last_day.wday
+      %>
+      <% (end_wday...7).each do %>
+        <div class="calendar-empty-cell"></div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Modal para crear/editar publicación -->
+  <div data-calendar-target="modal" class="calendar-modal-overlay hidden">
+  <div class="calendar-modal-container">
+    <div class="calendar-modal-header">
+      <h3 data-calendar-target="modalTitle" class="calendar-modal-title">Nueva Publicación</h3>
+      <button data-action="click->calendar#closeModal" class="calendar-modal-close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+      </button>
+    </div>
+    
+    <form data-calendar-target="form" data-action="submit->calendar#submitForm:prevent">
+      <input type="hidden" data-calendar-target="publicationId" name="id">
+      <input type="hidden" data-calendar-target="publicationDate" name="publication_date">
+      
+      <div class="calendar-form-group">
+        <label class="label">Título</label>
+        <input type="text" 
+               data-calendar-target="titleInput" 
+               name="title"
+               class="input w-full" 
+               placeholder="Ej: Reel chistoso"
+               required>
+      </div>
+      
+      <div class="calendar-form-group">
+        <label class="label">Descripción</label>
+        <textarea data-calendar-target="descriptionInput" 
+                  name="description"
+                  class="input w-full" 
+                  rows="4"
+                  placeholder="Describe el contenido de la publicación..."></textarea>
+      </div>
+      
+      <div class="calendar-form-group">
+        <label class="label">Fecha de publicación</label>
+        <input type="date" 
+               data-calendar-target="dateInput" 
+               name="publication_date_display"
+               class="input w-full"
+               required>
+      </div>
+      
+      <div class="calendar-form-actions">
+        <button type="button" 
+                data-action="click->calendar#closeModal" 
+                class="button-outline">
+          Cancelar
+        </button>
+        
+        <button type="button"
+                data-calendar-target="deleteButton"
+                data-action="click->calendar#deletePublication"
+                class="button-outline calendar-delete-button hidden">
+          Eliminar
+        </button>
+        
+        <button type="submit" class="button">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+  </div>
+</div>

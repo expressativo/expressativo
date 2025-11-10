@@ -7,6 +7,13 @@
           Volver al tablero
         <% end %>
       </div>
+    <% elsif params[:from] == 'calendar' %>
+      <div class="flex items-center">
+        <%= link_to project_publications_path(@project), class: "inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors font-medium" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+          Volver al calendario
+        <% end %>
+      </div>
     <% else %>
       <%= render 'tasks/bread_crumbs'%>
     <% end %>
