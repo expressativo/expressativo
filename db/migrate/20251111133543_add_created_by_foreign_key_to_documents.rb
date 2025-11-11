@@ -1,7 +1,15 @@
 class AddCreatedByForeignKeyToDocuments < ActiveRecord::Migration[8.0]
   def change
     # Rename the column to follow Rails conventions (created_by instead of create_by)
-    rename_column :documents, :create_by_id, :created_by_id unless column_exists?(:documents, :created_by_id)
+    # Only rename if the old column exists and the new one doesn't
+    if column_exists?(:documents, :create_by_id) && !column_exists?(:documents, :created_by_id)
+      rename_column :documents, :create_by_id, :created_by_id
+    end
+
+    # Add the column if it doesn't exist at all
+    unless column_exists?(:documents, :created_by_id)
+      add_column :documents, :created_by_id, :bigint, null: false
+    end
 
     # Fix orphaned records: assign them to the first user
     reversible do |dir|
