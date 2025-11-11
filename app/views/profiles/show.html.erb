@@ -1,0 +1,70 @@
+<% content_for :title, "Mi Perfil" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- Header con avatar grande -->
+  <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-t-2xl h-32"></div>
+  
+  <div class="bg-white shadow-xl rounded-b-2xl px-8 pb-8 -mt-16 relative">
+    <!-- Avatar -->
+    <div class="flex justify-center">
+      <div class="relative">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, class: "w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover" %>
+        <% else %>
+          <div class="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center">
+            <span class="text-white text-4xl font-bold">
+              <%= @user.first_name&.first&.upcase %><%= @user.last_name&.first&.upcase %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Nombre y botón editar -->
+    <div class="text-center mt-4">
+      <h1 class="text-3xl font-bold text-gray-900">
+        <%= @user.full_name %>
+      </h1>
+      <p class="text-gray-600 mt-1"><%= @user.email %></p>
+      
+      <%= link_to edit_profile_path, class: "inline-flex items-center gap-2 mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+        </svg>
+        Editar Perfil
+      <% end %>
+    </div>
+
+    <!-- Información del perfil -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Nombre -->
+      <div class="bg-gray-50 rounded-lg p-4">
+        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Nombre</label>
+        <p class="mt-2 text-lg text-gray-900"><%= @user.first_name || "No especificado" %></p>
+      </div>
+
+      <!-- Apellido -->
+      <div class="bg-gray-50 rounded-lg p-4">
+        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Apellido</label>
+        <p class="mt-2 text-lg text-gray-900"><%= @user.last_name || "No especificado" %></p>
+      </div>
+
+      <!-- Email -->
+      <div class="bg-gray-50 rounded-lg p-4 md:col-span-2">
+        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Correo Electrónico</label>
+        <p class="mt-2 text-lg text-gray-900"><%= @user.email %></p>
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4">
+        <label class="text-sm font-semibold text-purple-600 uppercase tracking-wide">Proyectos</label>
+        <p class="mt-2 text-3xl font-bold text-purple-700"><%= @user.projects.count %></p>
+      </div>
+
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4">
+        <label class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Miembro desde</label>
+        <p class="mt-2 text-lg font-semibold text-indigo-700"><%= l(@user.created_at, format: :long) %></p>
+      </div>
+    </div>
+  </div>
+</div>

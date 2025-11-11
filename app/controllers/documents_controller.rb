@@ -25,11 +25,11 @@ class DocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    @document = Document.new(document_params.merge(project: @project))
+    @document = Document.new(document_params.merge(project: @project, created_by: current_user))
 
     respond_to do |format|
       if @document.save
-        format.html { redirect_to @document, notice: "Document was successfully created." }
+        format.html { redirect_to @document, notice: "Documento creado exitosamente." }
         format.json { render :show, status: :created, location: @document }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -66,8 +66,9 @@ class DocumentsController < ApplicationController
   end
 
   def duplicate
-    new_document = @document.duplicate
+    new_document = @document.dup
     new_document.title = "Copy of " + @document.title
+    new_document.created_by = current_user
     if new_document.save
       redirect_to edit_document_path(new_document), notice: "Document was successfully duplicated."
     else
