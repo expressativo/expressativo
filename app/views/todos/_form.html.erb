@@ -15,4 +15,5 @@
   <%= form.submit "Guardar", class: "button", id:"submit_todo", data: {
     turbo_submits_with: "Guardando..."
   } %>
+  <%= link_to "Cancelar", project_todos_path(project), class: "button-outline" %>
 <% end %>

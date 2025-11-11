@@ -1,14 +1,7 @@
 <div class="calendar-widget">
-  <div class="calendar-widget-header">
-    <h2 class="calendar-widget-title">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
-      Publicaciones
+    <h2 class="card_title">
+      Calendario publicaciones
     </h2>
-    <%= link_to project_publications_path(@project), class: "calendar-widget-icon" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /></svg>
-    <% end %>
-  </div>
-
   <% 
     # Obtener publicaciones del mes actual
     today = Date.today
@@ -16,7 +9,7 @@
   %>
 
   <% if current_month_publications.any? %>
-    <ul class="calendar-widget-list">
+    <ul class="calendar-widget-list max-h-[300px] overflow-y-scroll">
       <% current_month_publications.limit(5).each do |publication| %>
         <li class="calendar-widget-item">
           <div class="calendar-widget-item-title">
@@ -39,7 +32,7 @@
       <%= link_to "Ver calendario completo", project_publications_path(@project), class: "calendar-widget-link" %>
     </div>
   <% else %>
-    <p class="calendar-widget-empty">No hay publicaciones planificadas este mes</p>
-    <%= link_to "Ver calendario", project_publications_path(@project), class: "calendar-widget-empty-link" %>
+    <p class="calendar-widget-empty text-center">No hay publicaciones planificadas este mes</p>
+    <%= link_to "Ver calendario", project_publications_path(@project), class: "text-sm text-blue-600 hover:underline mt-2 flex justify-center" %>
   <% end %>
 </div>

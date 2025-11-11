@@ -36,7 +36,7 @@
       <%= form.submit "Crear tablero",
           class: "button",
           data: { turbo_submits_with: "Creando..." } %>
-      <%= link_to "Cancelar", project_boards_path(@project), class: "button-outline" %>
+      <%= link_to "Cancelar", project_path(@project), class: "button-outline" %>
     </div>
   <% end %>
 </div>
