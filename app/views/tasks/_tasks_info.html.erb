@@ -13,15 +13,11 @@
     <div class="grid grid-cols-6 gap-4 mt-4">
       <div class="col-span-1">
         <div class="flex justify-end items-center gap-2">
-          Assignado:
+          Asignado a:
         </div>
       </div>
       <div class="col-span-5">
-        <div class="flex justify-start items-center gap-2">
-          <span class="text-gray-400 italic ">
-            Sin asignar
-          </span>
-        </div>
+        <%= render 'tasks/assignees_display', task: task %>
       </div>
     </div>
     <div class="grid grid-cols-6 gap-4 mt-4">

@@ -1,0 +1,16 @@
+<% if task.assigned_users.any? %>
+  <div class="space-y-2">
+    <% task.assigned_users.each do |user| %>
+      <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex-1 min-w-0">
+          <div class="font-medium text-gray-900 truncate"><%= user.full_name %></div>
+          <div class="text-sm text-gray-500 truncate"><%= user.email %></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <span class="text-gray-400 italic">
+    Sin asignar
+  </span>
+<% end %>
