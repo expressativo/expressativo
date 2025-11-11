@@ -19,7 +19,10 @@
     </div>
     <hr/ class="max-w-[100px] mx-auto text-gray-300">
     <div class="text-center my-2">
-      @document.author - <%= l(@document.created_at, format: :long) %>
+      <% if @document.created_by %>
+        <%= @document.created_by.full_name %> -
+      <% end %>
+      <%= l(@document.created_at, format: :long) %>
     </div>
     <div>
       <%= simple_format(@document.body, sanitize: true) %>

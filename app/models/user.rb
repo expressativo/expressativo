@@ -10,4 +10,8 @@ class User < ApplicationRecord
 
   # valida que sea una imagen
   validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_10_022853) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_11_133543) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -118,6 +118,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_10_022853) do
     t.string "title"
     t.text "body"
     t.bigint "project_id", null: false
+    t.bigint "created_by_id", null: false
+    t.index ["created_by_id"], name: "index_documents_on_created_by_id"
     t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["status"], name: "index_documents_on_status"
   end
@@ -215,6 +217,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_10_022853) do
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "projects"
+  add_foreign_key "documents", "users", column: "created_by_id"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "publications", "projects"

@@ -466,3 +466,16 @@ trix-editor .attachment__metadata {
   border-top: 1px solid #ccc;
   padding-top: 0.5em;
 }
+
+/* Toolbar sticky - siempre visible al hacer scroll */
+trix-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
+}
+
+pre {
+  background-color: #f6f8fa;
+  padding: 1em;
+}

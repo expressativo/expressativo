@@ -61,24 +61,6 @@ blockquote {
   margin: 1em 0;
 }
 
-pre {
-  background-color: #f0b3ff;
-  /* Fondo lila pastel */
-  color: #003366;
-  /* Azul oscuro para el texto */
-  border: 2px dashed #ff6600;
-  /* Borde naranja en guiones */
-  padding: 16px;
-  margin: 20px 0;
-  border-radius: 12px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-break: break-word;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-}
-
 #migaja_de_pan {
   list-style: none;
   padding: 0;
