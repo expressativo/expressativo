@@ -11,11 +11,19 @@ class Task < ApplicationRecord
   validates :title, presence: true
   validates :done, inclusion: { in: [ true, false ] }
 
+  after_update :sync_publication_title, if: :saved_change_to_title?
+
   def completed?
     done
   end
 
   def saved_change_to_completed?
     saved_change_to_done?
+  end
+
+  private
+
+  def sync_publication_title
+    publication&.update_column(:title, title)
   end
 end
