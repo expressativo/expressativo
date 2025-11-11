@@ -19,6 +19,11 @@ Rails.application.routes.draw do
         member do
           post :add_comment
         end
+        resources :assignments, controller: "task_assignments", only: [:create, :destroy] do
+          collection do
+            get :search
+          end
+        end
       end
       member do
         get :completed_tasks, to: "todos#completed_tasks"

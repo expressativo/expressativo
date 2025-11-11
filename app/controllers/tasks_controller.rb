@@ -10,6 +10,8 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
     @todo = Todo.find(params[:todo_id])
     @project = Project.find(params[:project_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to project_todos_path(params[:project_id]), alert: "La tarea que buscas no existe o fue eliminada."
   end
 
   def new
@@ -37,9 +39,9 @@ class TasksController < ApplicationController
     logger.debug "params: #{tasks_params}"
     if @task.update(tasks_params)
       if params[:from] == "full_form"
-        redirect_to project_todo_task_path(@project), notice: "Task has been updated successfully."
+        redirect_to project_todo_task_path(@project), notice: "Tarea actualizada correctamente."
       else
-        redirect_to project_todos_path(@project), notice: "Task has been updated successfully."
+        redirect_to project_todos_path(@project), notice: "Tarea actualizada correctamente."
       end
     else
       render :edit
