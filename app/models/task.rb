@@ -7,6 +7,8 @@ class Task < ApplicationRecord
   has_rich_text :notes
   has_many :comments, dependent: :destroy
   has_one :publication, dependent: :destroy
+  has_many :task_assignments, dependent: :destroy
+  has_many :assigned_users, through: :task_assignments, source: :user
 
   validates :title, presence: true
   validates :done, inclusion: { in: [ true, false ] }
