@@ -3,19 +3,45 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  adapter: mysql2
-  encoding: utf8mb4
-  database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
-  username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
-  password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
-  host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
-  port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+  primary:
+    <<: *default
+    adapter: mysql2
+    encoding: utf8mb4
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
+    username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
+    host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+    port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+
+  queue:
+    <<: *default
+    adapter: mysql2
+    encoding: utf8mb4
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
+    username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
+    host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+    port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+    schema_dump: queue_schema.rb
+    migrations_paths: db/queue_migrate
 
 
 test:
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  primary:
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    timeout: 5000
+
+  queue:
+    <<: *default
+    adapter: mysql2
+    encoding: utf8mb4
+    database: <%= ENV.fetch("DB_NAME") { "tebook_test_db" } %>
+    username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
+    host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+    port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+    schema_dump: queue_schema.rb
+    migrations_paths: db/queue_migrate
 
 
 production:
@@ -44,19 +70,21 @@ production:
     adapter: mysql2
     encoding: utf8mb4
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
     username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
-    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
     host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
     port: <%= ENV.fetch("DB_PORT") { 3306 } %>
-  
+    schema_dump: queue_schema.rb
+    migrations_paths: db/queue_migrate
+
   cache:
     adapter: mysql2
     encoding: utf8mb4
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    database: <%= ENV.fetch("DB_NAME") { "expressativo_production" } %>
+    database: <%= ENV.fetch("DB_NAME") { "tebook_local_db" } %>
     username: <%= ENV.fetch("DB_USERNAME") { "expressativo" } %>
-    password: <%= ENV.fetch("DB_PASSWORD") { "placeholder_during_build" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "expressativo" } %>
     host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
     port: <%= ENV.fetch("DB_PORT") { 3306 } %>
 
