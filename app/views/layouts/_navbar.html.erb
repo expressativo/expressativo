@@ -33,7 +33,7 @@
             data-action="click->navbar-dropdown#toggle"
                 type="button" class="relative flex rounded-full bg-white text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <% if current_user.avatar.attached? %>
-                  <span class="absolute -inset-1.5">
+                  <span>
                     <%= image_tag(current_user.avatar, class: "h-8 w-8 rounded-full object-cover") %>
                   </span>
                 <% else %>
