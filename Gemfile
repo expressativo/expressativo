@@ -73,7 +73,8 @@ gem "tailwindcss-rails", "~> 4.2"
 # active storage
 gem "active_storage_validations"
 gem "tailwindcss-ruby", "~> 4.1"
-gem "aws-sdk-s3", "~> 1.197"
+gem "aws-sdk-s3", "1.170", require: false
+gem "aws-sdk-core", "3.211"
 gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
 # Sentry GEMS
