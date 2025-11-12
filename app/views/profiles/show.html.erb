@@ -2,9 +2,9 @@
 
 <div class="max-w-4xl mx-auto">
   <!-- Header con avatar grande -->
-  <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-t-2xl h-32"></div>
+  <div class="rounded-t-2xl h-24"></div>
   
-  <div class="bg-white shadow-xl rounded-b-2xl px-8 pb-8 -mt-16 relative">
+  <div class="bg-white shadow-xl rounded-b-2xl px-8 pb-8 -mt-16 relative pt-4">
     <!-- Avatar -->
     <div class="flex justify-center">
       <div class="relative">
@@ -27,7 +27,7 @@
       </h1>
       <p class="text-gray-600 mt-1"><%= @user.email %></p>
       
-      <%= link_to edit_profile_path, class: "inline-flex items-center gap-2 mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" do %>
+      <%= link_to edit_profile_path, class: "inline-flex items-center gap-2 mt-4 button" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
         </svg>

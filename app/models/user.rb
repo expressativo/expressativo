@@ -8,8 +8,8 @@ class User < ApplicationRecord
   has_many :project_users, dependent: :destroy
   has_many :projects, through: :project_users
 
-  # valida que sea una imagen
-  validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
+  # Validaciones de avatar movidas al controller para evitar errores en producción
+  # validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
 
   def full_name
     "#{first_name} #{last_name}"

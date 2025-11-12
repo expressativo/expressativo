@@ -11,8 +11,9 @@ class ProfilesController < ApplicationController
 
   def update
     @user = current_user
-    
-    if update_user
+
+    # Validar avatar antes de guardar (sin usar image_processing)
+    if validate_avatar && update_user
       redirect_to profile_path, notice: "Perfil actualizado exitosamente."
     else
       render :edit, status: :unprocessable_entity
@@ -20,6 +21,26 @@ class ProfilesController < ApplicationController
   end
 
   private
+
+  def validate_avatar
+    return true unless user_params[:avatar].present?
+
+    avatar = user_params[:avatar]
+
+    # Validar tipo de contenido
+    unless [ "image/png", "image/jpeg", "image/jpg" ].include?(avatar.content_type)
+      @user.errors.add(:avatar, "debe ser PNG o JPEG")
+      return false
+    end
+
+    # Validar tamaño (5MB)
+    if avatar.size > 5.megabytes
+      @user.errors.add(:avatar, "debe ser menor a 5MB")
+      return false
+    end
+
+    true
+  end
 
   def update_user
     if user_params[:password].present?
