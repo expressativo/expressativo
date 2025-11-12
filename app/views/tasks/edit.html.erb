@@ -1,5 +1,5 @@
-<%= turbo_frame_tag "#{dom_id(@task)}_show" do%>
-  <section class="md:p-4 p-2 border-0 md:border rounded-xl border-gray-200 px-4 md:px-24 md:max-w-4xl m-auto">
+<%= turbo_frame_tag "#{dom_id(@task)}_show"  do %>
+  <section class="md:p-4 p-2 border-0 md:border rounded-xl border-gray-200 px-4 md:px-24 md:max-w-4xl m-auto bg-white">
     <%=  render 'tasks/full_form' %>
   </section>
 <% end %>

@@ -22,13 +22,11 @@ class TaskAssignmentsController < ApplicationController
 
   def destroy
     @assignment = @task.task_assignments.find_by(user_id: params[:id])
-    @todo = @task.todo
-    @project = @todo.project
     
     if @assignment&.destroy
-      redirect_to project_todo_task_path(@project, @todo, @task), notice: "Usuario desasignado correctamente."
+      render json: { success: true }
     else
-      redirect_to project_todo_task_path(@project, @todo, @task), alert: "Error al desasignar usuario."
+      render json: { success: false }, status: :unprocessable_entity
     end
   end
 

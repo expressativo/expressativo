@@ -63,8 +63,6 @@ export default class extends Controller {
         class="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2"
         data-action="click->task-assignee#assign"
         data-user-id="${user.id}"
-        data-user-name="${user.name}"
-        data-user-email="${user.email}"
       >
         <div class="flex-1">
           <div class="font-medium text-gray-900">${user.name}</div>
@@ -79,8 +77,6 @@ export default class extends Controller {
   async assign(event) {
     const button = event.currentTarget;
     const userId = button.dataset.userId;
-    const userName = button.dataset.userName;
-    const userEmail = button.dataset.userEmail;
 
     try {
       const response = await fetch(this.assignUrlValue, {
@@ -109,23 +105,22 @@ export default class extends Controller {
 
   addAssignedUser(user) {
     const assignedItem = document.createElement("div");
-    assignedItem.className = "flex items-center justify-between gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg";
+    assignedItem.className = "inline-block px-2 py-1 bg-purple-50 border border-purple-500 rounded-3xl";
     assignedItem.dataset.userId = user.id;
     assignedItem.innerHTML = `
-      <div class="flex-1 min-w-0">
-        <div class="font-medium text-gray-900 truncate">${user.name}</div>
-        <div class="text-sm text-gray-500 truncate">${user.email}</div>
-      </div>
-      <button
+      <div class="flex items-center gap-2 justify-between">
+        <div class="font-medium text-gray-900 truncate">${user.name || user.email}</div>
+        <button
         type="button"
         class="flex-shrink-0 text-red-600 hover:text-red-800"
         data-action="click->task-assignee#unassign"
         data-user-id="${user.id}"
-      >
+        >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
-      </button>
+        </button>
+      </div>
     `;
 
     this.assignedListTarget.appendChild(assignedItem);
@@ -152,7 +147,7 @@ export default class extends Controller {
       const data = await response.json();
 
       if (data.success) {
-        assignedItem.remove();
+        window.location.reload();
       } else {
         alert("Error al desasignar usuario");
       }
