@@ -11,7 +11,7 @@
     </h4>
     
     <% if task.done %>
-      <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+      <span class="completed-badge inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
         ✓ Completada
       </span>
     <% end %>
@@ -32,10 +32,21 @@
   <% end %>
 
   <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-    <div class="flex items-center gap-1 text-xs text-gray-500">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
-      <%= task.created_by.email.split('@').first %>
-    </div>
+    <% if task.assigned_users.any? %>
+      <div class="flex items-center gap-1 flex-wrap">
+        <% task.assigned_users.each do |user| %>
+          <div class="flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+            <span><%= user.full_name %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="flex items-center gap-1 text-xs text-gray-400 italic">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+        Sin asignar
+      </div>
+    <% end %>
 
     <%= button_to remove_from_board_board_task_path(task, board_id: board.id),
         method: :delete,

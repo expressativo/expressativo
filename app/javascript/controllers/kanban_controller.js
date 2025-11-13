@@ -60,10 +60,10 @@ export default class extends Controller {
     console.log("Tarea movida:", { taskId, columnId, newPosition });
 
     // Enviar actualización al servidor
-    this.updateTaskPosition(taskId, columnId, newPosition);
+    this.updateTaskPosition(taskId, columnId, newPosition, event.item);
   }
 
-  async updateTaskPosition(taskId, columnId, position) {
+  async updateTaskPosition(taskId, columnId, position, taskElement) {
     try {
       const response = await fetch(`/board_tasks/${taskId}/update_position`, {
         method: "PATCH",
@@ -81,10 +81,39 @@ export default class extends Controller {
         throw new Error("Error al actualizar la posición");
       }
 
-      console.log("Posición actualizada exitosamente");
+      // Obtener información sobre si es la última columna
+      const responseData = await response.json();
+      
+      // Actualizar el badge de completado sin recargar la página
+      this.updateCompletedBadge(taskElement, responseData.is_completed);
+      
+      console.log("✓ Posición actualizada exitosamente");
     } catch (error) {
       console.error("Error:", error);
       alert("Error al mover la tarea. Por favor, recarga la página.");
+    }
+  }
+
+  updateCompletedBadge(taskElement, isCompleted) {
+    // Buscar si ya existe un badge
+    const existingBadge = taskElement.querySelector('.completed-badge');
+    
+    if (isCompleted) {
+      // Si debe estar completada y no tiene badge, agregarlo
+      if (!existingBadge) {
+        const titleContainer = taskElement.querySelector('.flex.justify-between.items-start');
+        if (titleContainer) {
+          const badge = document.createElement('span');
+          badge.className = 'completed-badge inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full';
+          badge.textContent = '✓ Completada';
+          titleContainer.appendChild(badge);
+        }
+      }
+    } else {
+      // Si no debe estar completada y tiene badge, removerlo
+      if (existingBadge) {
+        existingBadge.remove();
+      }
     }
   }
 
