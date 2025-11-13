@@ -1,11 +1,96 @@
 <div>
   <div class="flex justify-between items-center mb-4">
-    <div>
-      <h1 class="text-2xl font-semibold"><%= @board.title %></h1>
-      <% if @board.description.present? %>
-        <p class="text-gray-600 mt-1"><%= @board.description %></p>
+    <div class="flex items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold"><%= @board.title %></h1>
+        <% if @board.description.present? %>
+          <p class="text-gray-600 mt-1"><%= @board.description %></p>
+        <% end %>
+      </div>
+      
+      <!-- Filtro de responsables -->
+      <div class="relative" data-controller="board-filter">
+        <button 
+          data-action="click->board-filter#toggle"
+          data-board-filter-target="button"
+          class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          <span class="text-sm font-medium text-gray-700">
+            <% if params[:assignee_id].present? %>
+              <% if params[:assignee_id] == "unassigned" %>
+                Sin asignar
+              <% else %>
+                <% assignee = @project_users.find { |u| u.id == params[:assignee_id].to_i } %>
+                <%= assignee&.first_name || "Filtrado" %>
+              <% end %>
+            <% else %>
+              Todos
+            <% end %>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <!-- Dropdown -->
+        <div 
+          data-board-filter-target="dropdown"
+          class="hidden absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+          <div class="py-1">
+            <!-- Opción: Todos -->
+            <a 
+              href="#"
+              data-action="click->board-filter#filter"
+              data-assignee-id="all"
+              data-assignee-name="Todos"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <%= 'bg-blue-50 font-semibold' unless params[:assignee_id].present? %>">
+              Todos
+            </a>
+            
+            <!-- Opción: Sin asignar -->
+            <a 
+              href="#"
+              data-action="click->board-filter#filter"
+              data-assignee-id="unassigned"
+              data-assignee-name="Sin asignar"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <%= 'bg-blue-50 font-semibold' if params[:assignee_id] == 'unassigned' %>">
+              Sin asignar
+            </a>
+            
+            <% if @project_users.any? %>
+              <div class="border-t border-gray-200 my-1"></div>
+              
+              <!-- Lista de usuarios -->
+              <% @project_users.each do |user| %>
+                <a 
+                  href="#"
+                  data-action="click->board-filter#filter"
+                  data-assignee-id="<%= user.id %>"
+                  data-assignee-name="<%= user.first_name %> <%= user.last_name %>"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <%= 'bg-blue-50 font-semibold' if params[:assignee_id].to_i == user.id %>">
+                  <%= user.first_name %> <%= user.last_name %>
+                </a>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Indicador de filtro activo -->
+      <% if params[:assignee_id].present? %>
+        <a 
+          href="<%= project_board_path(@project, @board) %>"
+          class="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Limpiar filtro
+        </a>
       <% end %>
     </div>
+    
     <div class="flex gap-2">
       <%= link_to "Agregar tareas", add_tasks_project_board_path(@project, @board), class: "button" %>
       <%= link_to "Editar tablero", edit_project_board_path(@project, @board), class: "button-outline" %>

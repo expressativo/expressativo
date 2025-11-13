@@ -8,7 +8,33 @@ class BoardsController < ApplicationController
   end
 
   def show
-    @columns = @board.columns.includes(tasks: [ :todo, :created_by ])
+    # Obtener todos los usuarios del proyecto para el filtro
+    @project_users = @project.users.order(:first_name, :last_name)
+    
+    # Construir query base de columnas
+    columns_query = @board.columns.includes(tasks: [ :todo, :created_by, :assigned_users ])
+    
+    # Aplicar filtro si existe
+    if params[:assignee_id].present?
+      if params[:assignee_id] == "unassigned"
+        # Filtrar tareas sin asignar
+        @columns = columns_query.map do |column|
+          filtered_tasks = column.tasks.select { |task| task.assigned_users.empty? }
+          column.define_singleton_method(:tasks) { filtered_tasks }
+          column
+        end
+      else
+        # Filtrar por usuario específico
+        assignee_id = params[:assignee_id].to_i
+        @columns = columns_query.map do |column|
+          filtered_tasks = column.tasks.select { |task| task.assigned_users.pluck(:id).include?(assignee_id) }
+          column.define_singleton_method(:tasks) { filtered_tasks }
+          column
+        end
+      end
+    else
+      @columns = columns_query
+    end
   end
 
   def new
