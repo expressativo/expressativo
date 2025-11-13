@@ -42,7 +42,9 @@ Rails.application.routes.draw do
       end
       collection do
         post :attach_task
+        post :attach_multiple_tasks
       end
+      resources :columns, only: [:create, :update, :destroy]
     end
     
     # Calendario de Publicaciones

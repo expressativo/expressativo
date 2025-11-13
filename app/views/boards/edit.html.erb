@@ -4,7 +4,7 @@
   </h1>
 
   <%= form_with model: [@project, @board], local: true do |form| %>
-    <div class="mb-4">
+    <div class="mb-4 input-wrapper">
       <%= form.label :title, "Título", class: "label" %>
       <%= form.text_field :title,
           class: "input",
@@ -12,13 +12,12 @@
           autofocus: true %>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-4 input-wrapper">
       <%= form.label :description, "Descripción (opcional)", class: "label" %>
       <%= form.text_area :description,
-          class: "input",
+          class: "border-gray-300 border rounded-2xl focus:border-purple-500 focus:ring-purple-500 w-full p-4 bg-white",
           rows: 4 %>
     </div>
-
     <div class="flex gap-2">
       <%= form.submit "Actualizar tablero",
           class: "button",

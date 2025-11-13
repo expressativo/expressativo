@@ -1,14 +1,14 @@
 class BoardsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_board, only: [:show, :edit, :update, :destroy, :add_tasks]
+  before_action :set_board, only: [ :show, :edit, :update, :destroy, :add_tasks ]
 
   def index
     @boards = @project.boards
   end
 
   def show
-    @columns = @board.columns.includes(tasks: [:todo, :created_by])
+    @columns = @board.columns.includes(tasks: [ :todo, :created_by ])
   end
 
   def new
@@ -58,6 +58,29 @@ class BoardsController < ApplicationController
     @task.update(column: column, position: column.tasks.count)
 
     flash[:notice] = "Tarea agregada al tablero."
+    redirect_to project_board_path(@project, @board)
+  end
+
+  def attach_multiple_tasks
+    column = Column.find(params[:column_id])
+    @board = column.board
+    task_ids = params[:task_ids] || []
+
+    if task_ids.empty?
+      flash[:alert] = "No se seleccionaron tareas."
+      redirect_to add_tasks_project_board_path(@project, @board)
+      return
+    end
+
+    # Get all tasks and update them in batch
+    tasks = Task.where(id: task_ids, column_id: nil)
+    current_position = column.tasks.count
+
+    tasks.each_with_index do |task, index|
+      task.update(column: column, position: current_position + index)
+    end
+
+    flash[:notice] = "#{tasks.count} tarea(s) agregada(s) a #{column.title}."
     redirect_to project_board_path(@project, @board)
   end
 

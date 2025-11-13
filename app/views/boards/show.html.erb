@@ -22,14 +22,26 @@
     style="min-width: max-content;">
     
     <% @columns.each do |column| %>
-      <div class="flex-shrink-0 w-80">
+      <div 
+        class="flex-shrink-0 w-80"
+        data-controller="column-editor"
+        data-column-editor-column-id-value="<%= column.id %>"
+        data-column-editor-board-id-value="<%= @board.id %>"
+        data-column-editor-project-id-value="<%= @project.id %>"
+        data-column-editor-update-url-value="<%= project_board_column_path(@project, @board, column) %>">
+        
         <!-- Encabezado de columna -->
         <div class="bg-gray-100 rounded-t-lg px-4 py-3 border-b-2 border-gray-300">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-700">
-              <%= column.title %>
-              <span class="text-sm text-gray-500 ml-2">(<%= column.tasks.count %>)</span>
-            </h3>
+            <div class="flex items-center gap-2 flex-1">
+              <h3 
+                data-column-editor-target="title"
+                data-action="click->column-editor#editTitle"
+                class="font-semibold text-gray-700 cursor-pointer hover:text-blue-600">
+                <%= column.title %>
+              </h3>
+              <span class="text-sm text-gray-500">(<%= column.tasks.count %>)</span>
+            </div>
           </div>
         </div>
 
@@ -45,5 +57,43 @@
         </div>
       </div>
     <% end %>
+
+    <!-- Columna para agregar nueva columna -->
+    <div 
+      class="flex-shrink-0 w-80"
+      data-controller="column-editor"
+      data-column-editor-create-url-value="<%= project_board_columns_path(@project, @board) %>">
+      
+      <div class="bg-gray-100 rounded-lg px-4 py-3">
+        <button 
+          data-action="click->column-editor#showForm"
+          class="w-full text-left font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded px-2 py-2 transition">
+          + Agregar columna
+        </button>
+        
+        <!-- Formulario para nueva columna -->
+        <div data-column-editor-target="form" class="hidden mt-2">
+          <input 
+            type="text"
+            data-column-editor-target="newColumnTitle"
+            placeholder="Nombre de la columna"
+            class="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            data-action="keydown.enter->column-editor#createColumn keydown.escape->column-editor#cancelCreate">
+          
+          <div class="flex gap-2">
+            <button 
+              data-action="click->column-editor#createColumn"
+              class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">
+              Agregar
+            </button>
+            <button 
+              data-action="click->column-editor#cancelCreate"
+              class="bg-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-400 text-sm">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
