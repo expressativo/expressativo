@@ -83,4 +83,16 @@ blockquote {
   mask-size: 100% 100%;
 }
 
+/* Estilos para drag & drop de columnas */
+.column-ghost {
+  opacity: 0.4;
+  background: #e5e7eb;
+}
+
+.column-drag {
+  opacity: 1;
+  cursor: move;
+  transform: rotate(2deg);
+}
+
 

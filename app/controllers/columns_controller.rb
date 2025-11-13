@@ -2,7 +2,7 @@ class ColumnsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
   before_action :set_board
-  before_action :set_column, only: [:update, :destroy]
+  before_action :set_column, only: [:update, :destroy, :update_position]
 
   def create
     @column = @board.columns.new(column_params)
@@ -33,6 +33,29 @@ class ColumnsController < ApplicationController
   def destroy
     @column.destroy
     render json: { success: true }
+  end
+
+  def update_position
+    new_position = params[:position].to_i
+    old_position = @column.position
+
+    # Reordenar columnas
+    if new_position < old_position
+      # Mover hacia la izquierda: incrementar posición de columnas entre new y old
+      @board.columns.where("position >= ? AND position < ?", new_position, old_position)
+                    .update_all("position = position + 1")
+    elsif new_position > old_position
+      # Mover hacia la derecha: decrementar posición de columnas entre old y new
+      @board.columns.where("position > ? AND position <= ?", old_position, new_position)
+                    .update_all("position = position - 1")
+    end
+
+    # Actualizar posición de la columna movida
+    @column.update(position: new_position)
+
+    render json: { success: true }
+  rescue => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
   end
 
   private

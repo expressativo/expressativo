@@ -1,4 +1,4 @@
-<div class="mb-4">
+<div>
   <div class="flex justify-between items-center mb-4">
     <div>
       <h1 class="text-2xl font-semibold"><%= @board.title %></h1>
@@ -17,13 +17,17 @@
 <!-- Tablero Kanban -->
 <div class="overflow-x-auto pb-4">
   <div 
-    data-controller="kanban" 
+    data-controller="kanban board-columns" 
+    data-board-columns-target="container"
+    data-board-columns-project-id-value="<%= @project.id %>"
+    data-board-columns-board-id-value="<%= @board.id %>"
     class="flex gap-4 min-h-screen"
     style="min-width: max-content;">
     
     <% @columns.each do |column| %>
       <div 
-        class="flex-shrink-0 w-80"
+        class="flex-shrink-0 w-80 column-draggable bg-white"
+        data-column-id="<%= column.id %>"
         data-controller="column-editor"
         data-column-editor-column-id-value="<%= column.id %>"
         data-column-editor-board-id-value="<%= @board.id %>"
@@ -31,9 +35,12 @@
         data-column-editor-update-url-value="<%= project_board_column_path(@project, @board, column) %>">
         
         <!-- Encabezado de columna -->
-        <div class="bg-gray-100 rounded-t-lg px-4 py-3 border-b-2 border-gray-300">
+        <div class="rounded-t-lg px-4 py-3 border-b-2 border-gray-300 column-drag-handle cursor-move">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2 flex-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+              </svg>
               <h3 
                 data-column-editor-target="title"
                 data-action="click->column-editor#editTitle"
@@ -49,7 +56,7 @@
         <div 
           data-kanban-target="column"
           data-column-id="<%= column.id %>"
-          class="bg-gray-50 rounded-b-lg p-4 min-h-[200px] space-y-3">
+          class="rounded-b-lg p-4 min-h-[200px] space-y-3">
           
           <% column.tasks.each do |task| %>
             <%= render 'boards/task_card', task: task, board: @board, project: @project %>
@@ -60,11 +67,11 @@
 
     <!-- Columna para agregar nueva columna -->
     <div 
-      class="flex-shrink-0 w-80"
+      class="flex-shrink-0 w-80 column-add-new"
       data-controller="column-editor"
       data-column-editor-create-url-value="<%= project_board_columns_path(@project, @board) %>">
       
-      <div class="bg-gray-100 rounded-lg px-4 py-3">
+      <div class="rounded-lg px-4 py-3">
         <button 
           data-action="click->column-editor#showForm"
           class="w-full text-left font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded px-2 py-2 transition">

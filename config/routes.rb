@@ -44,7 +44,11 @@ Rails.application.routes.draw do
         post :attach_task
         post :attach_multiple_tasks
       end
-      resources :columns, only: [:create, :update, :destroy]
+      resources :columns, only: [:create, :update, :destroy] do
+        member do
+          patch :update_position
+        end
+      end
     end
     
     # Calendario de Publicaciones
