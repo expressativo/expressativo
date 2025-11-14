@@ -1,0 +1,84 @@
+<% content_for :title, @folder.name %>
+<div class="app_container">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="main_header">
+    <header>
+      <h1 class="font-bold text-4xl text-center">
+        <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
+        <span class="text-2xl font-normal"> -
+          <%= link_to "Documentos", project_folders_path(@project), class: "underline" %>
+          <% @folder.path[0..-2].each do |parent| %>
+            / <%= link_to parent.name, project_folder_path(@project, parent), class: "underline" %>
+          <% end %>
+          / <%= @folder.name %>
+        </span>
+      </h1>
+    </header>
+  </div>
+
+  <div id="folder-content" class="main_content mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex gap-2">
+        <%= link_to "Editar carpeta", edit_project_folder_path(@project, @folder), class: "button secondary" %>
+        <%= button_to "Eliminar carpeta", project_folder_path(@project, @folder), method: :delete,
+          data: { confirm: "¿Estás seguro? Esta acción eliminará la carpeta y todo su contenido." },
+          class: "button danger" %>
+      </div>
+      <div class="relative" data-controller="dropdown">
+        <button type="button"
+                class="button flex items-center gap-2"
+                data-dropdown-target="button"
+                data-action="click->dropdown#toggle"
+                aria-expanded="false"
+                aria-haspopup="true">
+          Nuevo
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-10"
+             data-dropdown-target="menu">
+          <%= link_to new_project_folder_path(@project, parent_folder_id: @folder.id),
+                      class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" do %>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+              </svg>
+              <span>Nueva carpeta</span>
+            </div>
+          <% end %>
+
+          <%= link_to new_project_folder_document_path(@project, @folder, type: 'document'),
+                      class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" do %>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <span>Nuevo documento</span>
+            </div>
+          <% end %>
+
+          <%= link_to new_project_folder_document_path(@project, @folder, type: 'file'),
+                      class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" do %>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+              <span>Nuevo archivo</span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if @items.any? %>
+      
+    <% else %>
+      <p class="text-center my-10">Esta carpeta está vacía.</p>
+    <% end %>
+  </div>
+</div>

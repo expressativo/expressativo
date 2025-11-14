@@ -2,12 +2,13 @@ class DocumentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_document, only: %i[ show edit update destroy ]
   before_action :set_project, only: %i[index new create]
+  before_action :set_folder, only: %i[new create]
   before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive]
-  before_action :set_documents, only: %i[index]
 
   # GET /documents or /documents.json
   def index
-    @documents = @project.documents.all
+    # This redirects to folders index which shows the root level
+    redirect_to project_folders_path(@project)
   end
 
   # GET /documents/1 or /documents/1.json
@@ -16,7 +17,9 @@ class DocumentsController < ApplicationController
 
   # GET /documents/new
   def new
-    @document = Document.new
+    @document = @project.documents.build(folder: @folder)
+    # Set document_type based on URL parameter, default to 'document'
+    @document.document_type = params[:type] == "file" ? :file : :document
   end
 
   # GET /documents/1/edit
@@ -25,11 +28,14 @@ class DocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    @document = Document.new(document_params.merge(project: @project, created_by: current_user))
+    @document = @project.documents.build(document_params)
+    @document.folder = @folder
+    @document.created_by = current_user
 
     respond_to do |format|
       if @document.save
-        format.html { redirect_to @document, notice: "Documento creado exitosamente." }
+        redirect_path = @folder ? project_folder_path(@project, @folder) : project_folders_path(@project)
+        format.html { redirect_to redirect_path, notice: "Document was successfully created." }
         format.json { render :show, status: :created, location: @document }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -53,22 +59,35 @@ class DocumentsController < ApplicationController
 
   # DELETE /documents/1 or /documents/1.json
   def destroy
+    folder = @document.folder
     @document.destroy!
 
     respond_to do |format|
-      format.html { redirect_to documents_path, notice: "Document was successfully destroyed.", status: :see_other }
+      redirect_path = folder ? project_folder_path(@project, folder) : project_folders_path(@project)
+      format.html { redirect_to redirect_path, notice: "Document was successfully deleted.", status: :see_other }
       format.json { head :no_content }
     end
   end
 
   def download
-    send_data @document.file.download, filename: @document.file.filename.to_s, disposition: "attachment"
+    if @document.file.attached?
+      send_data @document.file.download, filename: @document.file.filename.to_s, disposition: "attachment"
+    else
+      redirect_to @document, alert: "No file attached to this document."
+    end
   end
 
   def duplicate
     new_document = @document.dup
-    new_document.title = "Copy of " + @document.title
+    new_document.name = "Copy of #{@document.name}"
     new_document.created_by = current_user
+    new_document.status = :draft
+
+    # Copy file if attached
+    if @document.file.attached?
+      new_document.file.attach(@document.file.blob)
+    end
+
     if new_document.save
       redirect_to edit_document_path(new_document), notice: "Document was successfully duplicated."
     else
@@ -77,9 +96,10 @@ class DocumentsController < ApplicationController
   end
 
   def archive
-    @document.update(archived: true)
+    @document.update(status: :archived)
     respond_to do |format|
-      format.html { redirect_to documents_path, notice: "Document was successfully archived.", status: :see_other }
+      redirect_path = @document.folder ? project_folder_path(@project, @document.folder) : project_folders_path(@project)
+      format.html { redirect_to redirect_path, notice: "Document was successfully archived.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -93,13 +113,14 @@ class DocumentsController < ApplicationController
     def set_project
       @project = Project.find(params[:project_id])
     end
-    # Only allow a list of trusted parameters through.
-    def document_params
-      params.require(:document).permit(:title, :body)
+
+    def set_folder
+      @folder = params[:folder_id].present? ? Folder.find(params[:folder_id]) : nil
     end
 
-    def set_documents
-      @documents = @project.documents.where(archived: false)
+    # Only allow a list of trusted parameters through.
+    def document_params
+      params.require(:document).permit(:name, :body, :file, :document_type)
     end
 
     def set_project_from_document

@@ -29,7 +29,7 @@
       <div class="col-span-5">
         <div class="flex justify-start items-center gap-2">
           <% if task.due_date.present?  %>
-            <%= l(task.due_date, format: :short) if task.due_date.present? %>
+            <%= l(task.due_date, format: :long) %>
           <% else %>
             <span class="text-gray-400 italic ">
               Selecciona una fecha...

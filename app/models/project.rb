@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   has_many :todos, dependent: :destroy
   has_many :announcements, dependent: :destroy
   has_many :documents, dependent: :nullify
+  has_many :folders, dependent: :destroy
   has_many :activities, dependent: :destroy
   has_many :boards, dependent: :destroy
   has_many :publications, dependent: :destroy
