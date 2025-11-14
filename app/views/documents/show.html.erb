@@ -48,9 +48,123 @@
         </div>
       </div>
     <% elsif @document.document_type == "document" %>
-      <div class="prose max-w-none mt-6">
+      <div class="prose max-w-none mt-6" id="document-content">
         <%= @document.body %>
       </div>
     <% end %>
   </div>
 </div>
+
+<style>
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .image-wrapper img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .image-download-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+  }
+
+  .image-wrapper:hover .image-download-btn {
+    opacity: 1;
+  }
+
+  .image-download-btn:hover {
+    background-color: rgba(59, 130, 246, 0.9);
+    transform: scale(1.05);
+  }
+
+  .image-download-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const documentContent = document.getElementById('document-content');
+
+    if (documentContent) {
+      // Encontrar todas las imágenes en el contenido
+      const images = documentContent.querySelectorAll('img');
+
+      images.forEach(function(img) {
+        // No procesar si ya está envuelta
+        if (img.parentElement.classList.contains('image-wrapper')) {
+          return;
+        }
+
+        // Crear contenedor wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'image-wrapper';
+
+        // Crear botón de descarga
+        const downloadBtn = document.createElement('a');
+        downloadBtn.className = 'image-download-btn';
+        downloadBtn.innerHTML = `
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Descargar
+        `;
+
+        // Envolver la imagen
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+        wrapper.appendChild(downloadBtn);
+
+        // Manejar click en el botón de descarga
+        downloadBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          downloadImage(img.src, getImageName(img.src));
+        });
+      });
+    }
+
+    function downloadImage(url, filename) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(link.href);
+        })
+        .catch(error => {
+          console.error('Error al descargar la imagen:', error);
+          // Fallback: abrir en nueva pestaña
+          window.open(url, '_blank');
+        });
+    }
+
+    function getImageName(url) {
+      const parts = url.split('/');
+      const filename = parts[parts.length - 1];
+      return filename || 'imagen.jpg';
+    }
+  });
+</script>
