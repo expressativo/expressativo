@@ -1,4 +1,4 @@
-<%= form_with(model: document, class: "contents", url: document.persisted? ? document_path(document) : project_documents_path(@project)) do |form| %>
+<%= form_with(model: document, class: "contents", url: document.persisted? ? document_path(document) : (@folder ? project_folder_documents_path(@project, @folder) : project_documents_path(@project))) do |form| %>
   <% if document.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= pluralize(document.errors.count, "error") %> prohibited this document from being saved:</h2>
@@ -9,16 +9,130 @@
       </ul>
     </div>
   <% end %>
-    <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
-      <div class="flex items-center justify-center">
-         <%= form.text_field :title, class: "document_input",  placeholder: "Escribe un titulo", autofocus: true %>
+
+  <div class="card max-w-[95%] mx-auto mb-4 p-4">
+    <div class="flex items-center justify-center">
+      <%= form.text_field :name, class: "document_input", placeholder: "Escribe un nombre", autofocus: true %>
+    </div>
+  </div>
+
+  <%= form.hidden_field :document_type %>
+
+  <% if document.document_type == "document" || document.document_type.nil? %>
+    <div class="card py-6 px-16 mb-4">
+      <%= form.rich_text_area :body, class: 'textarea', placeholder: "Escribe tu documento aquí...", data: { controller: "trix" } %>
+    </div>
+  <% end %>
+
+  <% if document.document_type == "file" %>
+    <div class="card py-6 px-16 mb-4">
+      <div class="mb-4">
+        <%= form.label :file, "Subir archivo", class: "block text-sm font-medium text-gray-700 mb-2" %>
+
+        <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-blue-400 transition-colors cursor-pointer bg-gray-50 hover:bg-blue-50">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <p class="text-lg text-gray-600 mb-2">
+            <span class="font-semibold text-blue-600">Haz clic para seleccionar</span> o arrastra y suelta
+          </p>
+          <p class="text-sm text-gray-500" id="file-info">
+            Cualquier tipo de archivo
+          </p>
+        </div>
+
+        <%= form.file_field :file, class: "hidden", id: "file-input" %>
+
+        <% if document.file.attached? %>
+          <p class="text-sm text-gray-500 mt-2">
+            Archivo actual: <%= document.file.filename %> (<%= number_to_human_size(document.file.byte_size) %>)
+          </p>
+        <% end %>
       </div>
     </div>
-    <div class="card py-6 px-16 mb-4">
-      <%= form.rich_text_area :body, class: 'textarea', placeholder: "Escrite tu documento aqui...", data: { controller: "trix" } %>
-    </div>
+  <% end %>
 
   <div class="inline">
     <%= form.submit "Guardar", class: "button" %>
+    <%= link_to "Cancelar", :back, class: "button secondary ml-2" %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+
+    if (dropZone && fileInput) {
+      // Click en drop zone abre el selector de archivos
+      dropZone.addEventListener('click', function() {
+        fileInput.click();
+      });
+
+      // Prevenir comportamiento por defecto del navegador
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Highlight drop zone cuando se arrastra un archivo sobre él
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight(e) {
+        dropZone.classList.add('border-blue-500', 'bg-blue-100');
+      }
+
+      function unhighlight(e) {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-100');
+      }
+
+      // Manejar el drop
+      dropZone.addEventListener('drop', handleDrop, false);
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        if (files.length > 0) {
+          fileInput.files = files;
+          updateFileInfo(files[0]);
+        }
+      }
+
+      // Actualizar info cuando se selecciona un archivo con el input
+      fileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+          updateFileInfo(this.files[0]);
+        }
+      });
+
+      function updateFileInfo(file) {
+        const fileSize = formatFileSize(file.size);
+        fileInfo.innerHTML = `
+          <span class="font-semibold text-green-600">✓ Archivo seleccionado:</span><br>
+          ${file.name} (${fileSize})
+        `;
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+      }
+    }
+  });
+</script>
