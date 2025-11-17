@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  
+
   # Perfil de usuario
-  resource :profile, only: [:show, :edit, :update]
+  resource :profile, only: [ :show, :edit, :update ]
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
         member do
           post :add_comment
         end
-        resources :assignments, controller: "task_assignments", only: [:create, :destroy] do
+        resources :assignments, controller: "task_assignments", only: [ :create, :destroy ] do
           collection do
             get :search
           end
@@ -33,8 +33,8 @@ Rails.application.routes.draw do
       resources :announcement_comments
     end
     resources :members, controller: "project_members", only: %i[index new create destroy]
-    resource :timeline, only: [:show], controller: "timelines"
-    
+    resource :timeline, only: [ :show ], controller: "timelines"
+
     # Tableros Kanban
     resources :boards do
       member do
@@ -44,20 +44,20 @@ Rails.application.routes.draw do
         post :attach_task
         post :attach_multiple_tasks
       end
-      resources :columns, only: [:create, :update, :destroy] do
+      resources :columns, only: [ :create, :update, :destroy ] do
         member do
           patch :update_position
         end
       end
     end
-    
+
     # Calendario de Publicaciones
     resources :publications do
       member do
         patch :update_date
       end
     end
-    
+
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
     end
@@ -83,5 +83,5 @@ Rails.application.routes.draw do
     end
   end
   # resources :registers, only: %i[new create]
-  root to: "projects#index"
+  root to: "home#index"
 end

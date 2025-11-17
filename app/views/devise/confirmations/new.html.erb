@@ -1,16 +1,47 @@
-<h2>Resend confirmation instructions</h2>
+<section class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
+  <div class="max-w-md w-full">
+    <!-- Logo/Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        <span class="text-blue-600">Ti</span>vo
+      </h1>
+      <p class="text-gray-600">Reenviar confirmación</p>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <!-- Confirmation Card -->
+    <div class="card p-8 shadow-xl">
+      <h2 class="title mb-6">Reenviar instrucciones de confirmación</h2>
+      
+      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        <div class="mb-6">
+          <p class="text-sm text-gray-600 mb-4">
+            Ingresa tu correo electrónico y te enviaremos nuevamente las instrucciones de confirmación.
+          </p>
+          
+          <div class="field">
+            <%= f.label :email, class: "label" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+                value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), 
+                class: "input", placeholder: "correo@ejemplo.com" %>
+          </div>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Reenviar instrucciones", class: "button w-full py-3 text-base font-medium hover:bg-purple-700 transition-colors" %>
+        </div>
+      <% end %>
+
+      <!-- Links -->
+      <div class="mt-6 text-center">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="text-center mt-6">
+      <%= link_to "← Volver al inicio", root_path, class: "text-blue-600 hover:text-blue-700 font-medium text-sm" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</section>

@@ -1,0 +1,402 @@
+<!-- Simple Navigation for Landing Page -->
+<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm border-b border-gray-200 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <h1 class="text-2xl font-bold text-gray-900">
+            <span class="text-blue-600">Ti</span>vo
+          </h1>
+        </div>
+      </div>
+      
+      <!-- Navigation Links -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-8">
+          <a href="#features" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Características</a>
+          <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Cómo funciona</a>
+          <a href="#use-cases" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Casos de uso</a>
+          <a href="#benefits" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Beneficios</a>
+        </div>
+      </div>
+      
+      <!-- CTA Buttons -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-center space-x-4">
+          <%= link_to "Iniciar Sesión", new_user_session_path, 
+              class: "text-gray-700 hover:text-blue-600 px-4 py-2 text-sm font-medium transition-colors" %>
+          <%= link_to "Comenzar Gratis", new_user_registration_path, 
+              class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm hover:shadow-md" %>
+        </div>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <button type="button" class="text-gray-700 hover:text-blue-600 p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <a href="#features" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Características</a>
+      <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Cómo funciona</a>
+      <a href="#use-cases" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Casos de uso</a>
+      <a href="#benefits" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Beneficios</a>
+      <div class="border-t border-gray-200 mt-3 pt-3">
+        <%= link_to "Iniciar Sesión", new_user_session_path, 
+            class: "text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium" %>
+        <%= link_to "Comenzar Gratis", new_user_registration_path, 
+            class: "bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium mt-2" %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+        Simplifica la gestión de
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+          proyectos
+        </span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Todo tu equipo, todas tus tareas, un solo lugar. La plataforma colaborativa que equipos modernos eligen para organizar, planificar y ejecutar.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <%= link_to "Comenzar Gratis", new_user_registration_path, 
+            class: "px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg" %>
+        <%= link_to "Ver Demo", "#features", 
+            class: "px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg border border-gray-200" %>
+      </div>
+      <p class="mt-4 text-sm text-gray-500">No requiere tarjeta de crédito</p>
+    </div>
+  </div>
+  
+  <!-- Hero Image Placeholder -->
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
+    <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-8">
+      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-96 flex items-center justify-center">
+        <div class="text-center">
+          <div class="w-24 h-24 bg-blue-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <p class="text-gray-600 font-medium">Interfaz de Tivo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Todo lo que necesitas para colaborar
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Funcionalidades potentes diseñadas para equipos modernos
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Gestión de Proyectos Colaborativos</h3>
+        <p class="text-gray-600">Crea proyectos ilimitados, invita a tu equipo con links únicos y define roles de owner y miembros.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Todo Lists Inteligentes</h3>
+        <p class="text-gray-600">Organiza tareas por listas, asigna múltiples usuarios, fechas de vencimiento y notas enriquecidas.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Tableros Kanban Visuales</h3>
+        <p class="text-gray-600">Drag & drop intuitivo, columnas personalizables y vinculación de tareas existentes.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Calendario de Publicaciones</h3>
+        <p class="text-gray-600">Planifica contenido mensualmente, vista de calendario visual y exporta como PNG/JPG.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-pink-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Centro de Documentos</h3>
+        <p class="text-gray-600">Sube y organiza archivos, estados de borrador/publicado/archivado y adjuntos ilimitados.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Comunicación Integrada</h3>
+        <p class="text-gray-600">Anuncios de proyecto, sistema de comentarios y feed de actividad en tiempo real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Cómo funciona Tivo
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Comienza a organizar tu equipo en minutos
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-8">
+      <!-- Step 1 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          1
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Crea tu cuenta</h3>
+        <p class="text-gray-600">Regístrate gratuitamente y configura tu perfil en segundos.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          2
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Crea proyectos</h3>
+        <p class="text-gray-600">Organiza tu trabajo en proyectos y genera enlaces de invitación.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          3
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Invita a tu equipo</h3>
+        <p class="text-gray-600">Comparte los enlaces únicos y asigna roles a los miembros.</p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          4
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Empieza a colaborar</h3>
+        <p class="text-gray-600">Usa tareas, tableros y calendarios para lograr tus objetivos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section id="use-cases" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Perfecto para equipos modernos
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Descubre cómo diferentes equipos utilizan Tivo
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Marketing Teams -->
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos de Marketing</h3>
+        <p class="text-gray-700">Planifica campañas, coordina contenido y colabora en estrategias creativas.</p>
+      </div>
+
+      <!-- Product Teams -->
+      <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+        <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos de Producto</h3>
+        <p class="text-gray-700">Gestiona sprints, haz seguimiento de features y coordina el roadmap.</p>
+      </div>
+
+      <!-- Remote Teams -->
+      <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+        <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos Remotos</h3>
+        <p class="text-gray-700">Mantén la sincronización, comparte actualizaciones y colabora sin fronteras.</p>
+      </div>
+
+      <!-- Startups -->
+      <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl">
+        <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Startups</h3>
+        <p class="text-gray-700">Muévete rápido, itera eficientemente y escala tu colaboración.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section id="benefits" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Por qué elegir Tivo
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        La diferencia está en los detalles
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Benefit 1 -->
+      <div class="text-center">
+        <div class="text-4xl font-bold text-blue-600 mb-4">10x</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Más Rápido</h3>
+        <p class="text-gray-600">Reduce el tiempo en reuniones y aumenta la productividad con comunicación centralizada.</p>
+      </div>
+
+      <!-- Benefit 2 -->
+      <div class="text-center">
+        <div class="text-4xl font-bold text-purple-600 mb-4">100%</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Transparencia</h3>
+        <p class="text-gray-600">Todos en el equipo saben qué está pasando, quién trabaja en qué y cuáles son los plazos.</p>
+      </div>
+
+      <!-- Benefit 3 -->
+      <div class="text-center">
+        <div class="text-4xl font-bold text-green-600 mb-4">24/7</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Accesible</h3>
+        <p class="text-gray-600">Trabaja desde cualquier lugar, en cualquier momento, desde cualquier dispositivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+      ¿Listo para transformar la colaboración de tu equipo?
+    </h2>
+    <p class="text-xl text-blue-100 mb-8">
+      Únete a miles de equipos que ya están organizando su trabajo con Tivo.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <%= link_to "Comenzar Gratis", new_user_registration_path, 
+          class: "px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg" %>
+      <%= link_to "Ver Demo", "#features", 
+          class: "px-8 py-4 bg-transparent hover:bg-white/10 text-white font-semibold rounded-lg border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-200 text-lg" %>
+    </div>
+    <p class="mt-6 text-blue-100 text-sm">Configuración en 2 minutos • Sin tarjeta de crédito • Soporte 24/7</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      <!-- Company -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Producto</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Características", "#features", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Precios", "#pricing", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Casos de uso", "#use-cases", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Empresa</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Sobre nosotros", "#about", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Blog", "#blog", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Carreras", "#careers", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Recursos</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Documentación", "#docs", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "API", "#api", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Soporte", "#support", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Legal</h3>
+        <ul class="space-y-2">
+          <li><%= link_to "Privacidad", "#privacy", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Términos", "#terms", class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Seguridad", "#security", class: "hover:text-white transition-colors" %></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+      <p class="text-gray-400">© 2024 Tivo. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

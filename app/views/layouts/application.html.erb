@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Expressativo" %></title>
+    <title><%= content_for(:title) || "Tivo - Gestión de Proyectos Colaborativa" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,15 +22,17 @@
       <%= Sentry.get_trace_propagation_meta.html_safe %>
     <% end %>
   </head>
-  <body class="bg-orange-50">
-    <%= render 'layouts/navbar'%>
+  <body class="bg-white">
+    <% if user_signed_in? %>
+      <%= render 'layouts/navbar'%>
+    <% end %>
     <% if notice %>
-    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 " role="alert">
+    <div class="p-4 my-4 text-sm text-blue-800 rounded-lg bg-blue-50 max-w-4xl mx-auto" role="alert">
       <%= notice %>
     </div>
     <% end %>
     <% if alert %>
-    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+    <div class="p-4 my-4 text-sm text-red-800 rounded-lg bg-red-50 max-w-4xl mx-auto" role="alert">
       <%= alert %>
     </div>
     <% end %>
