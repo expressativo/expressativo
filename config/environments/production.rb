@@ -63,16 +63,21 @@ Rails.application.configure do
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   #
 
-  if Rails.application.credentials.dig(:smtp, :user_name)
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.credentials.dig(:smtp, :user_name),
-      password: Rails.application.credentials.dig(:smtp, :password),
-      address: "smtp.hostinger.com",
-      port: 465,
-      authentication: :plain,
-      enable_starttls_auto: true,
-      domain: "expressativo.com"
-    }
+  # Only configure SMTP if credentials are available (skip during asset precompilation)
+  if defined?(Rails.application.credentials) && Rails.application.credentials.config.present?
+    smtp_user = Rails.application.credentials.dig(:smtp, :user_name) rescue nil
+
+    if smtp_user.present?
+      config.action_mailer.smtp_settings = {
+        user_name: smtp_user,
+        password: Rails.application.credentials.dig(:smtp, :password),
+        address: "smtp.hostinger.com",
+        port: 465,
+        authentication: :plain,
+        enable_starttls_auto: true,
+        domain: "expressativo.com"
+      }
+    end
   end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
