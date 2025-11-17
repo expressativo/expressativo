@@ -61,15 +61,19 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "expressativo.com" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
-  config.action_mailer.smtp_settings = {
-    user_name: Rails.application.credentials.dig(:smtp, :user_name),
-    password: Rails.application.credentials.dig(:smtp, :password),
-    address: "smtp.hostinger.com",
-    port: 465,
-    authentication: :plain,
-    enable_starttls_auto: true,
-    domain: "expressativo.com"
-  }
+  #
+
+  if Rails.application.credentials.dig(:smtp, :user_name)
+    config.action_mailer.smtp_settings = {
+      user_name: Rails.application.credentials.dig(:smtp, :user_name),
+      password: Rails.application.credentials.dig(:smtp, :password),
+      address: "smtp.hostinger.com",
+      port: 465,
+      authentication: :plain,
+      enable_starttls_auto: true,
+      domain: "expressativo.com"
+    }
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
