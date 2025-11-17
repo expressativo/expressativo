@@ -1,4 +1,4 @@
-<% content_for :title, "Ver documento" %>
+<% content_for :title, @document.name %>
 
 <div class="app_container">
   <div class="main_header">
@@ -6,26 +6,165 @@
       <h2 class="font-bold text-xl text-center">
         <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
         <span>-</span>
-        <%= link_to "Documentos", project_documents_path(@project), class: "underline font-semibold capitalize" %>
+        <%= link_to "Documentos", project_folders_path(@project), class: "underline font-semibold capitalize" %>
+        <% if @document.folder %>
+          <% @document.folder.path.each do |parent| %>
+            <span>-</span>
+            <%= link_to parent.name, project_folder_path(@project, parent), class: "underline font-semibold" %>
+          <% end %>
+        <% end %>
       </h2>
     </header>
   </div>
   <div class="main_content">
     <div class="relative">
       <h1 class="font-bold text-4xl text-center">
-          <%= @document.title %>
+        <%= @document.name %>
       </h1>
-      <%= link_to "Editar", edit_document_path(@document), class: "absolute top-4 right-4 text-sm text-gray-500 hover:text-gray-700" %>
+      <div class="absolute top-4 right-4 flex gap-2">
+        <%= link_to "Editar", edit_document_path(@document), class: "text-sm text-gray-500 hover:text-gray-700" %>
+        <% if @document.file.attached? %>
+          <%= link_to "Descargar", download_document_path(@document), class: "text-sm text-blue-500 hover:text-blue-700" %>
+        <% end %>
+      </div>
     </div>
-    <hr/ class="max-w-[100px] mx-auto text-gray-300">
+    <hr class="max-w-[100px] mx-auto text-gray-300">
     <div class="text-center my-2">
       <% if @document.created_by %>
         <%= @document.created_by.full_name %> -
       <% end %>
       <%= l(@document.created_at, format: :long) %>
     </div>
-    <div>
-      <%= simple_format(@document.body, sanitize: true) %>
-    </div>
+
+    <% if @document.document_type == "file" && @document.file.attached? %>
+      <div class="text-center my-6">
+        <div class="inline-block p-6 border border-gray-300 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          <p class="font-semibold text-lg"><%= @document.file.filename %></p>
+          <p class="text-gray-500 text-sm"><%= number_to_human_size(@document.file.byte_size) %></p>
+          <%= link_to "Descargar archivo", download_document_path(@document), class: "button mt-4" %>
+        </div>
+      </div>
+    <% elsif @document.document_type == "document" %>
+      <div class="prose max-w-none mt-6" id="document-content">
+        <%= @document.body %>
+      </div>
+    <% end %>
   </div>
 </div>
+
+<style>
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .image-wrapper img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .image-download-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+  }
+
+  .image-wrapper:hover .image-download-btn {
+    opacity: 1;
+  }
+
+  .image-download-btn:hover {
+    background-color: rgba(59, 130, 246, 0.9);
+    transform: scale(1.05);
+  }
+
+  .image-download-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const documentContent = document.getElementById('document-content');
+
+    if (documentContent) {
+      // Encontrar todas las imágenes en el contenido
+      const images = documentContent.querySelectorAll('img');
+
+      images.forEach(function(img) {
+        // No procesar si ya está envuelta
+        if (img.parentElement.classList.contains('image-wrapper')) {
+          return;
+        }
+
+        // Crear contenedor wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'image-wrapper';
+
+        // Crear botón de descarga
+        const downloadBtn = document.createElement('a');
+        downloadBtn.className = 'image-download-btn';
+        downloadBtn.innerHTML = `
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Descargar
+        `;
+
+        // Envolver la imagen
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+        wrapper.appendChild(downloadBtn);
+
+        // Manejar click en el botón de descarga
+        downloadBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          downloadImage(img.src, getImageName(img.src));
+        });
+      });
+    }
+
+    function downloadImage(url, filename) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(link.href);
+        })
+        .catch(error => {
+          console.error('Error al descargar la imagen:', error);
+          // Fallback: abrir en nueva pestaña
+          window.open(url, '_blank');
+        });
+    }
+
+    function getImageName(url) {
+      const parts = url.split('/');
+      const filename = parts[parts.length - 1];
+      return filename || 'imagen.jpg';
+    }
+  });
+</script>
