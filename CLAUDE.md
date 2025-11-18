@@ -157,7 +157,6 @@ Root path: `projects#index`
 - Solid Cable for Action Cable (database-backed)
 
 ### Deployment
-- Kamal for deployment (see config/deploy.yml)
 - In production, run migrations manually in the deployed container
 
 ## Testing Approach
