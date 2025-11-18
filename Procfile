@@ -1,2 +1,2 @@
-web: bundle exec rails server -p $PORT -e $RAILS_ENV
+web: PORT=${PORT:-3000} bundle exec puma -C config/puma.rb
 worker: bundle exec bin/jobs
