@@ -62,12 +62,11 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "expressativo.com" }
-  config.action_mailer.delivery_method = :mailtrap
-  if Rails.application.credentials.dig(:mailtrap, :api_key).present?
-    config.action_mailer.mailtrap_settings = {
-      api_key: Rails.application.credentials.dig(:mailtrap, :api_key)
-    }
-  end
+
+  # Temporarily disable email delivery in production
+  # TODO: Configure Mailtrap or SMTP later
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.perform_deliveries = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
