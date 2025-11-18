@@ -67,19 +67,21 @@ Rails.application.configure do
   #
 
   # Only configure SMTP if credentials are available (skip during asset precompilation)
-  if defined?(Rails.application.credentials) && Rails.application.credentials.config.present?
-    smtp_user = Rails.application.credentials.dig(:smtp, :user_name) rescue nil
+  unless defined?(Rake) && Rake.application.top_level_tasks.include?('assets:precompile')
+    if defined?(Rails.application.credentials) && Rails.application.credentials.config.present?
+      smtp_user = Rails.application.credentials.dig(:smtp, :user_name) rescue nil
 
-    if smtp_user.present?
-      config.action_mailer.smtp_settings = {
-        user_name: smtp_user,
-        password: Rails.application.credentials.dig(:smtp, :password),
-        address: "smtp.hostinger.com",
-        port: 465,
-        authentication: :plain,
-        enable_starttls_auto: true,
-        domain: "expressativo.com"
-      }
+      if smtp_user.present?
+        config.action_mailer.smtp_settings = {
+          user_name: smtp_user,
+          password: Rails.application.credentials.dig(:smtp, :password),
+          address: "smtp.hostinger.com",
+          port: 465,
+          authentication: :plain,
+          enable_starttls_auto: true,
+          domain: "expressativo.com"
+        }
+      end
     end
   end
 
