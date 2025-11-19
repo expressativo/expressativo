@@ -7,7 +7,9 @@
   </div>
 
   <div class="mb-6 space-y-4">
+    <!--  
     <%= link_to "Invitar nuevo miembro", new_project_member_path(@project), class: "button mb-4" %>
+    -->
     
     <!-- Link de invitación -->
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-4" data-controller="clipboard">
@@ -76,13 +78,14 @@
               <% end %>
             </div>
             <div>
-              <%= button_to "Eliminar",
-                project_member_path(@project, project_user),
+              <%= button_to project_member_path(@project, project_user),
                 method: :delete,
                 form: {
                   data: { turbo_confirm: "¿Estás seguro de eliminar este miembro?" }
                 },
-                class: "button-outline text-red-600 hover:bg-red-50" %>
+                class: "icon-button text-red-600 hover:bg-red-50"  do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+              <% end %>
             </div>
           </div>
         </div>

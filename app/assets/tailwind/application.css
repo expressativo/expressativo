@@ -84,4 +84,8 @@
     .main_content {
         @apply bg-white shadow-md rounded-lg border border-gray-200 px-16 py-6;
     }
+
+    .icon-button {
+        @apply inline-flex items-center gap-2 cursor-pointer rounded-3xl p-1
+    }
 }

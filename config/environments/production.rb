@@ -61,7 +61,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "expressativo.com" }
+  config.action_mailer.default_url_options = { host: "1.expressativo.com" }
 
   # Temporarily disable email delivery in production
   config.action_mailer.delivery_method = :mailtrap

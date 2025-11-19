@@ -1,9 +1,5 @@
 <% content_for :title, @folder.name %>
 <div class="app_container">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
   <div class="main_header">
     <header>
       <h1 class="font-bold text-4xl text-center">
@@ -25,7 +21,7 @@
         <%= link_to "Editar carpeta", edit_project_folder_path(@project, @folder), class: "button secondary" %>
         <%= button_to "Eliminar carpeta", project_folder_path(@project, @folder), method: :delete,
           data: { confirm: "¿Estás seguro? Esta acción eliminará la carpeta y todo su contenido." },
-          class: "button danger" %>
+          class: "button-outline" %>
       </div>
       <div class="relative" data-controller="dropdown">
         <button type="button"
@@ -76,7 +72,11 @@
     </div>
 
     <% if @items.any? %>
-      
+       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <% @items.each do |item| %>
+          <%= render item %>
+        <% end %>
+      </div>
     <% else %>
       <p class="text-center my-10">Esta carpeta está vacía.</p>
     <% end %>
