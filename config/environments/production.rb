@@ -66,9 +66,9 @@ Rails.application.configure do
   # Temporarily disable email delivery in production
   config.action_mailer.delivery_method = :mailtrap
   config.action_mailer.mailtrap_settings = {
-    api_key: Rails.application.credentials.dig(:mailtrap, :api_key) || ""
+    api_key: Rails.application.credentials.dig(:mailtrap, :api_key)
   }
-  config.action_mailer.perform_deliveries = false
+  config.action_mailer.perform_deliveries = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
