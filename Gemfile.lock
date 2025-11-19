@@ -180,6 +180,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mailtrap (2.5.0)
+      base64
     marcel (1.0.4)
     matrix (0.4.3)
     mini_magick (5.3.1)
@@ -429,6 +431,7 @@ DEPENDENCIES
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
+  mailtrap (~> 2.5)
   mysql2
   propshaft
   puma (>= 5.0)

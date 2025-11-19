@@ -64,8 +64,10 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "expressativo.com" }
 
   # Temporarily disable email delivery in production
-  # TODO: Configure Mailtrap or SMTP later
-  config.action_mailer.delivery_method = :test
+  config.action_mailer.delivery_method = :mailtrap
+  config.action_mailer.mailtrap_settings = {
+    api_key: Rails.application.credentials.dig(:mailtrap, :api_key) || ""
+  }
   config.action_mailer.perform_deliveries = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

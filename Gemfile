@@ -77,3 +77,5 @@ gem "devise-i18n", "~> 1.15"
 # Sentry GEMS
 gem "sentry-ruby"
 gem "sentry-rails"
+
+gem "mailtrap", "~> 2.5"
