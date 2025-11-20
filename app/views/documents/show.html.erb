@@ -44,7 +44,9 @@
           </svg>
           <p class="font-semibold text-lg"><%= @document.file.filename %></p>
           <p class="text-gray-500 text-sm"><%= number_to_human_size(@document.file.byte_size) %></p>
-          <%= link_to "Descargar archivo", download_document_path(@document), class: "button mt-4" %>
+          <div class="flex justify-center mt-4">
+            <%= link_to "Descargar archivo", download_document_path(@document), class: "button" %>
+          </div>
         </div>
       </div>
     <% elsif @document.document_type == "document" %>

@@ -1,11 +1,9 @@
 <div>
   <% @comments.each do |comment|%>
     <div class="p-4 flex <%= 'justify-end' if comment.user_id == current_user.id %>">
-      <span class="text-white bg-purple-500 py-2 px-4 rounded-3xl">
+      <div class="text-white bg-purple-500 py-2 px-4 rounded-3xl prose prose-invert max-w-none">
         <%= comment.content %>
-        <%= comment.user_id %>
-        <%= current_user.id %>
-      </span>
+      </div>
     </div>
   <% end %>
 </div>

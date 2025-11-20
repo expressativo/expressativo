@@ -1,7 +1,7 @@
 <%= form_with model: [@project, @announcement , AnnouncementComment.new], local: true do |form| %>
   <div>
     <%= form.label :content, "New Comment", class: "label" %><br>
-    <%= form.text_field :content, class:"input" %>
+    <%= form.rich_text_area :content, class:"input" %>
   </div>
   <div class="mt-4">
     <%= form.submit "Add Comment", class:"button" %>

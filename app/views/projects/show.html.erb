@@ -1,5 +1,5 @@
 <div>
-  <div class="bg-white shadow-md rounded-2xl px-0 pt-6 pb-8 mb-4 sm:w-full md:w-5xl mx-auto">
+  <div class="bg-white border border-gray-200 rounded-2xl px-0 pt-6 pb-8 mb-4 sm:w-full mx-auto">
     <div class="relative">
       <h1 class="text-2xl text-center font-semibold">
         <%= link_to @project.title, edit_project_path(@project) %>
@@ -9,7 +9,7 @@
       </div>
     </div>
     <section class="mt-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 divide-gray-300 gap-0 border-x-0 border border-gray-300">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
           <%= render 'projects/todo'%>
           <%= render 'projects/docs' %>
           <%= render 'projects/boards' %>
