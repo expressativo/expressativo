@@ -7,9 +7,7 @@
       <div class="bg-white p-4 border-b border-gray-300">
         <div class="flex justify-between items-start">
           <div class="flex items-center">
-            <% if comment.user.avatar.attached? %>
-              <%= image_tag comment.user.avatar, class: "w-8 h-8 rounded-full mr-2" %>
-            <% end %>
+            <%= user_avatar(comment.user, class: "w-8 h-8 rounded-full mr-2") %>
             <% if comment.user.full_name %>
               <p class="text-sm text-gray-600"><%= comment.user.full_name %></p>
             <% else %>
