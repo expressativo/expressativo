@@ -2,14 +2,17 @@
   <div class="flex justify-between items-center mb-4">
     <div class="flex items-center gap-4">
       <div>
+      <%= link_to edit_project_board_path(@project, @board) do %>
         <h1 class="text-2xl font-semibold"><%= @board.title %></h1>
+      <% end %>
+
         <% if @board.description.present? %>
           <p class="text-gray-600 mt-1"><%= @board.description %></p>
         <% end %>
       </div>
       
       <!-- Filtro de responsables -->
-      <div class="relative" data-controller="board-filter">
+      <div data-controller="board-filter">
         <button 
           data-action="click->board-filter#toggle"
           data-board-filter-target="button"
@@ -93,24 +96,23 @@
     
     <div class="flex gap-2">
       <%= link_to "Agregar tareas", add_tasks_project_board_path(@project, @board), class: "button" %>
-      <%= link_to "Editar tablero", edit_project_board_path(@project, @board), class: "button-outline" %>
       <%= link_to "Volver", project_boards_path(@project), class: "button-outline" %>
     </div>
   </div>
 </div>
 
 <!-- Tablero Kanban -->
-<div class="overflow-x-auto pb-4">
-  <div 
-    data-controller="kanban board-columns" 
+<div class="pb-4 overflow-x-auto overflow-y-auto h-[calc(50vh-200px)]">
+  <div
+    data-controller="kanban board-columns"
     data-board-columns-target="container"
     data-board-columns-project-id-value="<%= @project.id %>"
     data-board-columns-board-id-value="<%= @board.id %>"
     class="flex gap-4 min-h-screen"
     style="min-width: max-content;">
-    
+
     <% @columns.each do |column| %>
-      <div 
+      <div
         class="flex-shrink-0 w-80 column-draggable bg-white"
         data-column-id="<%= column.id %>"
         data-controller="column-editor"
@@ -118,15 +120,15 @@
         data-column-editor-board-id-value="<%= @board.id %>"
         data-column-editor-project-id-value="<%= @project.id %>"
         data-column-editor-update-url-value="<%= project_board_column_path(@project, @board, column) %>">
-        
+
         <!-- Encabezado de columna -->
-        <div class="rounded-t-lg px-4 py-3 border-b-2 border-gray-300 column-drag-handle cursor-move">
+        <div class="rounded-t-lg px-4 py-3 border-b-2 border-gray-300 column-drag-handle cursor-move sticky top-0 z-10 bg-white">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2 flex-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
               </svg>
-              <h3 
+              <h3
                 data-column-editor-target="title"
                 data-action="click->column-editor#editTitle"
                 class="font-semibold text-gray-700 cursor-pointer hover:text-blue-600">
@@ -138,11 +140,11 @@
         </div>
 
         <!-- Lista de tareas -->
-        <div 
+        <div
           data-kanban-target="column"
           data-column-id="<%= column.id %>"
           class="rounded-b-lg p-4 min-h-[200px] space-y-3">
-          
+
           <% column.tasks.each do |task| %>
             <%= render 'boards/task_card', task: task, board: @board, project: @project %>
           <% end %>
