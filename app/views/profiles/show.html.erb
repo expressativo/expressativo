@@ -8,15 +8,7 @@
     <!-- Avatar -->
     <div class="flex justify-center">
       <div class="relative">
-        <% if @user.avatar.attached? %>
-          <%= image_tag @user.avatar, class: "w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover" %>
-        <% else %>
-          <div class="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center">
-            <span class="text-white text-4xl font-bold">
-              <%= @user.first_name&.first&.upcase %><%= @user.last_name&.first&.upcase %>
-            </span>
-          </div>
-        <% end %>
+        <%= user_avatar(@user, class: "w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover", size: 32) %>
       </div>
     </div>
 

@@ -41,7 +41,7 @@ h1 {
 }
 
 trix-editor {
-  min-height: 400px;
+  min-height: 10rem;
   border: none !important;
 }
 

@@ -6,10 +6,22 @@
     <% @task.comments.includes(:user).order(created_at: :desc).each do |comment| %>
       <div class="bg-white p-4 border-b border-gray-300">
         <div class="flex justify-between items-start">
-          <p class="text-sm text-gray-600"><%= comment.user.email %></p>
-          <p class="text-xs text-gray-500"><%= comment.created_at %></p>
+          <div class="flex items-center">
+            <%= user_avatar(comment.user, class: "w-8 h-8 rounded-full mr-2") %>
+            <% if comment.user.full_name %>
+              <p class="text-sm text-gray-600"><%= comment.user.full_name %></p>
+            <% else %>
+            <p class="text-sm text-gray-600"><%= comment.user.email %></p>
+          <% end %>
+          </div>
+          <div class="flex items-center gap-2">
+            <p class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %></p>
+            <p class="text-xs text-gray-500"><%= comment.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+          </div>
         </div>
-        <p class="mt-2 text-gray-900"><%= comment.content %></p>
+        <div class="mt-2 text-gray-900 prose max-w-none">
+          <%= comment.content %>
+        </div>
       </div>
     <% end %>
   </div>

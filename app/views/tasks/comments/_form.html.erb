@@ -1,9 +1,9 @@
 <div>
   <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), method: :post do |f| %>
-    <div>
+    <div class="comment">
       <div class="input-wrapper">
-        <%= f.label :content, "Comentario", class: "label" %>
-        <%= f.text_area :content, class: "input h-[150px]" %>
+        <%= f.label :content, "Tu comentario", class: "label" %>
+        <%= f.rich_text_area :content %>
       </div>
       <%= f.submit "Agregar Comentario", class: "button", data: {
         turbo_submits_with: "Comentando..."

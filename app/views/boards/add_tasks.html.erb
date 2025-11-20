@@ -1,4 +1,4 @@
-<div class="bg-white shadow-md rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-4xl mx-auto" data-controller="bulk-task-selector">
+<div class="bg-white border border-gray-200 rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-4xl mx-auto" data-controller="bulk-task-selector">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">
       Agregar tareas a <%= @board.title %>
@@ -7,24 +7,20 @@
   </div>
 
   <!-- Action bar for bulk operations -->
-  <div data-bulk-task-selector-target="actionButtons" class="hidden sticky top-0 z-10 bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 shadow-sm">
+  <div data-bulk-task-selector-target="actionButtons" class="hidden sticky top-0 z-10 bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
     <div class="flex items-center justify-between">
       <span class="text-sm font-medium text-blue-900">
         <span data-bulk-task-selector-target="selectedCount">0</span> tarea(s) seleccionada(s)
       </span>
       <div class="flex gap-2">
-        <% @board.columns.each do |column| %>
-          <% unless column.title == 'Completado' %>
-            <button
+        <button
             type="button"
-            data-column-id="<%= column.id %>"
+            data-column-id="<%= @board.columns.order(position: :asc).last.id %>"
             data-url="<%= attach_multiple_tasks_project_boards_path(@project) %>"
             data-action="click->bulk-task-selector#attachToColumn"
             class="button-outline text-sm whitespace-nowrap">
-            Agregar a <%= column.title %>
-          </button>
-          <% end %>
-        <% end %>
+            Agregar a tablero
+        </button>
       </div>
     </div>
   </div>
@@ -37,7 +33,7 @@
           <%= todo.name %>
         </h3>
 
-        <% available_tasks = todo.tasks.where(column_id: nil) %>
+        <% available_tasks = todo.tasks.where(column_id: nil, done: false) %>
 
         <% if available_tasks.any? %>
           <!-- Select all checkbox for this todo -->
@@ -88,6 +84,7 @@
                 </div>
 
                 <div class="flex gap-2">
+                  <!-- TODO: Add bulk action buttons 
                   <% @board.columns.each do |column| %>
                     <% unless column.title == 'Completado' %>
                       <%= button_to column.title,
@@ -96,6 +93,7 @@
                           class: "button-outline text-sm whitespace-nowrap" %>
                     <% end %>
                   <% end %>
+                  -->
                 </div>
               </div>
             <% end %>

@@ -34,13 +34,7 @@
                     <div class="flex items-start gap-3 <%= is_left ? '' : 'md:flex-row-reverse' %>">
                       <!-- Avatar -->
                       <div class="flex-shrink-0">
-                        <% if activity.user.avatar.attached? %>
-                          <%= image_tag activity.user.avatar, class: "w-10 h-10 rounded-full object-cover" %>
-                        <% else %>
-                          <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-                            <%= activity.user.email.first.upcase %>
-                          </div>
-                        <% end %>
+                        <%= user_avatar(activity.user, class: "w-10 h-10 rounded-full object-cover", size: 10) %>
                       </div>
 
                       <!-- Activity Content -->
