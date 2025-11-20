@@ -9,7 +9,7 @@
           <%= user_avatar(single.owner, class: "w-8 h-8 rounded-full border-2 border-white") %>
           <% if single.members.present? %>
             <% single.members.each do |member| %>
-              <%= user_avatar(member, class: "w-8 h-8 rounded-full border-2 border-white") %>
+              <%= user_avatar(member, class: "w-8 h-8 rounded-full border-2 border-white object-cover") %>
             <% end %>
           <% end %>
         </div>
