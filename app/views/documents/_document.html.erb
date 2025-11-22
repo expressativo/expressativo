@@ -1,29 +1,29 @@
 <article id="<%= dom_id document %>" class="border border-gray-300 rounded-lg p-4 max-h-[300px] overflow-hidden hover:border-blue-500 transition relative">
   <div class="flex items-start gap-3">
-    <%= link_to document, class: "flex items-start gap-3 flex-1" do %>
-      <% if document.document_type == "file" %>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-      <% else %>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      <% end %>
-      <div class="flex-1">
-        <h2 class="text-xl font-bold mb-2">
+    <% if document.document_type == "file" %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+      </svg>
+    <% else %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    <% end %>
+    <div class="flex-1">
+      <%= link_to document do %>
+        <h2 class="text-xl font-bold mb-2 hover:text-blue-600 transition">
           <%= document.name %>
         </h2>
-        <% if document.document_type == "document" && document.body.present? %>
-          <div class="fade-text text-sm text-gray-600">
-            <%= sanitize document.body %>
-          </div>
-        <% elsif document.file.attached? %>
-          <p class="text-sm text-gray-500">
-            <%= document.file.filename %> (<%= number_to_human_size(document.file.byte_size) %>)
-          </p>
-        <% end %>
-      </div>
-    <% end %>
+      <% end %>
+      <% if document.document_type == "document" && document.body.present? %>
+        <div class="fade-text text-sm text-gray-600">
+          <%= strip_tags(document.body) %>
+        </div>
+      <% elsif document.file.attached? %>
+        <p class="text-sm text-gray-500">
+          <%= document.file.filename %> (<%= number_to_human_size(document.file.byte_size) %>)
+        </p>
+      <% end %>
+    </div>
   </div>
 </article>
