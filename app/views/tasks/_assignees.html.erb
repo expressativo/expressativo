@@ -48,18 +48,18 @@
       </svg>
     </div>
 
+    <% if task.assigned_users.empty? %>
+      <span class="text-xs text-gray-500 italic">
+        No hay personas asignadas a esta tarea
+      </span>
+    <% end %>
+
     <!-- Resultados de búsqueda -->
     <div
       data-task-assignee-target="results"
-      class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+      class="hidden absolute top-12 z-100 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
     >
       <!-- Los resultados se insertan aquí dinámicamente -->
     </div>
   </div>
-
-  <% if task.assigned_users.empty? %>
-    <span class="text-sm text-gray-500 italic">
-      No hay personas asignadas a esta tarea
-    </span>
-  <% end %>
 </div>
