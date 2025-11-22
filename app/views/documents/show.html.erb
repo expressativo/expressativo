@@ -22,10 +22,15 @@
         <%= @document.name %>
       </h1>
       <div class="absolute top-4 right-4 flex gap-2">
+        <div>
         <%= link_to "Editar", edit_document_path(@document), class: "text-sm text-gray-500 hover:text-gray-700" %>
+        </div>
         <% if @document.file.attached? %>
           <%= link_to "Descargar", download_document_path(@document), class: "text-sm text-blue-500 hover:text-blue-700" %>
         <% end %>
+        <div>
+        <%= button_to "Eliminar", document_path(@document), method: :delete, data: { turbo_confirm: "¿Estás seguro de eliminar este documento?" }, class: "text-sm text-red-500 hover:text-red-700" %>
+        </div>
       </div>
     </div>
     <hr class="max-w-[100px] mx-auto text-gray-300">

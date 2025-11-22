@@ -26,7 +26,7 @@ class DocumentsTest < ApplicationSystemTestCase
 
     click_on "Update Document"
 
-    assert_text "Document was successfully updated"
+    assert_text "Documento actualizado exitosamente"
     click_on "Back"
   end
 

@@ -48,7 +48,7 @@ class DocumentsController < ApplicationController
   def update
     respond_to do |format|
       if @document.update(document_params)
-        format.html { redirect_to @document, notice: "Document was successfully updated.", status: :see_other }
+        format.html { redirect_to @document, notice: "Documento actualizado exitosamente", status: :see_other }
         format.json { render :show, status: :ok, location: @document }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -64,7 +64,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       redirect_path = folder ? project_folder_path(@project, folder) : project_folders_path(@project)
-      format.html { redirect_to redirect_path, notice: "Document was successfully deleted.", status: :see_other }
+      format.html { redirect_to redirect_path, notice: "Documento eliminado exitosamente", status: :see_other }
       format.json { head :no_content }
     end
   end
