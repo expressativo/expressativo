@@ -74,6 +74,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Ruta para ver tareas asignadas al usuario actual
+  get "my_task", to: "tasks#my_task", as: :my_task
+
   # Rutas de invitación (fuera del namespace de projects para URLs más limpias)
   get "invite/:token", to: "project_invitations#show", as: :project_invitation
   post "invite/:token/accept", to: "project_invitations#accept", as: :accept_project_invitation

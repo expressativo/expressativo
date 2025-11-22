@@ -10,7 +10,7 @@
 
   <% if current_month_publications.any? %>
     <ul class="calendar-widget-list max-h-[300px] overflow-y-scroll">
-      <% current_month_publications.limit(5).each do |publication| %>
+      <% current_month_publications.limit(3).each do |publication| %>
         <li class="calendar-widget-item">
           <div class="calendar-widget-item-title">
             <%= publication.title %>
@@ -24,6 +24,13 @@
               Tarea creada
             </div>
           <% end %>
+        </li>
+      <% end %>
+      <% if current_month_publications.count > 3 %>
+        <li class="calendar-widget-item">
+          <div class="calendar-widget-item-title">
+            + <%= current_month_publications.count - 3 %> más
+          </div>
         </li>
       <% end %>
     </ul>

@@ -1,4 +1,4 @@
-<div class="p-4 border rounded-xl border-gray-200 md:px-24 w-full md:max-w-2xl lg:max-w-6xl m-auto">
+<div class="p-4 md:px-24 w-full md:max-w-2xl lg:max-w-6xl m-auto">
   <%= link_to edit_project_todo_task_path(@project, @todo, task), data: { turbo_frame: "#{dom_id(task)}_form" } do %>
     <div class="grid grid-cols-6 gap-4 mt-4">
       <div class="col-span-1 flex justify-end">

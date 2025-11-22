@@ -4,6 +4,9 @@
       <h1 class="text-2xl text-center font-semibold">
         <%= link_to @project.title, edit_project_path(@project) %>
       </h1>
+      <div class="flex justify-center">
+        <%= render 'project_member', project: @project %>
+      </div>
       <div class="absolute top-0 left-4">
         <%= render 'projects/option_dropdown' %>
       </div>

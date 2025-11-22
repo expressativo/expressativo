@@ -7,7 +7,7 @@
       <div class="bg-white p-4 border-b border-gray-300">
         <div class="flex justify-between items-start">
           <div class="flex items-center">
-            <%= user_avatar(comment.user, class: "w-8 h-8 rounded-full mr-2") %>
+            <%= user_avatar(comment.user) %>
             <% if comment.user.full_name %>
               <p class="text-sm text-gray-600"><%= comment.user.full_name %></p>
             <% else %>

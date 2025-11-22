@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_context
+  before_action :set_context, except: :my_task
 
   def index
     @tasks = @todo.tasks
@@ -69,11 +69,23 @@ class TasksController < ApplicationController
     redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
   end
 
+  # task assigned to current user
+  def my_task
+    @tasks = current_user.tasks.where(done: false)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+      format.json { render json: @tasks }
+    end
+  end
+
+  private
+
   def set_context
     @todo = Todo.find(params[:todo_id])
     @project = Project.find(params[:project_id])
   end
-
   def tasks_params
     params.require(:task).permit(:title, :done, :from, :notes, :due_date)
   end

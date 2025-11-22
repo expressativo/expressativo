@@ -2,7 +2,7 @@
 
 @layer components {
     .input {
-        @apply border-gray-300 border rounded-2xl focus:border-purple-500 focus:ring-purple-500 h-12 w-full p-4 bg-white;
+        @apply border-gray-300 border rounded-2xl focus:border-purple-500 focus:ring-purple-500 h-12x w-full px-2 bg-white;
     }
 
     .textarea {
@@ -50,7 +50,7 @@
     }
 
     .card {
-        @apply bg-white shadow-md rounded-lg border border-gray-200;
+        @apply bg-white rounded-lg border border-gray-200;
     }
 
     .errors {
