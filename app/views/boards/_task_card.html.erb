@@ -48,7 +48,7 @@
       </div>
     <% end %>
 
-    <%= button_to remove_from_board_board_task_path(task, board_id: board.id),
+    <%= button_to remove_from_board_board_task_path(task, board_id: board.id, **request.query_parameters),
         method: :delete,
         form: { data: { turbo_confirm: "¿Remover esta tarea del tablero?" } },
         class: "text-xs text-red-600 hover:text-red-800" do %>

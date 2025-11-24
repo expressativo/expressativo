@@ -1,8 +1,8 @@
  <div class="flex -space-x-2 mt-auto">
         <%= user_avatar(project.owner) %>
         <% if project.members.present? %>
-        <% project.members.each do |member| %>
-            <%= user_avatar(member) %>
-        <% end %>
+            <% project.members.each do |member| %>
+                <%= user_avatar(member) %>
+            <% end %>
         <% end %>
  </div>

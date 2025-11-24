@@ -6,7 +6,7 @@
   class="space-y-3"
 >
   <!-- Lista de usuarios asignados -->
-  <div data-task-assignee-target="assignedList" class="space-y-2">
+  <div data-task-assignee-target="assignedList" class="flex flex-wrap gap-2 items-center">
     <% task.assigned_users.each do |user| %>
       <div class="inline-block px-2 py-1 bg-purple-50 border border-purple-500 rounded-3xl" data-user-id="<%= user.id %>">
         <div class="flex justify-between items-center">

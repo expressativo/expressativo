@@ -73,7 +73,11 @@
                   data-assignee-id="<%= user.id %>"
                   data-assignee-name="<%= user.first_name %> <%= user.last_name %>"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <%= 'bg-blue-50 font-semibold' if params[:assignee_id].to_i == user.id %>">
-                  <%= user.first_name %> <%= user.last_name %>
+                  <% if user.first_name.present? %>
+                    <%= user.first_name %> <%= user.last_name %>
+                  <% else %>
+                    <%= user.email %>
+                  <% end %>
                 </a>
               <% end %>
             <% end %>

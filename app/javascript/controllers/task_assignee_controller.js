@@ -107,9 +107,10 @@ export default class extends Controller {
     const assignedItem = document.createElement("div");
     assignedItem.className = "inline-block px-2 py-1 bg-purple-50 border border-purple-500 rounded-3xl";
     assignedItem.dataset.userId = user.id;
+    console.log(`${Boolean(user.name.trim())}`)
     assignedItem.innerHTML = `
       <div class="flex items-center gap-2 justify-between">
-        <div class="font-medium text-gray-900 truncate">${user.name || user.email}</div>
+        <div class="font-medium text-gray-900 truncate">${Boolean(user.name.trim()) ? user.name : user.email}</div>
         <button
         type="button"
         class="flex-shrink-0 text-red-600 hover:text-red-800"
@@ -129,22 +130,25 @@ export default class extends Controller {
   async unassign(event) {
     const button = event.currentTarget;
     const userId = button.dataset.userId;
-    const assignedItem = button.closest("[data-user-id]");
 
     if (!confirm("¿Desasignar este usuario de la tarea?")) {
       return;
     }
+    
+    console.log(userId)
 
     try {
-      const url = `${this.unassignBaseUrlValue}/${userId}`;
+      const url = `${this.unassignBaseUrlValue}/${userId}.json`;
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
           "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
         }
       });
+      console.log(response)
 
       const data = await response.json();
+
 
       if (data.success) {
         window.location.reload();

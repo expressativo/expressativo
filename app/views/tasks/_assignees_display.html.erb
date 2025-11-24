@@ -1,10 +1,10 @@
 <% if task.assigned_users.any? %>
-  <div class="space-y-2">
+  <div class="flex flex-wrap gap-2 items-center">
     <% task.assigned_users.each do |user| %>
       <div class="inline-block px-3 py-1 bg-purple-50 border border-purple-500 rounded-3xl">
         <div class="flex items-center gap-2">
           <%= user_avatar(user, class: "w-6 h-6 rounded-full object-cover") %>
-          <% if user.full_name %>
+          <% if user.full_name.present? %>
             <div class="font-medium text-gray-900 truncate"><%= user.full_name %></div>
           <% else %>
             <div class="font-medium text-gray-900 truncate"><%= user.email %></div>
