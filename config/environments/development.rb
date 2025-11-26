@@ -29,7 +29,7 @@ Rails.application.configure do
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
-  
+
   # Configuración optimizada para assets en desarrollo
   config.assets.debug = true
   config.assets.digest = false
@@ -37,6 +37,9 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+
+  # Configurar el host para ActiveStorage en desarrollo
+  Rails.application.routes.default_url_options[:host] = "localhost:3000"
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

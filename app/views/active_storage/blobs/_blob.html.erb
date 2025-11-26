@@ -1,8 +1,23 @@
-<figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
+<figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %> relative">
   <% if blob.representable? %>
-    <%= image_tag blob.representation(resize_to_limit: local_assigns[:in_gallery] ? [ 800, 600 ] : [ 1024, 768 ]) %>
+      <% if Rails.env.development? %>
+        <%# En desarrollo: usar el blob directo sin procesamiento para evitar errores con vips/imagemagick %>
+        <%= image_tag rails_blob_path(blob, only_path: true), class: "max-w-full h-auto" %>
+      <% else %>
+        <%# En producción: usar representación optimizada %>
+        <%= image_tag blob.representation(resize_to_limit: local_assigns[:in_gallery] ? [ 800, 600 ] : [ 1024, 768 ]) %>
+      <% end %>
   <% end %>
+ <%# Botón de descarga en la esquina superior derecha - siempre visible %>
+ <div class="flex items-center justify-center gap-2">
 
+  <div class="inline-block underline rounded text-purple-500 hover:text-purple-700" style="padding-left: 5px; padding-right: 5px;">
+        <%= link_to rails_blob_path(blob, disposition: "attachment"), 
+            title: "Descargar #{blob.filename}",
+            download: blob.filename do %>
+          Descargar
+        <% end %>
+  </div>
   <figcaption class="attachment__caption">
     <% if caption = blob.try(:caption) %>
       <%= caption %>
@@ -11,4 +26,6 @@
       <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
     <% end %>
   </figcaption>
+ </div>
+
 </figure>
