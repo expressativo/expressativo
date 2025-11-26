@@ -1,0 +1,23 @@
+<%= turbo_frame_tag dom_id(comment) do %>
+  <div class="bg-white p-4 border-b border-gray-300">
+    <%= form_with model: comment, 
+                  url: project_todo_task_comment_path(@project, @todo, @task, comment),
+                  method: :patch do |f| %>
+      
+      <div class="mb-4">
+        <%= f.label :content, "Editar comentario", class: "label text-sm font-medium text-gray-700" %>
+        <%= f.rich_text_area :content, class: "mt-2" %>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <%= f.submit "Actualizar", class: "button", data: {
+          turbo_submits_with: "Actualizando..."
+        } %>
+        <%= link_to "Cancelar", 
+            project_todo_task_path(@project, @todo, @task, anchor: dom_id(comment)),
+            class: "button-outline",
+            data: { turbo_frame: "_top" } %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

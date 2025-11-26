@@ -44,6 +44,7 @@
       <%= render 'tasks/tasks_info', task: @task %>
     <% end %>
     <section class="md:max-w-4xl m-auto mt-4">
+      <div id="flash-messages"></div>
       <%= render 'tasks/comments/list' %>
       <div class="mt-4">
         <%= render 'tasks/comments/form' %>

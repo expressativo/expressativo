@@ -27,6 +27,7 @@ Rails.application.routes.draw do
             get :search
           end
         end
+        resources :comments, only: [ :edit, :update, :destroy ]
       end
       member do
         get :completed_tasks, to: "todos#completed_tasks"

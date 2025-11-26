@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@comment) do %>
+  <%= render 'comments/form', comment: @comment, project: @project, todo: @todo, task: @task %>
+<% end %>
