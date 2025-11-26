@@ -1,0 +1,49 @@
+<div class="max-w-7xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Proyectos Archivados</h1>
+    <%= link_to "Volver a proyectos activos", projects_path, class: "button-outline" %>
+  </div>
+
+  <% if @projects.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @projects.each do |project| %>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">
+              <%= link_to project.title, project_path(project), class: "hover:text-indigo-600" %>
+            </h2>
+            <span class="inline-block bg-gray-500 text-white text-xs px-2 py-1 rounded">Archivado</span>
+          </div>
+          
+          <% if project.description.present? %>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2"><%= project.description %></p>
+          <% end %>
+          
+          <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+            <div class="text-sm text-gray-500">
+              <%= project.users.count %> miembro<%= project.users.count != 1 ? 's' : '' %>
+            </div>
+            
+            <%= button_to "Desarchivar", unarchive_project_path(project),
+                method: :patch,
+                class: "px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors",
+                data: { 
+                  turbo_confirm: "¿Deseas desarchivar este proyecto?" 
+                } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white border border-gray-200 rounded-2xl p-12 text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+        <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+        <path d="M10 12l4 0" />
+      </svg>
+      <p class="text-lg text-gray-600 mb-2">No tienes proyectos archivados</p>
+      <p class="text-sm text-gray-500">Los proyectos que archives aparecerán aquí</p>
+    </div>
+  <% end %>
+</div>

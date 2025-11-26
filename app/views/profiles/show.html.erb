@@ -49,13 +49,26 @@
 
       <!-- Estadísticas -->
       <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4">
-        <label class="text-sm font-semibold text-purple-600 uppercase tracking-wide">Proyectos</label>
-        <p class="mt-2 text-3xl font-bold text-purple-700"><%= @user.projects.count %></p>
+        <label class="text-sm font-semibold text-purple-600 uppercase tracking-wide">Proyectos Activos</label>
+        <p class="mt-2 text-3xl font-bold text-purple-700"><%= @user.projects.active.count %></p>
       </div>
 
       <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4">
         <label class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Miembro desde</label>
         <p class="mt-2 text-lg font-semibold text-indigo-700"><%= l(@user.created_at, format: :long) %></p>
+      </div>
+      
+      <!-- Proyectos Archivados -->
+      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 md:col-span-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Proyectos Archivados</label>
+            <p class="mt-2 text-3xl font-bold text-gray-700"><%= @user.projects.archived.count %></p>
+          </div>
+          <% if @user.projects.archived.any? %>
+            <%= link_to "Ver archivados", archived_projects_path, class: "button-outline" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

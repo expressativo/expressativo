@@ -63,8 +63,13 @@ Rails.application.routes.draw do
 
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
+      patch :archive
+      patch :unarchive
     end
   end
+
+  # Proyectos archivados
+  get "archived_projects", to: "projects#archived", as: :archived_projects
 
   # Rutas para actualizar posición de tareas en tableros
   resources :board_tasks, only: [] do

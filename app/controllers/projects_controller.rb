@@ -17,7 +17,12 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.for_user(current_user)
+    @projects = Project.for_user(current_user).active
+  end
+
+  def archived
+    @projects = Project.for_user(current_user).archived
+    render :archived
   end
 
   def show
@@ -40,6 +45,18 @@ class ProjectsController < ApplicationController
     @project = Project.for_user(current_user).find(params[:id])
     @project.destroy
     redirect_to projects_path, notice: "Project was successfully destroyed."
+  end
+
+  def archive
+    @project = Project.for_user(current_user).find(params[:id])
+    @project.update(archived: true)
+    redirect_to projects_path, notice: "Proyecto archivado correctamente."
+  end
+
+  def unarchive
+    @project = Project.for_user(current_user).find(params[:id])
+    @project.update(archived: false)
+    redirect_to projects_path, notice: "Proyecto desarchivado correctamente."
   end
 
   private

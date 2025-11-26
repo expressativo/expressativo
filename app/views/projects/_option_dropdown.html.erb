@@ -18,13 +18,22 @@
         <%= link_to "Editar", edit_project_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
       </li>
       <li>
-        <%= button_to "Eliminar", project_path(@project),
-        method: :delete,
+        <%= button_to "Archivar", archive_project_path(@project),
+        method: :patch,
         form: {
-          data: { turbo_confirm: "Esta seguro " },
+          data: { turbo_confirm: "¿Estás seguro de que deseas archivar este proyecto?" },
           class: "w-full"
         },
         class: "block px-4 py-2 hover:bg-gray-100 text-left w-full" %>
+      </li>
+      <li>
+        <%= button_to "Eliminar", project_path(@project),
+        method: :delete,
+        form: {
+          data: { turbo_confirm: "¿Estás seguro de que deseas eliminar este proyecto?" },
+          class: "w-full"
+        },
+        class: "block px-4 py-2 hover:bg-gray-100 text-left w-full text-red-600" %>
       </li>
     </ul>
 </div> 

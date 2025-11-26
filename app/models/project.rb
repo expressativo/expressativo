@@ -13,6 +13,8 @@ class Project < ApplicationRecord
   before_create :generate_invitation_token
 
   scope :for_user, ->(user) { joins(:project_users).where(project_users: { user_id: user.id }) }
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
 
   def owner
     project_users.find_by(role: "owner")&.user

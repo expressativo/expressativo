@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_19_170038) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_26_223806) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -111,6 +111,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_170038) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "conversation_participants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "conversation_type", null: false
+    t.integer "project_id"
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_type"], name: "index_conversations_on_conversation_type"
+    t.index ["project_id"], name: "index_conversations_on_project_id"
+  end
+
   create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -141,6 +161,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_170038) do
     t.index ["project_id"], name: "index_folders_on_project_id"
   end
 
+  create_table "message_mentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "message_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id", "user_id"], name: "index_message_mentions_on_message_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_message_mentions_on_user_id"
+  end
+
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "project_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.bigint "user_id", null: false
@@ -157,6 +197,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_170038) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "invitation_token"
+    t.boolean "archived", default: false, null: false
     t.index ["invitation_token"], name: "index_projects_on_invitation_token", unique: true
   end
 
