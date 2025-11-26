@@ -1,10 +1,117 @@
-<div>
-    <h1>Mis tareas</h1>
-    <section>
-        <% @tasks.each do |task| %>
-            <%= link_to project_todo_task_path(task.todo.project, task.todo, task), class: "mb-4 cursor-pointer border border-gray-200 p-4 rounded-2xl block" do %>
-                <%= task.title %>
+<div class="max-w-5xl mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Mis Tareas</h1>
+    
+    <% if @tasks.any? %>
+        <div class="space-y-3">
+            <% @tasks.each do |task| %>
+                <%= link_to project_todo_task_path(task.todo.project, task.todo, task), 
+                    class: "block bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-300 transition-all duration-200" do %>
+                    
+                    <div class="flex items-start justify-between gap-4">
+                        <!-- Título y proyecto -->
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1 truncate">
+                                <%= task.title %>
+                            </h3>
+                            
+                            <div class="flex items-center gap-3 text-sm text-gray-600">
+                                <!-- Proyecto -->
+                                <div class="flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M3 7m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                        <path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" />
+                                        <path d="M12 12l0 .01" />
+                                        <path d="M3 13a20 20 0 0 0 18 0" />
+                                    </svg>
+                                    <span class="font-medium"><%= task.todo.project.title %></span>
+                                </div>
+                                
+                                <!-- Todo list -->
+                                <div class="flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                        <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                        <path d="M9 12l2 2l4 -4" />
+                                    </svg>
+                                    <span><%= task.todo.name %></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Fecha de vencimiento -->
+                        <div class="flex-shrink-0">
+                            <% if task.due_date.present? %>
+                                <% days_until = (task.due_date.to_date - Date.today).to_i %>
+                                <% is_overdue = days_until < 0 %>
+                                <% is_today = days_until == 0 %>
+                                <% is_soon = days_until > 0 && days_until <= 3 %>
+                                
+                                <div class="flex items-center gap-2 px-3 py-2 rounded-lg <%= 
+                                    if is_overdue
+                                        'bg-red-50 text-red-700 border border-red-200'
+                                    elsif is_today
+                                        'bg-orange-50 text-orange-700 border border-orange-200'
+                                    elsif is_soon
+                                        'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                                    else
+                                        'bg-gray-50 text-gray-700 border border-gray-200'
+                                    end
+                                %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                                        <path d="M16 3v4" />
+                                        <path d="M8 3v4" />
+                                        <path d="M4 11h16" />
+                                        <path d="M11 15h1" />
+                                        <path d="M12 15v3" />
+                                    </svg>
+                                    <div class="text-sm">
+                                        <div class="font-semibold">
+                                            <%= l(task.due_date, format: :short) %>
+                                        </div>
+                                        <div class="text-xs">
+                                            <% if is_overdue %>
+                                                Vencida hace <%= days_until.abs %> día<%= days_until.abs != 1 ? 's' : '' %>
+                                            <% elsif is_today %>
+                                                Vence hoy
+                                            <% elsif is_soon %>
+                                                Vence en <%= days_until %> día<%= days_until != 1 ? 's' : '' %>
+                                            <% else %>
+                                                En <%= days_until %> días
+                                            <% end %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% else %>
+                                <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50 text-gray-500 border border-gray-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                                        <path d="M16 3v4" />
+                                        <path d="M8 3v4" />
+                                        <path d="M4 11h16" />
+                                    </svg>
+                                    <span class="text-sm">Sin fecha</span>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
             <% end %>
-        <% end %>
-    </section>
+        </div>
+    <% else %>
+        <div class="bg-white border border-gray-200 rounded-2xl p-12 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                <path d="M9 12l2 2l4 -4" />
+            </svg>
+            <p class="text-lg text-gray-600 mb-2">No tienes tareas pendientes</p>
+            <p class="text-sm text-gray-500">¡Buen trabajo! Todas tus tareas están completadas</p>
+        </div>
+    <% end %>
 </div>

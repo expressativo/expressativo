@@ -71,7 +71,10 @@ class TasksController < ApplicationController
 
   # task assigned to current user
   def my_task
-    @tasks = current_user.tasks.where(done: false)
+    @tasks = current_user.tasks
+      .where(done: false)
+      .includes(todo: :project)
+      .order(Arel.sql("CASE WHEN due_date IS NULL THEN 1 ELSE 0 END, due_date ASC"))
 
     respond_to do |format|
       format.html
