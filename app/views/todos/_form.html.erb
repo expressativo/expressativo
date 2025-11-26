@@ -7,13 +7,17 @@
     </ul>
   </div>
 <% end %>
+
 <%= form_with model: [project, todo], local: true do |form| %>
   <div class="mb-4 ">
     <%= form.label 'Título' , class: "label"%>
     <%= form.text_field :name, class: "input mt-2", placeholder: "Describe esta lista de tareas", autofocus: true %>
   </div>
-  <%= form.submit "Guardar", class: "button", id:"submit_todo", data: {
-    turbo_submits_with: "Guardando..."
-  } %>
-  <%= link_to "Cancelar", project_todos_path(project), class: "button-outline" %>
+  
+  <div class="flex items-center space-x-2 mt-6">
+    <%= form.submit "Guardar", class: "button", id: "submit_todo", data: {
+      turbo_submits_with: "Guardando..."
+    } %>
+    <%= link_to "Cancelar", project_todos_path(project), class: "button-outline" %>
+  </div>
 <% end %>

@@ -1,6 +1,7 @@
 class TodosController < ApplicationController
     before_action :authenticate_user!
     before_action :set_project
+    before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks ]
 
     def index
       @todos = @project.todos
@@ -20,10 +21,9 @@ class TodosController < ApplicationController
     end
 
     def edit
-      @todo = @project.todos.find(params[:id])
     end
+
     def update
-      @todo = @project.todos.find(params[:id])
       if @todo.update(todo_params)
         redirect_to project_todos_path(@project), notice: "Todo has sido actualizado con éxito."
       else
@@ -31,14 +31,26 @@ class TodosController < ApplicationController
       end
     end
 
+    def destroy
+      if @todo.tasks.pending.any?
+        redirect_to edit_project_todo_path(@project, @todo), alert: "No se puede eliminar el Todo porque tiene tareas pendientes."
+      else
+        @todo.destroy
+        redirect_to project_todos_path(@project), notice: "Todo eliminado correctamente."
+      end
+    end
+
     def completed_tasks
-      @todo = @project.todos.find(params[:id])
       @completed_tasks = @todo.tasks.where(done: true)
     end
 
     private
     def set_project
       @project = Project.find(params[:project_id])
+    end
+
+    def set_todo
+      @todo = @project.todos.find(params[:id])
     end
 
     def todo_params
