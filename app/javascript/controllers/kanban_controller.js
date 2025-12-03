@@ -32,13 +32,27 @@ export default class extends Controller {
         delay: 100, // Pequeño delay para distinguir entre click y drag
         delayOnTouchOnly: true,
         
-        onStart: (event) => {
+       onStart: (event) => {
           this.isDragging = true;
           event.item.classList.add('sortable-drag');
+          
+          // Resaltar columnas de destino (todas excepto la de origen)
+          const sourceColumn = event.from;
+          this.columnTargets.forEach((col) => {
+            if (col !== sourceColumn) {
+              col.classList.add('drop-target-highlight');
+            }
+          });
         },
-        
-        onEnd: (event) => {
+
+      onEnd: (event) => {
           event.item.classList.remove('sortable-drag');
+          
+          // Remover resaltado de todas las columnas
+          this.columnTargets.forEach((col) => {
+            col.classList.remove('drop-target-highlight');
+          });
+          
           this.handleDrop(event);
           
           // Resetear después de un pequeño delay

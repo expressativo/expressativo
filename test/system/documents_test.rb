@@ -16,7 +16,7 @@ class DocumentsTest < ApplicationSystemTestCase
 
     click_on "Create Document"
 
-    assert_text "Document was successfully created"
+    assert_text "Documento creado"
     click_on "Back"
   end
 

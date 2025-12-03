@@ -35,7 +35,7 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       if @document.save
         redirect_path = @folder ? project_folder_path(@project, @folder) : project_folders_path(@project)
-        format.html { redirect_to redirect_path, notice: "Document was successfully created." }
+        format.html { redirect_to redirect_path, notice: "Documento creado." }
         format.json { render :show, status: :created, location: @document }
       else
         format.html { render :new, status: :unprocessable_entity }

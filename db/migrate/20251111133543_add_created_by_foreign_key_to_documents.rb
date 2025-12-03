@@ -14,9 +14,12 @@ class AddCreatedByForeignKeyToDocuments < ActiveRecord::Migration[8.0]
     # Fix orphaned records: assign them to the first user
     reversible do |dir|
       dir.up do
-        result = execute("SELECT id FROM users ORDER BY id LIMIT 1")
-        first_user_id = result.first[0]
-        execute("UPDATE documents SET created_by_id = #{first_user_id} WHERE created_by_id NOT IN (SELECT id FROM users)")
+        first_user_id = select_value("SELECT id FROM users ORDER BY id LIMIT 1")
+
+        # If there are no users yet, skip the backfill step
+        if first_user_id
+          execute("UPDATE documents SET created_by_id = #{first_user_id} WHERE created_by_id NOT IN (SELECT id FROM users)")
+        end
       end
     end
 

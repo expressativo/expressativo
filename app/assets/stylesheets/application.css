@@ -96,3 +96,9 @@ blockquote {
 }
 
 
+/* Resaltado de columnas de destino al arrastrar tareas */
+.drop-target-highlight {
+  background-color: var(--color-purple-100) !important; /* bg-blue-100 */
+  border: 2px dashed var(--color-purple-700) !important; /* border-blue-500 */
+  transition: all 0.2s ease;
+}

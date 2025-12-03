@@ -15,7 +15,8 @@
       <div class="flex gap-2">
         <button
             type="button"
-            data-column-id="<%= @board.columns.order(position: :asc).last.id %>"
+            <%# Siempre agrega la tarea a la columna que esta en primera posicion %>
+            data-column-id="<%= @board.columns.order(position: :asc).first.id %>"
             data-url="<%= attach_multiple_tasks_project_boards_path(@project) %>"
             data-action="click->bulk-task-selector#attachToColumn"
             class="button-outline text-sm whitespace-nowrap">

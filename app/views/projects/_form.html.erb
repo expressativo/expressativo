@@ -10,11 +10,11 @@
 <%= form_with model: project , local:true do |form| %>
   <div class="mb-4">
     <%= form.label :title , class: "label"%>
-    <%= form.text_field :title, class: "input", placeholder: "Title of project" %>
+    <%= form.text_field :title, class: "input", placeholder: "Titulo del proyecto" %>
   </div>
   <div class="mb-4">
     <%= form.label :description, class: "label" %>
-    <%= form.text_field :description, class:"input" , placeholder: "Type more info"%>
+    <%= form.text_field :description, class:"input" , placeholder: "Descripción del proyecto"%>
   </div>
   <%= form.submit "Guardar", class: "button", id:"submit_project", data: {
     turbo_submits_with: "Guardando..."
