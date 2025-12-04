@@ -4,7 +4,7 @@ class TodosController < ApplicationController
     before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks ]
 
     def index
-      @todos = @project.todos
+      @todos = @project.todos.includes(:tasks)
     end
 
     def new

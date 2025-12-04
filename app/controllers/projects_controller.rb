@@ -17,16 +17,18 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.for_user(current_user).active
+    @projects = Project.for_user(current_user).active.includes(:project_users, :users)
   end
 
   def archived
-    @projects = Project.for_user(current_user).archived
+    @projects = Project.for_user(current_user).archived.includes(:project_users, :users)
     render :archived
   end
 
   def show
-    @project = Project.for_user(current_user).find(params[:id])
+    @project = Project.for_user(current_user)
+                      .includes(boards: [], publications: :task)
+                      .find(params[:id])
   end
 
   def edit

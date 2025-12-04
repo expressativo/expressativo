@@ -1,9 +1,14 @@
-<div>
+<div class="border border-2 border-gray-200 rounded-lg p-4">
   <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), method: :post do |f| %>
     <div class="comment">
       <div class="input-wrapper">
-        <%= f.label :content, "Tu comentario", class: "label" %>
-        <%= f.rich_text_area :content %>
+        <%= f.label :content, "Tu comentario (usa @ para mencionar)", class: "label" %>
+        <div data-controller="trix-mentions"
+             data-trix-mentions-project-id-value="<%= @project.id %>"
+             data-trix-mentions-todo-id-value="<%= @todo.id %>"
+             data-trix-mentions-task-id-value="<%= @task.id %>">
+          <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" %>
+        </div>
       </div>
       <%= f.submit "Agregar Comentario", class: "button", data: {
         turbo_submits_with: "Comentando..."
