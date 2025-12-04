@@ -2,7 +2,7 @@ class AnnouncementsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
   def index
-    @announcements = @project.announcements
+    @announcements = @project.announcements.order(created_at: :desc)
   end
 
   def new
@@ -33,7 +33,7 @@ class AnnouncementsController < ApplicationController
 
   def show
     @announcement = @project.announcements.find(params[:id])
-    @comments = @announcement.announcement_comments.all
+    @comments = @announcement.announcement_comments.includes(:user).order(created_at: :desc)
   end
 
   def destroy

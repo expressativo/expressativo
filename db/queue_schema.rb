@@ -101,6 +101,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
     t.index ["board_id"], name: "index_columns_on_board_id"
   end
 
+  create_table "comment_mentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "comment_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id", "user_id"], name: "index_comment_mentions_on_comment_id_and_user_id", unique: true
+    t.index ["comment_id"], name: "index_comment_mentions_on_comment_id"
+    t.index ["user_id"], name: "index_comment_mentions_on_user_id"
+  end
+
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
     t.bigint "task_id", null: false
@@ -139,6 +149,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
     t.index ["parent_folder_id"], name: "index_folders_on_parent_folder_id"
     t.index ["project_id", "name"], name: "index_folders_on_project_id_and_name"
     t.index ["project_id"], name: "index_folders_on_project_id"
+  end
+
+  create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.string "notification_type", null: false
+    t.datetime "read_at"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "project_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -243,6 +268,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
   add_foreign_key "announcements", "projects"
   add_foreign_key "boards", "projects"
   add_foreign_key "columns", "boards"
+  add_foreign_key "comment_mentions", "comments"
+  add_foreign_key "comment_mentions", "users"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "folders"
@@ -251,6 +278,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
   add_foreign_key "folders", "folders", column: "parent_folder_id"
   add_foreign_key "folders", "projects"
   add_foreign_key "folders", "users", column: "created_by_id"
+  add_foreign_key "notifications", "users"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "publications", "projects"

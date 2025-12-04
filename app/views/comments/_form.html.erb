@@ -1,12 +1,17 @@
 <%= turbo_frame_tag dom_id(comment) do %>
-  <div class="bg-white p-4 border-b border-gray-300">
+  <div class="bg-white p-4 border-gray-200 rounded-lg border-2">
     <%= form_with model: comment, 
                   url: project_todo_task_comment_path(@project, @todo, @task, comment),
                   method: :patch do |f| %>
       
       <div class="mb-4">
-        <%= f.label :content, "Editar comentario", class: "label text-sm font-medium text-gray-700" %>
-        <%= f.rich_text_area :content, class: "mt-2" %>
+        <%= f.label :content, "Editar comentario (usa @ para mencionar)", class: "label text-sm font-medium text-gray-700" %>
+        <div data-controller="trix-mentions"
+             data-trix-mentions-project-id-value="<%= @project.id %>"
+             data-trix-mentions-todo-id-value="<%= @todo.id %>"
+             data-trix-mentions-task-id-value="<%= @task.id %>">
+          <%= f.rich_text_area :content, class: "mt-2" %>
+        </div>
       </div>
       
       <div class="flex items-center space-x-2">

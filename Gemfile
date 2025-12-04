@@ -79,3 +79,6 @@ gem "sentry-ruby"
 gem "sentry-rails"
 
 gem "mailtrap", "~> 2.5"
+
+# Paginación
+gem 'kaminari'

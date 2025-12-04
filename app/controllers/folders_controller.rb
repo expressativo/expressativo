@@ -1,20 +1,20 @@
 class FoldersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_folder, only: [:show, :edit, :update, :destroy]
-  before_action :set_parent_folder, only: [:new, :create]
+  before_action :set_folder, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_parent_folder, only: [ :new, :create ]
 
   def index
-    folders = @project.folders.root_folders
-    documents = @project.documents.root_documents.not_archived
+    folders = @project.folders.includes(:created_by).root_folders
+    documents = @project.documents.includes(:created_by).root_documents.not_archived
 
     # Combine and sort by created_at (most recent first)
     @items = (folders.to_a + documents.to_a).sort_by(&:created_at).reverse
   end
 
   def show
-    subfolders = @folder.subfolders
-    documents = @folder.documents.not_archived
+    subfolders = @folder.subfolders.includes(:created_by)
+    documents = @folder.documents.includes(:created_by).not_archived
 
     # Combine and sort by created_at (most recent first)
     @items = (subfolders.to_a + documents.to_a).sort_by(&:created_at).reverse

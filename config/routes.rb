@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :tasks do
         member do
           post :add_comment
+          get :search_members
         end
         resources :assignments, controller: "task_assignments", only: [ :create, :destroy ] do
           collection do
@@ -94,6 +95,18 @@ Rails.application.routes.draw do
       patch :archive
     end
   end
+
+  # Notificaciones
+  resources :notifications, only: [ :index, :show ] do
+    member do
+      post :mark_as_read
+    end
+    collection do
+      post :mark_all_as_read
+      get :unread_count
+    end
+  end
+
   # resources :registers, only: %i[new create]
   root to: "projects#index"
 end

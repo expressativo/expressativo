@@ -1,0 +1,13 @@
+Hola <%= @user.full_name || @user.email %>,
+
+<%= @mentioned_by.full_name || @mentioned_by.email %> te mencionó en un comentario de la tarea "<%= @task.title %>" en el proyecto <%= @project.title %>.
+
+Comentario:
+---
+<%= @comment.content.to_plain_text %>
+---
+
+Ver tarea: <%= project_todo_task_url(@project, @task.todo, @task) %>
+
+---
+Este es un correo automático de Expressativo.

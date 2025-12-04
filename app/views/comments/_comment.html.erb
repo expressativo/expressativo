@@ -1,5 +1,5 @@
 <%= turbo_frame_tag dom_id(comment) do %>
-  <div class="bg-white p-4 border-b border-gray-300">
+  <div id="comment_<%= comment.id %>" class="bg-white p-4 border-b border-gray-300">
     <div class="flex justify-between items-start">
       <div class="flex items-center">
         <%= user_avatar(comment.user) %>

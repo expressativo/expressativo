@@ -4,6 +4,15 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: [ :edit, :update, :destroy ]
   before_action :authorize_user!, only: [ :edit, :update, :destroy ]
 
+  def show
+    @comment = @task.comments.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
   def edit
     respond_to do |format|
       format.html

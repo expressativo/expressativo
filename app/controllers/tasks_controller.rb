@@ -7,7 +7,7 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = Task.find(params[:id])
+    @task = Task.includes(:assigned_users, :created_by, :publication, comments: :user).find(params[:id])
     @todo = Todo.find(params[:todo_id])
     @project = Project.find(params[:project_id])
   rescue ActiveRecord::RecordNotFound
@@ -81,6 +81,29 @@ class TasksController < ApplicationController
       format.turbo_stream
       format.json { render json: @tasks }
     end
+  end
+
+  def search_members
+    @task = Task.find(params[:id])
+    @project = @task.todo.project
+
+    query = params[:q].to_s.downcase
+
+    users = @project.users.where(
+      "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?",
+      "%#{query}%", "%#{query}%", "%#{query}%"
+    ).limit(5)
+
+    render json: {
+      users: users.map do |user|
+        {
+          id: user.id,
+          name: user.full_name.presence || user.email,
+          email: user.email,
+          initials: user.full_name.present? ? user.full_name.split.map(&:first).join.upcase : user.email[0].upcase
+        }
+      end
+    }
   end
 
   private

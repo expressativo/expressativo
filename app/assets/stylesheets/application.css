@@ -102,3 +102,60 @@ blockquote {
   border: 2px dashed var(--color-purple-700) !important; /* border-blue-500 */
   transition: all 0.2s ease;
 }
+
+/* Estilos para menciones */
+.mention-suggestion {
+  cursor: pointer;
+}
+
+.mention-suggestion:hover {
+  background-color: #f3f4f6;
+}
+
+/* Estilos para Tribute.js (autocompletado tipo Twitter) */
+.tribute-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+  display: block;
+  z-index: 999999;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.tribute-container ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tribute-container li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tribute-container li:last-child {
+  border-bottom: none;
+}
+
+.tribute-container li.highlight,
+.tribute-container li:hover {
+  background-color: #eef2ff;
+}
+
+.tribute-container li.no-match {
+  cursor: default;
+  padding: 12px;
+  text-align: center;
+}
+
+.tribute-container .menu-highlighted {
+  background-color: #eef2ff;
+}
