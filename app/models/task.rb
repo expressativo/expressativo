@@ -15,6 +15,7 @@ class Task < ApplicationRecord
 
   scope :pending, -> { where(done: false) }
 
+  before_save :sync_done_with_column
   after_update :sync_publication
 
   def completed?
@@ -26,6 +27,15 @@ class Task < ApplicationRecord
   end
 
   private
+
+  def sync_done_with_column
+    # Solo sincronizar si cambió la columna y no se está cambiando done manualmente
+    if column_id_changed? && column.present? && !done_changed?
+      board = column.board
+      last_column = board.columns.reorder(position: :desc).first
+      self.done = (column.id == last_column.id)
+    end
+  end
 
   def sync_publication
     publication&.update(title: title, publication_date: due_date, description: notes)

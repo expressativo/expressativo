@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   resources :board_tasks, only: [] do
     member do
       patch :update_position
+      post :add_to_board
       delete :remove_from_board
     end
   end

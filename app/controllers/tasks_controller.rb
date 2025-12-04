@@ -113,6 +113,6 @@ class TasksController < ApplicationController
     @project = Project.find(params[:project_id])
   end
   def tasks_params
-    params.require(:task).permit(:title, :done, :from, :notes, :due_date)
+    params.require(:task).permit(:title, :done, :from, :notes, :due_date, :column_id)
   end
 end
