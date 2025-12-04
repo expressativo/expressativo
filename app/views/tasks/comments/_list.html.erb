@@ -3,7 +3,7 @@
     <h3 class="text-lg font-medium text-gray-900">Comentarios</h3>
   <% end %>
   <div class="mt-2 space-y-4">
-    <% @task.comments.includes(:user).order(created_at: :desc).each do |comment| %>
+    <% @task.comments.order(created_at: :desc).each do |comment| %>
       <%= render 'comments/comment', comment: comment, project: @project, todo: @todo, task: @task %>
     <% end %>
   </div>

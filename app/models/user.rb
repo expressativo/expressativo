@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :projects, through: :project_users
   has_many :task_assignments, dependent: :destroy
   has_many :tasks, through: :task_assignments
+  has_many :notifications, dependent: :destroy
+  has_many :comment_mentions, dependent: :destroy
 
   # Validaciones de avatar movidas al controller para evitar errores en producción
   # validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
