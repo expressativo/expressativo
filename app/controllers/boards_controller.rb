@@ -10,10 +10,10 @@ class BoardsController < ApplicationController
   def show
     # Obtener todos los usuarios del proyecto para el filtro
     @project_users = @project.users.order(:first_name, :last_name)
-    
+
     # Construir query base de columnas
     columns_query = @board.columns.includes(tasks: [ :todo, :created_by, :assigned_users ])
-    
+
     # Aplicar filtro si existe
     if params[:assignee_id].present?
       if params[:assignee_id] == "unassigned"

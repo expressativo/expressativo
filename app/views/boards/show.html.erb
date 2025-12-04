@@ -1,5 +1,5 @@
 <div>
-  <div class="flex justify-between items-center mb-4">
+  <div class="flex justify-between items-center">
     <div class="flex items-center gap-4">
       <div>
       <%= link_to edit_project_board_path(@project, @board) do %>
@@ -147,7 +147,7 @@
         <div
           data-kanban-target="column"
           data-column-id="<%= column.id %>"
-          class="rounded-b-lg p-4 min-h-[200px] space-y-3">
+          class="rounded-b-lg p-4 min-h-[200px] space-y-3 pb-36">
 
           <% column.tasks.each do |task| %>
             <%= render 'boards/task_card', task: task, board: @board, project: @project %>

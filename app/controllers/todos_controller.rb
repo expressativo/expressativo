@@ -4,7 +4,15 @@ class TodosController < ApplicationController
     before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks ]
 
     def index
-      @todos = @project.todos
+      @todos = @project.todos.includes(tasks: [ :assigned_users, :todo ])
+
+      # Si se pasa un parámetro de vista, actualizar la preferencia del usuario
+      if params[:view].present? && [ "list", "grid" ].include?(params[:view])
+        current_user.update(todos_view_preference: params[:view])
+      end
+
+      # Usar la preferencia guardada del usuario
+      @view_type = current_user.todos_view_preference || "list"
     end
 
     def new
