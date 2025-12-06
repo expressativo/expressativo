@@ -1,5 +1,5 @@
-<div class="border border-2 border-gray-200 rounded-lg p-4">
-  <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), method: :post do |f| %>
+<div class="border border-2 border-gray-200 rounded-lg p-4" data-controller="show-comment-section">
+  <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), class: "hidden", method: :post do |f| %>
     <div class="comment">
       <div class="input-wrapper">
         <%= f.label :content, "Tu comentario (usa @ para mencionar)", class: "label" %>
@@ -10,9 +10,16 @@
           <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" %>
         </div>
       </div>
-      <%= f.submit "Agregar Comentario", class: "button", data: {
-        turbo_submits_with: "Comentando..."
-      } %>
+      <div class="flex gap-2">
+        <%= f.submit "Agregar Comentario", class: "button", data: {
+          turbo_submits_with: "Comentando..."
+        } %>
+        <button type="button" class="button-outline" data-action="click->show-comment-section#toggle">Cancelar</button>
+      </div>
     </div>
   <% end %>
+
+   <button id="toggle-add-comment" class="button" data-action="click->show-comment-section#toggle">
+    Agregar comentario
+  </button>
 </div>
