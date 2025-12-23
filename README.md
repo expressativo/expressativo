@@ -1,7 +1,8 @@
 # Tivo  simple planning project app
-<img width="1440" alt="Screenshot 2025-06-28 at 6 00 27 PM" src="https://github.com/user-attachments/assets/9df1313e-7478-4a3d-9a6d-e23fc3934df9" />
+<img width="1920" height="1045" alt="imagen" src="https://github.com/user-attachments/assets/6000f88d-43a9-4219-82fb-47a8aa7e8463" />
 
-
+## Kamban board
+<img width="1920" height="1045" alt="imagen" src="https://github.com/user-attachments/assets/f067208d-8a91-4f78-a9d9-dea6f91053d5" />
 
 With Tivo you can create, manage and share your tasks and projects
 
