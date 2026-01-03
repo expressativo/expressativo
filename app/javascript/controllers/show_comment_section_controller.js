@@ -15,17 +15,8 @@ export default class extends Controller {
   handleKeyDown(event) {
     // Si se presiona Escape
     if (event.key === 'Escape') {
+      event.preventDefault();
       this.toggle();
-    }
-
-    if(event.key === 'c') {
-      this.toggle();
-      setTimeout(() => {
-          window.scrollTo({
-              top: document.body.scrollHeight,
-              behavior: 'smooth'
-            });
-      }, 100);
     }
   }
 
