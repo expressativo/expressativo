@@ -109,5 +109,5 @@ Rails.application.routes.draw do
   end
 
   # resources :registers, only: %i[new create]
-  root to: "projects#index"
+  root to: "home#index"
 end

@@ -86,14 +86,9 @@
   <!-- Hero Image Placeholder -->
   <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
     <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-8">
-      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-96 flex items-center justify-center">
+      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-[600px] flex items-center justify-center">
         <div class="text-center">
-          <div class="w-24 h-24 bg-blue-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
-            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
-          <p class="text-gray-600 font-medium">Interfaz de Tivo</p>
+          <img src="<%= asset_url('hero-image.png') %>" alt="Hero Image" class="w-full h-full object-cover">
         </div>
       </div>
     </div>
@@ -294,6 +289,93 @@
   </div>
 </section>
 
+<!-- Testimonials Section -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Lo que dicen nuestros usuarios
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Miles de equipos confían en Tivo para su trabajo diario
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Testimonial 1 -->
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-center mb-4">
+          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+            <span class="text-white font-semibold">M</span>
+          </div>
+          <div class="ml-3">
+            <h4 class="font-semibold text-gray-900">María García</h4>
+            <p class="text-gray-600 text-sm">Product Manager</p>
+          </div>
+        </div>
+        <p class="text-gray-700 italic">"Tivo revolucionó cómo coordinamos nuestros sprints. El tablero Kanban es intuitivo y las notificaciones mantienen a todos al día."</p>
+        <div class="flex text-yellow-400 mt-3">
+          ★★★★★
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-center mb-4">
+          <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+            <span class="text-white font-semibold">C</span>
+          </div>
+          <div class="ml-3">
+            <h4 class="font-semibold text-gray-900">Carlos Rodríguez</h4>
+            <p class="text-gray-600 text-sm">Marketing Director</p>
+          </div>
+        </div>
+        <p class="text-gray-700 italic">"El calendario de publicaciones nos ayudó a planificar contenido mensual. La integración con tareas es perfecta."</p>
+        <div class="flex text-yellow-400 mt-3">
+          ★★★★★
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-center mb-4">
+          <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+            <span class="text-white font-semibold">A</span>
+          </div>
+          <div class="ml-3">
+            <h4 class="font-semibold text-gray-900">Ana López</h4>
+            <p class="text-gray-600 text-sm">CEO Startup</p>
+          </div>
+        </div>
+        <p class="text-gray-700 italic">"Desde que usamos Tivo, nuestros equipos remotos están más sincronizados. Los documentos compartidos ahorran horas semanales."</p>
+        <div class="flex text-yellow-400 mt-3">
+          ★★★★★
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Proof Numbers -->
+    <div class="mt-16 grid md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">10,000+</div>
+        <p class="text-gray-600">Usuarios activos</p>
+      </div>
+      <div>
+        <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">50,000+</div>
+        <p class="text-gray-600">Tareas completadas</p>
+      </div>
+      <div>
+        <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">2,500+</div>
+        <p class="text-gray-600">Proyectos gestionados</p>
+      </div>
+      <div>
+        <div class="text-3xl md:text-4xl font-bold text-orange-600 mb-2">98%</div>
+        <p class="text-gray-600">Satisfacción cliente</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Benefits Section -->
 <section id="benefits" class="py-20 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -302,51 +384,122 @@
         Por qué elegir Tivo
       </h2>
       <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        La diferencia está en los detalles
+        La diferencia está en los detalles que marcan la diferencia
       </p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-8">
       <!-- Benefit 1 -->
-      <div class="text-center">
+      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 text-center">
+        <div class="text-5xl font-bold text-blue-600 mb-4">🚀</div>
         <div class="text-4xl font-bold text-blue-600 mb-4">10x</div>
         <h3 class="text-xl font-semibold text-gray-900 mb-2">Más Rápido</h3>
-        <p class="text-gray-600">Reduce el tiempo en reuniones y aumenta la productividad con comunicación centralizada.</p>
+        <p class="text-gray-600">Reduce el tiempo en reuniones improductivas y aumenta la productividad con comunicación centralizada y flujos de trabajo automatizados.</p>
       </div>
 
       <!-- Benefit 2 -->
-      <div class="text-center">
+      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300 text-center">
+        <div class="text-5xl font-bold text-purple-600 mb-4">👁️</div>
         <div class="text-4xl font-bold text-purple-600 mb-4">100%</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Transparencia</h3>
-        <p class="text-gray-600">Todos en el equipo saben qué está pasando, quién trabaja en qué y cuáles son los plazos.</p>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Transparencia Total</h3>
+        <p class="text-gray-600">Todos en el equipo saben qué está pasando, quién trabaja en qué tarea y cuáles son los plazos reales. Fin a las sorpresas.</p>
       </div>
 
       <!-- Benefit 3 -->
-      <div class="text-center">
+      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 text-center">
+        <div class="text-5xl font-bold text-green-600 mb-4">🌐</div>
         <div class="text-4xl font-bold text-green-600 mb-4">24/7</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Accesible</h3>
-        <p class="text-gray-600">Trabaja desde cualquier lugar, en cualquier momento, desde cualquier dispositivo.</p>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Siempre Accesible</h3>
+        <p class="text-gray-600">Trabaja desde cualquier lugar, en cualquier momento, desde cualquier dispositivo. Tu equipo nunca para.</p>
+      </div>
+    </div>
+
+    <!-- Additional Benefits -->
+    <div class="mt-16 grid md:grid-cols-2 gap-8">
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">✅ Funcionalidades Completas</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>✓ Gestión de proyectos ilimitados</li>
+          <li>✓ Tableros Kanban con drag & drop</li>
+          <li>✓ Calendario de publicaciones integrado</li>
+          <li>✓ Centro de documentos compartidos</li>
+          <li>✓ Sistema de comentarios y menciones</li>
+          <li>✓ Notificaciones en tiempo real</li>
+        </ul>
+      </div>
+
+      <div class="bg-gradient-to-r from-green-50 to-blue-50 p-8 rounded-xl">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">🎯 Resultados Comprobados</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>✓ 40% reducción en tiempo de reuniones</li>
+          <li>✓ 60% mejora en visibilidad del progreso</li>
+          <li>✓ 25% aumento en productividad del equipo</li>
+          <li>✓ 95% de adopción por parte de usuarios</li>
+          <li>✓ Soporte 24/7 incluido gratis</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-      ¿Listo para transformar la colaboración de tu equipo?
+<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
+  <div class="absolute inset-0 bg-black/10"></div>
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">
+      🚀 ¿Listo para revolucionar la colaboración de tu equipo?
     </h2>
-    <p class="text-xl text-blue-100 mb-8">
-      Únete a miles de equipos que ya están organizando su trabajo con Tivo.
+    <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+      Únete a más de 10,000 equipos que ya están organizando su trabajo con Tivo. Comienza gratis hoy mismo.
     </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-      <%= link_to "Comenzar Gratis", new_user_registration_path, 
-          class: "px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg" %>
-      <%= link_to "Ver Demo", "#features", 
-          class: "px-8 py-4 bg-transparent hover:bg-white/10 text-white font-semibold rounded-lg border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-200 text-lg" %>
+
+    <!-- Urgency Banner -->
+    <div class="bg-yellow-400 text-yellow-900 px-6 py-3 rounded-lg mb-8 inline-block">
+      <span class="font-semibold">⚡ Oferta limitada:</span> Primeros 100 usuarios obtienen soporte premium gratis por 6 meses
     </div>
-    <p class="mt-6 text-blue-100 text-sm">Configuración en 2 minutos • Sin tarjeta de crédito • Soporte 24/7</p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <%= link_to "🚀 Comenzar Gratis Ahora", new_user_registration_path,
+          class: "px-10 py-5 bg-white text-blue-600 font-bold rounded-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 text-xl animate-pulse" %>
+      <%= link_to "Ver Demo Interactiva", "#features",
+          class: "px-10 py-5 bg-transparent hover:bg-white/20 text-white font-bold rounded-lg border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-300 text-xl" %>
+    </div>
+
+    <div class="mt-8 grid md:grid-cols-3 gap-6 text-center">
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="text-2xl font-bold text-white">2 min</div>
+        <p class="text-blue-100">Configuración</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="text-2xl font-bold text-white">Gratis</div>
+        <p class="text-blue-100">Sin tarjeta</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="text-2xl font-bold text-white">24/7</div>
+        <p class="text-blue-100">Soporte</p>
+      </div>
+    </div>
+
+    <p class="mt-6 text-blue-100 text-sm">
+      ✅ Sin compromisos • ✅ Datos seguros • ✅ Cancelación gratuita
+    </p>
+  </div>
+</section>
+
+<!-- Final CTA Banner -->
+<section class="py-12 bg-gray-900">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">
+      ¿Todavía tienes dudas?
+    </h3>
+    <p class="text-gray-300 mb-6">
+      Prueba Tivo gratis durante 14 días. Sin riesgos, sin compromisos.
+    </p>
+    <%= link_to "Iniciar Prueba Gratuita", new_user_registration_path,
+        class: "px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200" %>
+    <p class="mt-4 text-gray-400 text-sm">
+      Más de 10,000 equipos ya confían en nosotros
+    </p>
   </div>
 </section>
 
