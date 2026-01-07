@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_07_132801) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -255,7 +255,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_020023) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "todos_view_preference", default: "list"
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

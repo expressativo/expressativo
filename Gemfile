@@ -74,6 +74,8 @@ gem "aws-sdk-s3", "1.170", require: false
 gem "aws-sdk-core", "3.211"
 gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 # Sentry GEMS
 gem "sentry-ruby"
 gem "sentry-rails"
