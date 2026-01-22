@@ -1,6 +1,6 @@
 <div class="p-4 border-r border-gray-300">
     <h2 class="card_title">
-      Tablero
+      Tableros
     </h2>
 
   <% if @project.boards.any? %>
@@ -11,7 +11,7 @@
         </li>
       <% end %>
     </ul>
-    
+
     <% if @project.boards.count > 5 %>
       <div class="mt-3 pt-3 border-t border-gray-200 text-center">
         <%= link_to "Ver todos los tableros", project_boards_path(@project), class: "text-sm text-blue-600 hover:underline" %>
@@ -19,12 +19,13 @@
     <% end %>
   <% else %>
     <p class="text-gray-500 text-sm text-center">No hay tableros creados</p>
-    <%= link_to "Crear tablero", new_project_board_path(@project), class: "text-sm text-blue-600 hover:underline mt-2 flex justify-center" %>
   <% end %>
+  <%= link_to "Crear tablero", new_project_board_path(@project), class: "text-sm text-blue-600 hover:underline mt-2 flex justify-center" %>
 
-<!-- 
 
- 
+<!--
+
+
   <div class="calendar-widget-footer">
     <%= link_to "Ver todos los tableros", project_boards_path(@project), class: "calendar-widget-link" %>
   </div>
