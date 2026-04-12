@@ -7,22 +7,119 @@
 }
 
 .glightbox:hover img {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 /* Estilos para el overlay del lightbox */
 .glightbox-container {
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(0, 0, 0, 0.98);
+  z-index: 9999;
+}
+
+/* Estilos para el contenedor de la imagen */
+.gslide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gslide-media {
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gslide-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+
+.gslide-image.zoomed {
+  cursor: zoom-out;
+}
+
+/* Estilos para la descripción */
+.gslide-description {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 16px;
+  font-size: 14px;
+}
+
+/* Botones de navegación */
+.glightbox-nav {
+  z-index: 10000;
+}
+
+.glightbox-prev,
+.glightbox-next {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.glightbox-prev:hover,
+.glightbox-next:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* Botón de cerrar */
+.glightbox-close {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.glightbox-close:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: rotate(90deg);
+}
+
+/* Contador de slides */
+.glightbox-slide-count {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 /* Mejorar la navegación en móviles */
 @media (max-width: 768px) {
   .gslide-media {
-    max-height: 80vh;
+    max-height: 85vh;
   }
 
   .gslide-description {
     padding: 12px;
+    font-size: 12px;
+  }
+
+  .glightbox-prev,
+  .glightbox-next {
+    padding: 8px 12px;
+    font-size: 20px;
+  }
+
+  .glightbox-close {
+    padding: 8px 12px;
+    font-size: 24px;
   }
 }
 
@@ -45,4 +142,35 @@ figure.attachment--preview img {
 
 figure.attachment--preview:hover img {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Efectos de zoom */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.glightbox-container.animation-in {
+  animation: zoomIn 0.3s ease-out;
+}
+
+.glightbox-container.animation-out {
+  animation: zoomOut 0.3s ease-in;
 }

@@ -22,6 +22,21 @@ export default class extends Controller {
       touchNavigation: true,
       loop: true,
       autoplayVideos: true,
+      zoomable: true,
+      draggable: true,
+      preload: true,
+      openEffect: "zoom",
+      closeEffect: "zoom",
+      slideEffect: "slide",
+      moreLength: 0,
+      moreText: "",
+      descPosition: "bottom",
+      plyr: {
+        config: {
+          controls: ["play-large", "play", "progress", "current-time", "mute", "volume", "fullscreen"],
+          tooltips: { controls: true, seek: true },
+        },
+      },
     })
   }
 
