@@ -114,9 +114,14 @@
 
     if (documentContent) {
       // Encontrar todas las imágenes en el contenido
-      const images = documentContent.querySelectorAll('img');
+      const images = documentContent.querySelectorAll('figure.attachment--preview a.glightbox img, img:not(.glightbox img)');
 
       images.forEach(function(img) {
+        // No procesar si ya tiene un link de GLightbox
+        if (img.closest('a.glightbox')) {
+          return;
+        }
+
         // No procesar si ya está envuelta
         if (img.parentElement.classList.contains('image-wrapper')) {
           return;

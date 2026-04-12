@@ -1,0 +1,48 @@
+/* Estilos personalizados para GLightbox */
+
+/* Mejorar el aspecto de las imágenes en el lightbox */
+.glightbox img {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.glightbox:hover img {
+  opacity: 0.9;
+}
+
+/* Estilos para el overlay del lightbox */
+.glightbox-container {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+/* Mejorar la navegación en móviles */
+@media (max-width: 768px) {
+  .gslide-media {
+    max-height: 80vh;
+  }
+
+  .gslide-description {
+    padding: 12px;
+  }
+}
+
+/* Asegurar que las imágenes se vean bien en diferentes tamaños */
+.gslide-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mejorar el aspecto de las figuras con imágenes */
+figure.attachment--preview {
+  display: inline-block;
+  margin: 1em auto;
+}
+
+figure.attachment--preview img {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+figure.attachment--preview:hover img {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
