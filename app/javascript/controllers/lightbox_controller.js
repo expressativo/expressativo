@@ -3,12 +3,16 @@ import GLightbox from "glightbox"
 
 export default class extends Controller {
   connect() {
+    this._turboLoadHandler = this.initializeLightbox.bind(this)
+    document.addEventListener("turbo:load", this._turboLoadHandler)
     this.initializeLightbox()
-    this.addEventListener()
   }
 
   disconnect() {
-    this.removeEventListener()
+    document.removeEventListener("turbo:load", this._turboLoadHandler)
+    if (this.lightbox) {
+      this.lightbox.destroy()
+    }
   }
 
   initializeLightbox() {
@@ -38,18 +42,5 @@ export default class extends Controller {
         },
       },
     })
-  }
-
-  addEventListener() {
-    // Reinitialize cuando Turbo carga nuevo contenido
-    document.addEventListener("turbo:load", this.handleTurboLoad.bind(this))
-  }
-
-  removeEventListener() {
-    document.removeEventListener("turbo:load", this.handleTurboLoad.bind(this))
-  }
-
-  handleTurboLoad() {
-    this.initializeLightbox()
   }
 }

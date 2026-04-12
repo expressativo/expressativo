@@ -10,4 +10,4 @@ pin "@rails/actiontext", to: "actiontext.esm.js"
 pin "sortablejs" # @1.15.6
 pin "html2canvas" # @1.4.1
 pin "tributejs" # @5.1.3
-pin "glightbox" # @3.3.0
+pin "glightbox", to: "https://cdn.jsdelivr.net/npm/glightbox@3/dist/glightbox.esm.js"
