@@ -19,7 +19,7 @@
     <%= stylesheet_link_tag "calendar", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "glightbox", "data-turbo-track": "reload" %>
     <%# GLightbox CSS %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/glightbox.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css">
     <%= javascript_importmap_tags %>
     <% if Rails.env.production? %>
       <%= Sentry.get_trace_propagation_meta.html_safe %>
