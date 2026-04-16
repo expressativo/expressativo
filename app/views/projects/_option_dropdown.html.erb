@@ -15,7 +15,10 @@
         <%= link_to "Miembros", project_members_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
       </li>
       <li>
-        <%= link_to "Editar", edit_project_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        <%= link_to "Configuración", project_settings_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
+      </li>
+      <li>
+        <%= link_to "Miembros", project_members_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
       </li>
       <li>
         <%= button_to "Archivar", archive_project_path(@project),

@@ -84,3 +84,5 @@ gem "mailtrap", "~> 2.5"
 
 # Paginación
 gem 'kaminari'
+
+gem "simple_form", "~> 5.4"

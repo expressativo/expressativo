@@ -13,10 +13,12 @@
     </div>
     <section class="mt-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <%= render 'projects/todo'%>
-          <%= render 'projects/docs' %>
-          <%= render 'projects/boards' %>
+        <%= render 'projects/todo'%>
+        <%= render 'projects/docs' %>
+        <%= render 'projects/boards' %>
+        <% if @project.has_calendar %>
           <%= render 'projects/publications' %>
+        <% end %>
       </div>
     </section>
   </div>
