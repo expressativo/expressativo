@@ -11,11 +11,12 @@ export default class extends Controller {
   connect() {
     console.log("Kanban controller conectado");
     this.initializeSortable();
+    this.initializeHeaderDropZones();
   }
 
   disconnect() {
-    // Limpiar instancias de Sortable
     this.sortableInstances?.forEach(instance => instance.destroy());
+    this.cleanupHeaderDropZones();
   }
 
   initializeSortable() {
@@ -129,6 +130,77 @@ export default class extends Controller {
         existingBadge.remove();
       }
     }
+  }
+
+  initializeHeaderDropZones() {
+    this._headerHandlers = [];
+
+    const headers = this.element.querySelectorAll('.column-drag-handle');
+    headers.forEach((header) => {
+      const columnWrapper = header.closest('[data-column-id]');
+      if (!columnWrapper) return;
+
+      const columnId = columnWrapper.dataset.columnId;
+      const taskList = columnWrapper.querySelector('[data-kanban-target="column"]');
+      if (!taskList) return;
+
+      const highlightClasses = ['bg-purple-50', 'border-b-purple-500', 'ring-2', 'ring-purple-300', 'ring-inset'];
+
+      const onDragOver = (e) => {
+        if (!this.isDragging) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        header.classList.remove('border-gray-300');
+        header.classList.add(...highlightClasses);
+      };
+
+      const onDragLeave = () => {
+        header.classList.remove(...highlightClasses);
+        header.classList.add('border-gray-300');
+      };
+
+      const onDrop = (e) => {
+        e.preventDefault();
+        header.classList.remove(...highlightClasses);
+        header.classList.add('border-gray-300');
+
+        const draggedItem = this.element.querySelector('.sortable-drag') ||
+                            this.element.querySelector('.task-card[style*="position"]');
+
+        // SortableJS expone el elemento arrastrado
+        const sortableDragged = Sortable.dragged;
+        if (!sortableDragged) return;
+
+        const sourceList = sortableDragged.parentElement;
+
+        // Insertar al inicio de la columna destino
+        taskList.prepend(sortableDragged);
+
+        // Obtener el taskId y actualizar posición
+        const taskId = sortableDragged.dataset.taskId;
+        this.updateTaskPosition(taskId, columnId, 0, sortableDragged);
+
+        // Limpiar highlights
+        this.columnTargets.forEach((col) => {
+          col.classList.remove('drop-target-highlight');
+        });
+      };
+
+      header.addEventListener('dragover', onDragOver);
+      header.addEventListener('dragleave', onDragLeave);
+      header.addEventListener('drop', onDrop);
+
+      this._headerHandlers.push({ header, onDragOver, onDragLeave, onDrop });
+    });
+  }
+
+  cleanupHeaderDropZones() {
+    this._headerHandlers?.forEach(({ header, onDragOver, onDragLeave, onDrop }) => {
+      header.removeEventListener('dragover', onDragOver);
+      header.removeEventListener('dragleave', onDragLeave);
+      header.removeEventListener('drop', onDrop);
+    });
+    this._headerHandlers = [];
   }
 
   getCsrfToken() {
