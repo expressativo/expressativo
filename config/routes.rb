@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   resources :projects do
-    resources :settings, only: [ :index ], controller: "projects/settings"
     resources :folders do
       resources :documents, only: %i[new create]
     end

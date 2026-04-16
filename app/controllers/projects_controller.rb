@@ -38,7 +38,7 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.for_user(current_user).find(params[:id])
     if @project.update(project_params)
-      redirect_to project_path(@project), notice: "Project was successfully updated."
+      redirect_to project_path(@project), notice: "Actualizado correctamente."
     else
       render :edit
     end
@@ -63,6 +63,6 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.require(:project).permit(:title, :description)
+    params.require(:project).permit(:title, :description, :has_calendar)
   end
 end

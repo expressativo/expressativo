@@ -1,6 +1,6 @@
 <div data-controller="dropdown" class="relative">
 
-<button 
+<button
  data-dropdown-target="button"
  data-action="click->dropdown#toggle"
  class="cursor-pointer"
@@ -11,12 +11,9 @@
 <!-- Dropdown menu -->
 <div  data-dropdown-target="menu" class="hidden absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
     <ul class="py-2 text-sm text-gray-700">
-      <li>
-        <%= link_to "Miembros", project_members_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
-      </li>
-      <li>
-        <%= link_to "Configuración", project_settings_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
-      </li>
+        <li>
+          <%= link_to "Editar", edit_project_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        </li>
       <li>
         <%= link_to "Miembros", project_members_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
       </li>
@@ -39,4 +36,4 @@
         class: "block px-4 py-2 hover:bg-gray-100 text-left w-full text-red-600" %>
       </li>
     </ul>
-</div> 
+</div>
