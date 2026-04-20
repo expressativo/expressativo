@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu", "modal", "taskTitle", "todoSelect"]
+  static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon"]
   static values = {
     projectId: String,
     todos: Array
@@ -86,8 +86,21 @@ export default class extends Controller {
     this.taskTitleTarget.select()
   }
 
+  toggleNotes() {
+    const field = this.notesFieldTarget
+    const icon = this.notesToggleIconTarget
+    const hidden = field.classList.toggle("hidden")
+    icon.innerHTML = hidden
+      ? '<path d="M12 5v14M5 12h14"/>'
+      : '<path d="M5 12h14"/>'
+    if (hidden) this.taskNotesTarget.value = ""
+  }
+
   closeModal() {
     this.modalTarget.classList.add("hidden")
+    this.notesFieldTarget.classList.add("hidden")
+    this.notesToggleIconTarget.innerHTML = '<path d="M12 5v14M5 12h14"/>'
+    this.taskNotesTarget.value = ""
     this.selectedText = ""
   }
 
@@ -118,6 +131,8 @@ export default class extends Controller {
     const formData = new FormData()
     formData.append("task[title]", title)
     formData.append("task[done]", "false")
+    const notes = this.taskNotesTarget.value.trim()
+    if (notes) formData.append("task[notes]", notes)
 
     const submitBtn = event.submitter || event.target.querySelector('[type="submit"]')
     if (submitBtn) submitBtn.disabled = true

@@ -34,10 +34,10 @@ echo "==> Instalando gemas..."
 bundle install
 
 echo "==> Levantando base de datos MySQL con Docker..."
-docker-compose -f local.yml up -d
+docker compose -f local.yml up -d
 
 echo "==> Esperando a que MySQL esté listo..."
-until docker-compose -f local.yml exec -T db mysqladmin ping -h 127.0.0.1 -u root -proot --silent 2>/dev/null; do
+until docker compose -f local.yml exec -T db mysqladmin ping -h 127.0.0.1 -u root -proot --silent 2>/dev/null; do
   sleep 1
 done
 echo "==> MySQL listo."
