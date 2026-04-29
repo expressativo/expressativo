@@ -1,3 +1,38 @@
 <div>
-  <%= render 'todos/form', @project: project, @todo: todo %>
+  <div class="card max-w-[95%] mx-auto mb-[-10px] p-4">
+    <div class="flex items-center justify-center">
+      <%= link_to @project.title, project_todos_path(@project),  class: "text-2xl underline font-semibold capitalize"%>
+    </div>
+  </div>
+  <%= turbo_frame_tag dom_id(@todo) do %>
+    <section class="card px-4 pt-4 pb-6">
+      <%= turbo_frame_tag "#{dom_id(@todo)}_tasks" do %>
+        <header class="pl-6">
+          <span class="text-gray-500 text-xs"> <%= @todo.tasks.where(done: true).count %> / <%= @todo.tasks.count %> </span>
+        </header>
+        <li class="flex items-center mb-2">
+          <span class="bg-green-500 rounded-full w-5 h-5 inline-block mr-2">
+          </span>
+          <%= link_to @todo.name, edit_project_todo_path(@project, @todo),
+                data:{ turbo_frame: "modal", turbo: false }, class:"text-gray-800 text-lg font-semibold underline cursor-pointer" %>
+        </li>
+        <%= render 'todos/todo_item', tasks: @todo.tasks.where(done: false), todo: @todo %>
+        <%= render 'todos/todo_item', tasks: @todo.tasks.order(updated_at: :desc).where(done: true).limit(5), todo: @todo %>
+        <% if @todo.tasks.where(done: true).count > 5 %>
+          <li class="flex items-center mb-2">
+            <span class="bg-gray-500 rounded-full w-3 h-3 inline-block mr-2">
+            </span>
+            <%= link_to 'Ver más', completed_tasks_project_todo_path(@project, @todo), class:"text-gray-800 text-sm font-semibold underline cursor-pointer", data: { turbo_frame: "_top"} %>
+          </li>
+        <% end %>
+      <% end %>
+      <%= turbo_frame_tag "#{dom_id(@todo)}_task_form" do %>
+        <footer class="mt-4">
+          <%= link_to 'Agregar tarea', new_project_todo_task_path(@project, @todo), 
+                      data: { turbo_frame: "#{dom_id(@todo)}_task_form" }, 
+                      class: "button-outline mt-4" %>
+        </footer>
+      <% end %>
+    </section>
+  <% end %>
 </div>
