@@ -17,7 +17,9 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.for_user(current_user).active.includes(:project_users, :users)
+    @projects = Project.for_user(current_user).active
+                       .includes(:todos, :boards, :users, project_users: :user)
+                       .order(updated_at: :desc)
   end
 
   def archived
