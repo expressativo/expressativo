@@ -1,8 +1,27 @@
-<div>
-  <div class="card max-w-4xl mx-auto mb-[-10px] p-4">
-    <h2 class="title mb-4">
-     Nueva Proyecto
-    </h2>
+<div class="max-w-3xl mx-auto py-4">
+  <nav class="flex items-center text-sm text-gray-500 mb-3 flex-wrap" aria-label="Breadcrumb">
+    <%= link_to "Proyectos", projects_path, class: "hover:text-purple-600 transition-colors" %>
+    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+    <span class="text-gray-800 font-medium">Nuevo proyecto</span>
+  </nav>
+
+  <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+    <header class="px-6 py-5 border-b border-gray-200">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900">Nuevo proyecto</h1>
+          <p class="text-sm text-gray-500">Crea un espacio para organizar tareas y colaborar con tu equipo.</p>
+        </div>
+      </div>
+    </header>
+
     <%= render 'projects/form', project: @project %>
-  </div>
+  </section>
 </div>

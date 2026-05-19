@@ -1,58 +1,98 @@
-<div 
-  class="task-card bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer"
+<% project_key = project.title.to_s.upcase.gsub(/[^A-Z0-9]/, '').first(4).presence || "TASK" %>
+<% overdue = task.due_date.present? && task.due_date.to_date < Date.current && !task.done %>
+<div
+  class="task-card group/card relative bg-white rounded shadow-sm border border-slate-200 hover:border-purple-400 hover:shadow-md transition cursor-pointer"
   data-controller="task-card"
   data-task-card-url-value="<%= project_todo_task_path(project, task.todo, task) %>"
   data-action="click->task-card#open"
   data-task-id="<%= task.id %>">
-  
-  <div class="flex justify-between items-start mb-2">
-    <h4 class="font-medium text-gray-900 flex-1">
+
+  <div class="p-3 space-y-2">
+    <!-- Etiqueta de lista (Todo) -->
+    <div class="flex items-center gap-1 text-[11px] text-slate-500">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+        <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+      </svg>
+      <span class="truncate"><%= task.todo.name %></span>
+    </div>
+
+    <!-- Título -->
+    <p class="text-sm text-slate-900 leading-snug <%= 'line-through text-slate-500' if task.done %>">
       <%= task.title %>
-    </h4>
-    
-    <% if task.done %>
-      <span class="completed-badge inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
-        ✓ Completada
-      </span>
+    </p>
+
+    <!-- Etiquetas / metadatos -->
+    <% if task.due_date.present? %>
+      <div class="flex flex-wrap gap-1">
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded <%= overdue ? 'bg-red-50 text-red-700' : 'bg-slate-100 text-slate-600' %>">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+            <path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" />
+          </svg>
+          <%= l(task.due_date, format: :short) %>
+        </span>
+      </div>
     <% end %>
-  </div>
 
-  <div class="text-sm text-gray-600 mb-3">
-    <div class="flex items-center gap-1">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
-      <span class="text-xs"><%= task.todo.name %></span>
-    </div>
-  </div>
+    <!-- Footer: tipo + clave + asignados -->
+    <div class="flex items-center justify-between pt-1">
+      <div class="flex items-center gap-1.5 min-w-0">
+        <% if task.done %>
+          <span class="w-4 h-4 rounded-sm bg-green-500 flex items-center justify-center flex-shrink-0" title="Completada">
+            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+        <% else %>
+          <span class="w-4 h-4 rounded-sm bg-blue-500 flex items-center justify-center flex-shrink-0" title="Tarea">
+            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </span>
+        <% end %>
+        <span class="text-[11px] font-medium text-slate-500 tracking-wide truncate">
+          <%= project_key %>-<%= task.id %>
+        </span>
+      </div>
 
-  <% if task.due_date.present? %>
-    <div class="flex items-center gap-1 text-xs text-gray-500 mb-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /></svg>
-      <%= l(task.due_date, format: :short) %>
-    </div>
-  <% end %>
-
-  <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-    <% if task.assigned_users.any? %>
-      <div class="flex items-center gap-1 flex-wrap">
-        <% task.assigned_users.each do |user| %>
-          <div class="flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
-            <span><%= user.full_name %></span>
+      <div class="flex items-center">
+        <% if task.assigned_users.any? %>
+          <div class="flex -space-x-1.5">
+            <% task.assigned_users.first(3).each do |user| %>
+              <span title="<%= user.full_name %>" class="ring-2 ring-white rounded-full">
+                <%= user_avatar(user, size: 6) %>
+              </span>
+            <% end %>
+            <% if task.assigned_users.size > 3 %>
+              <span class="w-6 h-6 rounded-full bg-slate-200 ring-2 ring-white flex items-center justify-center text-[10px] font-semibold text-slate-600">
+                +<%= task.assigned_users.size - 3 %>
+              </span>
+            <% end %>
           </div>
+        <% else %>
+          <span title="Sin asignar" class="w-6 h-6 rounded-full border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+              <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+            </svg>
+          </span>
         <% end %>
       </div>
-    <% else %>
-      <div class="flex items-center gap-1 text-xs text-gray-400 italic">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
-        Sin asignar
-      </div>
-    <% end %>
-
-    <%= button_to remove_from_board_board_task_path(task, board_id: board.id, **request.query_parameters),
-        method: :delete,
-        form: { data: { turbo_confirm: "¿Remover esta tarea del tablero?" } },
-        class: "text-xs text-red-600 hover:text-red-800" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
-    <% end %>
+    </div>
   </div>
+
+  <!-- Botón remover (visible en hover) -->
+  <%= button_to remove_from_board_board_task_path(task, board_id: board.id, **request.query_parameters),
+        method: :delete,
+        form: {
+          data: { turbo_confirm: "¿Remover esta tarea del tablero?" },
+          class: "absolute top-1.5 right-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity"
+        },
+        class: "p-1 rounded text-slate-400 hover:text-red-600 hover:bg-red-50",
+        title: "Remover del tablero" do %>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 6l-12 12" /><path d="M6 6l12 12" />
+    </svg>
+  <% end %>
 </div>
