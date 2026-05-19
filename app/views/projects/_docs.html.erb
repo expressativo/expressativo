@@ -1,3 +1,61 @@
-<%= link_to project_documents_path(@project), class: "p-4 cursor-pointer border-b border-gray-300 min-h-[120px]" do %>
-  <h2 class="card_title">Documentos & Archivos</h2>
-<% end %>
+<section class="bg-white border border-gray-200 rounded-2xl">
+  <header class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <h2 class="text-base font-semibold text-gray-900">Documentos recientes</h2>
+      <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full"><%= @documents_count %></span>
+    </div>
+    <%= link_to "Nuevo", new_project_document_path(@project),
+          class: "inline-flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-700" %>
+  </header>
+
+  <% if @recent_documents.any? %>
+    <ul class="divide-y divide-gray-100">
+      <% @recent_documents.each do |doc| %>
+        <li>
+          <%= link_to document_path(doc), class: "flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors" do %>
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                <% if doc.file? %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                  </svg>
+                <% else %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                <% end %>
+              </div>
+              <div class="min-w-0">
+                <div class="text-sm font-medium text-gray-900 truncate"><%= doc.name %></div>
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                  <span class="px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wide font-medium
+                    <%= doc.published? ? 'bg-green-50 text-green-700' : doc.draft? ? 'bg-gray-100 text-gray-600' : 'bg-amber-50 text-amber-700' %>">
+                    <%= doc.status %>
+                  </span>
+                  <span>Actualizado <%= time_ago_in_words(doc.updated_at) %></span>
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <div class="px-5 py-3 border-t border-gray-100 text-center">
+      <%= link_to "Ver todos los documentos", project_documents_path(@project), class: "text-xs font-medium text-purple-600 hover:text-purple-700" %>
+    </div>
+  <% else %>
+    <div class="px-5 py-10 text-center">
+      <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <p class="text-sm text-gray-500 mb-2">Sin documentos aún.</p>
+      <%= link_to "Crear documento", new_project_document_path(@project), class: "inline-block text-xs font-medium text-purple-600 hover:text-purple-700" %>
+    </div>
+  <% end %>
+</section>

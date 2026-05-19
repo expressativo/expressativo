@@ -27,8 +27,34 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.for_user(current_user)
-                      .includes(boards: [], publications: :task)
+                      .includes(boards: [], publications: :task, project_users: :user)
                       .find(params[:id])
+
+    project_tasks = Task.joins(:todo).where(todos: { project_id: @project.id })
+
+    @todos_count       = @project.todos.count
+    @tasks_total       = project_tasks.count
+    @tasks_completed   = project_tasks.where(done: true).count
+    @tasks_pending     = @tasks_total - @tasks_completed
+    @completion_pct    = @tasks_total.zero? ? 0 : ((@tasks_completed.to_f / @tasks_total) * 100).round
+    @documents_count   = @project.documents.not_archived.count
+    @boards_count      = @project.boards.count
+
+    @upcoming_tasks = project_tasks
+                       .where(done: false)
+                       .where.not(due_date: nil)
+                       .where("due_date >= ?", Time.current.beginning_of_day)
+                       .includes(:assigned_users, todo: {})
+                       .order(:due_date)
+                       .limit(5)
+
+    @recent_activities = Activity.for_project(@project)
+                                 .recent
+                                 .includes(:user, :trackable)
+                                 .limit(6)
+
+    @recent_documents     = @project.documents.not_archived.order(updated_at: :desc).limit(4)
+    @recent_announcements = @project.announcements.order(created_at: :desc).limit(3)
   end
 
   def edit
