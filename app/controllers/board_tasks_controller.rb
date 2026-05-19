@@ -5,20 +5,23 @@ class BoardTasksController < ApplicationController
   def update_position
     task = Task.find(params[:id])
     column = Column.find(params[:column_id])
-    board = column.board
 
-    # Determinar si es la última columna del board (la de mayor posición)
-    # Usar reorder para anular el default_scope de la asociación
-    last_column = board.columns.reorder(position: :desc).first
-    is_last_column = column.id == last_column.id
+    # Mover a la columna "done" marca la tarea como completada; cualquier otra
+    # columna implica que la tarea sigue en progreso (o pendiente si nunca tuvo
+    # estatus).
+    new_status =
+      if column.done?
+        "done"
+      elsif task.status == "done"
+        "in_progress"
+      else
+        task.status
+      end
 
-    # Actualizar tarea con nueva columna, posición y estado done
-    # Si se mueve a la última columna: done = true
-    # Si se mueve a cualquier otra columna: done = false
     task.update(
       column: column,
       position: params[:position].to_i,
-      done: is_last_column
+      status: new_status
     )
 
     # Reordenar las demás tareas en la columna
@@ -27,7 +30,7 @@ class BoardTasksController < ApplicationController
       t.update_column(:position, new_position) if t.position != new_position
     end
 
-    render json: { is_completed: task.done }
+    render json: { is_completed: task.completed? }
   end
 
   def add_to_board
@@ -45,8 +48,8 @@ class BoardTasksController < ApplicationController
       return
     end
 
-    # Obtener la primera columna del tablero
-    column = board.columns.order(position: :asc).first
+    # Usar la columna inicial (kind: todo) y, si no existe, la primera por posición.
+    column = board.todo_column || board.columns.order(position: :asc).first
 
     if column.nil?
       respond_to do |format|
@@ -56,18 +59,12 @@ class BoardTasksController < ApplicationController
       return
     end
 
-    # Determinar si es la última columna del board
-    last_column = board.columns.reorder(position: :desc).first
-    is_last_column = column.id == last_column.id
-
-    # Obtener la última posición en la columna
     last_position = column.tasks.maximum(:position) || -1
 
-    # Agregar tarea a la columna
     task.update(
       column: column,
       position: last_position + 1,
-      done: is_last_column
+      status: column.done? ? "done" : task.status
     )
 
     respond_to do |format|

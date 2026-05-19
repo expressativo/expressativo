@@ -1,0 +1,13 @@
+<div class="max-w-7xl mx-auto py-4 px-2">
+  <div class="flex gap-4 items-start">
+    <div class="hidden md:block">
+      <%= render 'projects/sidebar', project: project, active: active %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="md:hidden mb-3">
+        <%= render 'projects/mobile_nav', project: project, active: active %>
+      </div>
+      <%= yield %>
+    </div>
+  </div>
+</div>

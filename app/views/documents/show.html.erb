@@ -1,35 +1,7 @@
 <% content_for :title, @document.name %>
 <% kind = document_kind(@document) %>
 
-<div class="max-w-7xl mx-auto py-4">
-  <nav class="flex items-center text-sm text-gray-500 mb-3 flex-wrap" aria-label="Breadcrumb">
-    <%= link_to "Proyectos", projects_path, class: "hover:text-purple-600 transition-colors" %>
-    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-    </svg>
-    <%= link_to @project.title, project_path(@project), class: "hover:text-purple-600 transition-colors" %>
-    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-    </svg>
-    <%= link_to "Documentos", project_folders_path(@project), class: "hover:text-purple-600 transition-colors" %>
-    <% if @document.folder %>
-      <% @document.folder.path.each do |parent| %>
-        <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-        <%= link_to parent.name, project_folder_path(@project, parent), class: "hover:text-purple-600 transition-colors" %>
-      <% end %>
-    <% end %>
-    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-    </svg>
-    <span class="text-gray-800 font-medium truncate"><%= @document.name %></span>
-  </nav>
-
-  <%= render 'projects/project_header', project: @project %>
-
-  <%= render 'projects/tabs', project: @project, active: :documents %>
-
+<%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
   <% back_url = @document.folder ? project_folder_path(@project, @document.folder) : project_folders_path(@project) %>
   <% back_label = @document.folder ? @document.folder.name : "Documentos" %>
 
@@ -127,5 +99,5 @@
       <% end %>
     </div>
   </section>
-</div>
+<% end %>
 

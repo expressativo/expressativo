@@ -38,8 +38,8 @@ class TasksController < ApplicationController
     logger.debug "params: #{params.inspect}"
     logger.debug "params: #{tasks_params}"
     if @task.update(tasks_params)
-      if params[:from] == "full_form"
-        redirect_to project_todo_task_path(@project), notice: "Tarea actualizada correctamente."
+      if params[:from] == "full_form" || params[:from] == "show"
+        redirect_to project_todo_task_path(@project, @todo, @task), notice: "Tarea actualizada correctamente."
       else
         redirect_to project_todos_path(@project), notice: "Tarea actualizada correctamente."
       end
@@ -72,7 +72,7 @@ class TasksController < ApplicationController
   # task assigned to current user
   def my_task
     @tasks = current_user.tasks
-      .where(done: false)
+      .not_done
       .includes(todo: :project)
       .order(Arel.sql("CASE WHEN due_date IS NULL THEN 1 ELSE 0 END, due_date ASC"))
 
@@ -113,6 +113,6 @@ class TasksController < ApplicationController
     @project = Project.find(params[:project_id])
   end
   def tasks_params
-    params.require(:task).permit(:title, :done, :from, :notes, :due_date, :column_id)
+    params.require(:task).permit(:title, :completed, :status, :from, :notes, :due_date, :column_id)
   end
 end

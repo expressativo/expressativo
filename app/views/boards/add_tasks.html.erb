@@ -34,7 +34,7 @@
           <%= todo.name %>
         </h3>
 
-        <% available_tasks = todo.tasks.where(column_id: nil, done: false) %>
+        <% available_tasks = todo.tasks.where(column_id: nil).not_done %>
 
         <% if available_tasks.any? %>
           <!-- Select all checkbox for this todo -->
@@ -63,7 +63,7 @@
                     <h4 class="font-medium text-gray-900">
                       <%= task.title %>
                     </h4>
-                    <% if task.done %>
+                    <% if task.completed? %>
                       <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
                         ✓
                       </span>

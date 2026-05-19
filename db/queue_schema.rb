@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_16_150906) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_19_232358) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -98,6 +98,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_16_150906) do
     t.bigint "board_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "kind", default: "custom", null: false
+    t.index ["board_id", "kind"], name: "index_columns_on_board_id_and_kind"
     t.index ["board_id"], name: "index_columns_on_board_id"
   end
 
@@ -222,7 +224,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_16_150906) do
 
   create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
-    t.boolean "done", default: false, null: false
     t.bigint "todo_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -231,8 +232,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_16_150906) do
     t.bigint "created_by_id"
     t.bigint "column_id"
     t.integer "position", default: 0
+    t.string "status", default: "pending", null: false
     t.index ["column_id"], name: "index_tasks_on_column_id"
     t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
+    t.index ["status"], name: "index_tasks_on_status"
     t.index ["todo_id"], name: "index_tasks_on_todo_id"
   end
 

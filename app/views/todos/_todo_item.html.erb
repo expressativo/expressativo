@@ -2,13 +2,13 @@
   <%= turbo_frame_tag dom_id(task) do %>
     <li class="flex items-center gap-2 group/task">
       <%= form_with class: "flex items-center", model: [@project, todo, task], method: :patch, data: { turbo_frame: dom_id(todo) } do |f| %>
-        <%= f.check_box :done, {
+        <%= f.check_box :completed, {
               class: "w-4 h-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer",
               onchange: "this.form.requestSubmit()"
             } %>
       <% end %>
       <%= link_to project_todo_task_path(@project, todo, task),
-            class: "flex-1 min-w-0 text-sm truncate transition #{task.done ? 'text-gray-400 line-through' : 'text-gray-700 hover:text-purple-600'}",
+            class: "flex-1 min-w-0 text-sm truncate transition #{task.completed? ? 'text-gray-400 line-through' : 'text-gray-700 hover:text-purple-600'}",
             data: { turbo_frame: "_top" } do %>
         <%= task.title %>
       <% end %>

@@ -27,7 +27,6 @@ class Publication < ApplicationRecord
     new_task = todo.tasks.create(
       title: title,
       created_by: created_by,
-      done: false,
       due_date: publication_date,
     )
 

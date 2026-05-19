@@ -2,7 +2,7 @@
   <div class="<%= @view_type == 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-3' %>">
     <% @todos.each do |todo| %>
       <%= turbo_frame_tag dom_id(todo) do %>
-        <% completed = todo.tasks.where(done: true).count %>
+        <% completed = todo.tasks.done.count %>
         <% total = todo.tasks.count %>
         <% pct = total.positive? ? (completed * 100.0 / total).round : 0 %>
         <article class="bg-white border border-gray-200 hover:border-purple-300 rounded-xl p-4 transition group">
@@ -24,8 +24,8 @@
 
           <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
             <ul class="space-y-1.5">
-              <%= render 'todos/todo_item', tasks: todo.tasks.where(done: false), todo: todo %>
-              <%= render 'todos/todo_item', tasks: todo.tasks.order(updated_at: :desc).where(done: true).limit(5), todo: todo %>
+              <%= render 'todos/todo_item', tasks: todo.tasks.not_done, todo: todo %>
+              <%= render 'todos/todo_item', tasks: todo.tasks.done.order(updated_at: :desc).limit(5), todo: todo %>
               <% if completed > 5 %>
                 <li class="pl-6">
                   <%= link_to "Ver completadas (#{completed})", completed_tasks_project_todo_path(@project, todo),

@@ -36,14 +36,14 @@ class ProjectsController < ApplicationController
 
     @todos_count       = @project.todos.count
     @tasks_total       = project_tasks.count
-    @tasks_completed   = project_tasks.where(done: true).count
+    @tasks_completed   = project_tasks.where(status: "done").count
     @tasks_pending     = @tasks_total - @tasks_completed
     @completion_pct    = @tasks_total.zero? ? 0 : ((@tasks_completed.to_f / @tasks_total) * 100).round
     @documents_count   = @project.documents.not_archived.count
     @boards_count      = @project.boards.count
 
     @upcoming_tasks = project_tasks
-                       .where(done: false)
+                       .where.not(status: "done")
                        .where.not(due_date: nil)
                        .where("due_date >= ?", Time.current.beginning_of_day)
                        .includes(:assigned_users, todo: {})

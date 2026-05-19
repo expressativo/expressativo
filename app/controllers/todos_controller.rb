@@ -53,7 +53,7 @@ class TodosController < ApplicationController
     end
 
     def completed_tasks
-      @completed_tasks = @todo.tasks.where(done: true)
+      @completed_tasks = @todo.tasks.done
     end
 
     private

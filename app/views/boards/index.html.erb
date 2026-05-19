@@ -1,20 +1,4 @@
-<div class="max-w-7xl mx-auto py-4">
-  <nav class="flex items-center text-sm text-gray-500 mb-3 flex-wrap" aria-label="Breadcrumb">
-    <%= link_to "Proyectos", projects_path, class: "hover:text-purple-600 transition-colors" %>
-    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-    </svg>
-    <%= link_to @project.title, project_path(@project), class: "hover:text-purple-600 transition-colors truncate" %>
-    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-    </svg>
-    <span class="text-gray-800 font-medium">Tableros</span>
-  </nav>
-
-  <%= render 'projects/project_header', project: @project %>
-
-  <%= render 'projects/tabs', project: @project, active: :boards %>
-
+<%= render layout: 'projects/layout', locals: { project: @project, active: :boards } do %>
   <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
     <header class="px-6 py-4 border-b border-gray-200 flex items-center justify-between gap-4 flex-wrap">
       <div class="min-w-0">
@@ -106,4 +90,4 @@
       </div>
     <% end %>
   </section>
-</div>
+<% end %>

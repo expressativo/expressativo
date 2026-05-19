@@ -1,10 +1,17 @@
 <div data-controller="calendar">
   <!-- Header -->
   <div class="calendar-header">
-    <h1 class="calendar-title">
-      Calendario de Publicaciones - <%= @project.title %>
-    </h1>
-    <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
+    <div class="flex items-center gap-3 min-w-0">
+      <%= link_to project_path(@project),
+            title: "Volver al proyecto",
+            "aria-label": "Volver al proyecto",
+            class: "inline-flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:text-purple-600 hover:border-purple-300 transition-colors flex-shrink-0" do %>
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7" /></svg>
+      <% end %>
+      <h1 class="calendar-title truncate">
+        Calendario de Publicaciones <span class="text-gray-400 font-normal">·</span> <span class="text-gray-600 font-normal"><%= @project.title %></span>
+      </h1>
+    </div>
   </div>
 
   <!-- Navegación del calendario -->

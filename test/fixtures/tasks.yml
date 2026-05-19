@@ -2,10 +2,10 @@
 
 one:
   title: MyString
-  done: false
+  status: pending
   todo: one
 
 two:
   title: MyString
-  done: false
+  status: pending
   todo: two

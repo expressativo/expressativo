@@ -1,6 +1,8 @@
 class Task < ApplicationRecord
   include TrackableActivity
 
+  STATUSES = %w[pending in_progress done].freeze
+
   belongs_to :todo
   belongs_to :created_by, class_name: "User"
   belongs_to :column, optional: true
@@ -11,29 +13,77 @@ class Task < ApplicationRecord
   has_many :assigned_users, through: :task_assignments, source: :user
 
   validates :title, presence: true
-  validates :done, inclusion: { in: [ true, false ] }
+  validates :status, inclusion: { in: STATUSES }
 
-  scope :pending, -> { where(done: false) }
+  scope :pending,     -> { where(status: "pending") }
+  scope :in_progress, -> { where(status: "in_progress") }
+  scope :done,        -> { where(status: "done") }
+  scope :completed,   -> { where(status: "done") }
+  scope :not_done,    -> { where.not(status: "done") }
 
-  before_save :sync_done_with_column
+  before_save :sync_status_with_column
+  before_save :sync_column_with_status
   after_update :sync_publication
 
   def completed?
-    done
+    status == "done"
+  end
+
+  def completed
+    completed?
+  end
+
+  def completed=(value)
+    bool = ActiveModel::Type::Boolean.new.cast(value)
+    if bool
+      self.status = "done"
+    elsif completed?
+      self.status = column_id.present? ? "in_progress" : "pending"
+    end
   end
 
   def saved_change_to_completed?
-    saved_change_to_done?
+    saved_change_to_status? && [ saved_change_to_status[0], saved_change_to_status[1] ].include?("done")
   end
 
   private
 
-  def sync_done_with_column
-    # Solo sincronizar si cambió la columna y no se está cambiando done manualmente
-    if column_id_changed? && column.present? && !done_changed?
-      board = column.board
-      last_column = board.columns.reorder(position: :desc).first
-      self.done = (column.id == last_column.id)
+  # Cuando el usuario cambia la columna de la tarea, ajustar status para que
+  # refleje si llegó a la columna "done" o salió de ella.
+  def sync_status_with_column
+    return unless column_id_changed?
+    return if status_changed? # priorizar el cambio manual de status
+
+    if column.present? && column.kind == "done"
+      self.status = "done"
+    elsif completed?
+      self.status = "in_progress"
+    end
+  end
+
+  # Cuando el usuario marca/desmarca el check (cambia status), reflejar el
+  # movimiento en el tablero: ir a la columna "done" o regresar a la anterior.
+  def sync_column_with_status
+    return unless status_changed?
+    return if column_id_changed? # ya se está moviendo manualmente
+    return if column.blank?
+
+    board = column.board
+    if status == "done"
+      done_column = board.columns.find_by(kind: "done")
+      return if done_column.nil? || done_column.id == column_id
+      self.column = done_column
+      self.position = done_column.tasks.count
+    elsif column.kind == "done"
+      previous = board.columns
+                      .where.not(kind: "done")
+                      .where("position < ?", column.position)
+                      .reorder(position: :desc)
+                      .first
+      previous ||= board.columns.where.not(kind: "done").reorder(position: :desc).first
+      return if previous.nil?
+      self.column = previous
+      self.position = previous.tasks.count
     end
   end
 

@@ -3,9 +3,11 @@
 one:
   title: MyString
   position: 1
+  kind: custom
   board: one
 
 two:
   title: MyString
   position: 1
+  kind: custom
   board: two
