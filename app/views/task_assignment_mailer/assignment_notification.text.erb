@@ -1,6 +1,6 @@
 Hola <%= @task_assignment.user.full_name || @task_assignment.user.email %>,
 
-<%= @assigned_by.full_name || @assigned_by.email %> te ha asignado la tarea "<%= @task.title %>" en el proyecto <%= @project.name %>.
+<%= @assigned_by.full_name || @assigned_by.email %> te ha asignado la tarea "<%= @task.title %>" en el proyecto <%= @project.title %>.
 
 <% if @task.description.present? %>
 Descripción: <%= @task.description %>
