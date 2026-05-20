@@ -52,7 +52,7 @@ Rails.application.configure do
   # Replace the default in-process and non-durable queuing backend for Active Job.
   config.active_job.queue_adapter = :solid_queue
   # Skip database connection during asset precompilation
-  unless defined?(Rake) && Rake.application.top_level_tasks.include?("assets:precompile")
+  unless defined?(Rake) && Rake.respond_to?(:application) && Rake.application.top_level_tasks.include?("assets:precompile")
     config.solid_queue.connects_to = { database: { writing: :queue } }
   end
 
