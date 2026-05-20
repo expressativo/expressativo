@@ -61,7 +61,11 @@
 
       <% elsif kind == :image %>
         <div class="flex justify-center bg-gray-50 rounded-xl p-4">
-          <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
+          <% if @document.file.content_type == "image/svg+xml" %>
+            <%= document_svg_inline(@document, class: "max-w-full max-h-[80vh] flex items-center justify-center") || content_tag(:p, "No se pudo previsualizar el SVG.", class: "text-sm text-gray-500") %>
+          <% else %>
+            <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
+          <% end %>
         </div>
 
       <% elsif kind == :pdf %>

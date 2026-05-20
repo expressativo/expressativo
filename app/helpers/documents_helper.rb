@@ -50,18 +50,35 @@ module DocumentsHelper
     return nil unless document_previewable?(document)
 
     file = document.file
+    if document_kind(document) == :image && file.content_type == "image/svg+xml"
+      return document_svg_inline(document, **html_options)
+    end
+
     src =
       if document_kind(document) == :image
-        if file.content_type == "image/svg+xml"
-          url_for(file)
-        else
-          url_for(file.representation(resize_to_limit: size))
-        end
+        url_for(file.representation(resize_to_limit: size))
       else
         url_for(file.preview(resize_to_limit: size))
       end
 
     image_tag(src, **html_options)
+  rescue StandardError
+    nil
+  end
+
+  # Reads the SVG blob, sanitizes it and returns it wrapped in a div ready to
+  # be embedded inline. Cached per blob to avoid re-downloading and re-parsing.
+  def document_svg_inline(document, **html_options)
+    return nil unless document.file.attached? && document.file.content_type == "image/svg+xml"
+
+    blob = document.file.blob
+    sanitized = Rails.cache.fetch([ "svg_inline", blob.id, blob.checksum ], expires_in: 1.day) do
+      SvgSanitizer.sanitize(blob.download)
+    end
+    return nil if sanitized.blank?
+
+    wrapper_class = html_options.delete(:class) || "w-full h-full"
+    content_tag(:div, sanitized.html_safe, class: "svg-inline-preview #{wrapper_class}", **html_options)
   rescue StandardError
     nil
   end

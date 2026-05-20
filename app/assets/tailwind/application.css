@@ -151,4 +151,14 @@
     .drive-document.drive-as-list .aspect-\[4\/3\] {
         @apply hidden;
     }
+
+    /* ===== Inline SVG previews ===== */
+    .svg-inline-preview {
+        @apply flex items-center justify-center overflow-hidden;
+    }
+
+    .svg-inline-preview > svg {
+        @apply w-full h-full max-w-full max-h-full;
+        object-fit: contain;
+    }
 }
