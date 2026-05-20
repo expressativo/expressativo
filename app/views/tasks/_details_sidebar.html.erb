@@ -130,7 +130,7 @@
       <% if task.due_date.present? %>
         <%
           today = Date.current
-          days = (task.due_date - today).to_i
+          days = (task.due_date.to_date - today).to_i
           if task.completed?
             pill = { bg: "bg-gray-50", text: "text-gray-600", border: "border-gray-200" }
           elsif days < 0
