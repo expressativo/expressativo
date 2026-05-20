@@ -21,9 +21,6 @@
     <%# GLightbox CSS %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css">
     <%= javascript_importmap_tags %>
-    <% if Rails.env.production? %>
-      <%= Sentry.get_trace_propagation_meta.html_safe %>
-    <% end %>
   </head>
   <body class="bg-white" data-controller="lightbox">
     <% if user_signed_in? %>
