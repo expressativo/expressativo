@@ -25,6 +25,9 @@ class CommentMention < ApplicationRecord
   end
 
   def send_mention_email
+    return unless user&.email.present?
+    return unless comment&.task&.todo&.project.present?
+
     MentionMailer.mention_notification(user, comment).deliver_later
   end
 end

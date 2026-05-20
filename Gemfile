@@ -76,10 +76,6 @@ gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
-# Sentry GEMS
-gem "sentry-ruby"
-gem "sentry-rails"
-
 gem "resend", "~> 1.0"
 gem "letter_opener"
 

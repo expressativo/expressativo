@@ -9,6 +9,9 @@ class TaskAssignment < ApplicationRecord
   private
 
   def send_assignment_notification
+    return unless user&.email.present?
+    return unless task&.todo&.project.present?
+
     TaskAssignmentMailer.assignment_notification(self).deliver_later
   end
 end

@@ -1,12 +1,12 @@
 class MentionMailer < ApplicationMailer
-  default from: "notificaciones@expressativo.com"
-
   def mention_notification(user, comment)
     @user = user
     @comment = comment
-    @task = comment.task
-    @project = @task.todo.project
-    @mentioned_by = comment.user
+    @task = comment&.task
+    @project = @task&.todo&.project
+    @mentioned_by = comment&.user
+
+    return if @task.nil? || @project.nil? || @mentioned_by.nil? || user&.email.blank?
 
     mail(
       to: user.email,
