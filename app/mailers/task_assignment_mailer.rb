@@ -9,7 +9,7 @@ class TaskAssignmentMailer < ApplicationMailer
 
     mail(
       to: task_assignment.user.email,
-      subject: "Se te ha asignado una nueva tarea en #{@project.name}"
+      subject: "Se te ha asignado una nueva tarea en #{@project.title}"
     )
   end
 end
