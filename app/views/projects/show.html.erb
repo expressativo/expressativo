@@ -6,13 +6,11 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
     <div class="lg:col-span-2 space-y-4">
       <%= render 'upcoming_tasks' %>
-      <%= render 'boards' %>
+      <%= render 'recent_activity' %>
       <%= render 'docs' %>
     </div>
 
     <div class="space-y-4">
-      <%= render 'team_panel', project: @project %>
-      <%= render 'recent_activity' %>
       <% if @project.has_calendar %>
         <%= render 'publications' %>
       <% end %>
