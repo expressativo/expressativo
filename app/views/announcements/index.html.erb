@@ -20,7 +20,7 @@
       <% end %>
     </header>
 
-    <% if @announcements.any? { |a| a.content.present? } %>
+    <% if @announcements.any? { |a| a.content.to_plain_text.strip.present? } %>
       <%= render 'announcements/list' %>
     <% else %>
       <div class="text-center py-16">

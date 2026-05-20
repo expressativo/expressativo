@@ -1,6 +1,7 @@
 <ul class="divide-y divide-gray-100">
   <% @announcements.each do |announcement| %>
-    <% next unless announcement.content.present? %>
+    <% plain = announcement.content.to_plain_text.to_s.strip %>
+    <% next if plain.blank? %>
     <li class="flex items-center justify-between gap-4 px-6 py-4 hover:bg-gray-50 transition-colors group">
       <%= link_to project_announcement_path(@project, announcement), class: "flex items-start gap-3 min-w-0 flex-1" do %>
         <span class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -10,7 +11,7 @@
         </span>
         <div class="min-w-0 flex-1">
           <h3 class="text-sm font-semibold text-gray-900 truncate group-hover:text-purple-600 transition-colors">
-            <%= announcement.content %>
+            <%= plain %>
           </h3>
           <p class="text-xs text-gray-500 mt-0.5">
             <%= time_ago_in_words(announcement.created_at) %> atrás
