@@ -80,7 +80,8 @@ gem "omniauth-rails_csrf_protection"
 gem "sentry-ruby"
 gem "sentry-rails"
 
-gem "mailtrap", "~> 2.5"
+gem "resend", "~> 1.0"
+gem "letter_opener"
 
 # Paginación
 gem 'kaminari'

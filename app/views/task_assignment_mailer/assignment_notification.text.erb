@@ -1,0 +1,16 @@
+Hola <%= @task_assignment.user.full_name || @task_assignment.user.email %>,
+
+<%= @assigned_by.full_name || @assigned_by.email %> te ha asignado la tarea "<%= @task.title %>" en el proyecto <%= @project.name %>.
+
+<% if @task.description.present? %>
+Descripción: <%= @task.description %>
+<% end %>
+
+<% if @task.due_date.present? %>
+Fecha límite: <%= l(@task.due_date, format: :long) %>
+<% end %>
+
+Ver tarea: <%= project_todo_task_url(@project, @task.todo, @task) %>
+
+---
+Este es un correo automático de Expressativo. No respondas a este mensaje.
