@@ -65,6 +65,7 @@ Rails.application.routes.draw do
 
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
+      post :send_invitation,       to: "project_invitations#send_invitation"
       patch :archive
       patch :unarchive
     end

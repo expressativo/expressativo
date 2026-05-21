@@ -1,0 +1,14 @@
+TE HAN INVITADO A UN PROYECTO EN TIVO
+=====================================
+
+<%= @inviter&.full_name.to_s.strip.presence || @inviter&.email || "Alguien" %> te ha invitado a unirte al proyecto "<%= @project.title %>" en Tivo.
+
+<% if @project.description.present? -%>
+Descripción del proyecto:
+<%= @project.description %>
+
+<% end -%>
+Únete al proyecto siguiendo este enlace:
+<%= @invitation_url %>
+
+Si no esperabas esta invitación, puedes ignorar este correo.

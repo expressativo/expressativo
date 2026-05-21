@@ -10,7 +10,7 @@ class MentionMailer < ApplicationMailer
 
     mail(
       to: user.email,
-      subject: "#{@mentioned_by.full_name || @mentioned_by.email} te mencionó en un comentario"
+      subject: "[#{@project.title.to_s.upcase}] - Nueva mención en un comentario"
     )
   end
 end

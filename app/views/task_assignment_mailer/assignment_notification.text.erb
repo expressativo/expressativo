@@ -2,8 +2,8 @@ Hola <%= @task_assignment.user.full_name || @task_assignment.user.email %>,
 
 <%= @assigned_by.full_name || @assigned_by.email %> te ha asignado la tarea "<%= @task.title %>" en el proyecto <%= @project.title %>.
 
-<% if @task.description.present? %>
-Descripción: <%= @task.description %>
+<% if @task.notes.present? %>
+Notas: <%= ActionController::Base.helpers.strip_tags(@task.notes.to_s).squish %>
 <% end %>
 
 <% if @task.due_date.present? %>

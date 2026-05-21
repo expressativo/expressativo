@@ -1,555 +1,416 @@
-<!-- Simple Navigation for Landing Page -->
-<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm border-b border-gray-200 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <!-- Logo -->
-      <div class="flex items-center">
-        <div class="flex-shrink-0">
-          <h1 class="text-2xl font-bold text-gray-900">
-            <span class="text-blue-600">Ti</span>vo
-          </h1>
+<% content_for :title, "Tivo — Gestión de proyectos colaborativa para equipos modernos" %>
+<% content_for :description, "Organiza proyectos, tableros Kanban, calendarios de publicaciones, listas de tareas y anuncios en un solo lugar. Tivo es la plataforma colaborativa para equipos de marketing, producto y startups." %>
+<% content_for :canonical, root_url %>
+<% content_for :og_image, asset_url("landing/screen-project-show.png") %>
+
+<% content_for :head do %>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Tivo",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Plataforma colaborativa para gestionar proyectos, tareas, tableros Kanban, calendarios de publicaciones y documentos en equipo.",
+    "url": "<%= root_url %>",
+    "image": "<%= asset_url('landing/screen-project-show.png') %>",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Tableros Kanban con drag & drop",
+      "Listas de tareas colaborativas",
+      "Calendario de publicaciones",
+      "Anuncios y comentarios",
+      "Gestión de miembros con roles",
+      "Documentos compartidos"
+    ]
+  }
+  </script>
+<% end %>
+
+<div data-controller="mobile-menu">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-white/85 backdrop-blur-md border-b border-gray-200/70 z-50" aria-label="Navegación principal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <%= link_to root_path, class: "flex items-center gap-2", aria: { label: "Tivo — Inicio" } do %>
+          <%= image_tag "expressativo_logo.jpg", alt: "", class: "h-8 w-8 rounded-lg object-cover", aria: { hidden: "true" } %>
+          <span class="text-xl font-bold text-gray-900">Tivo</span>
+        <% end %>
+
+        <div class="hidden md:flex items-baseline space-x-8">
+          <a href="#features" class="text-gray-700 hover:text-purple-600 px-2 py-2 text-sm font-medium transition-colors">Funcionalidades</a>
+          <a href="#product-tour" class="text-gray-700 hover:text-purple-600 px-2 py-2 text-sm font-medium transition-colors">Tour del producto</a>
+          <a href="#how-it-works" class="text-gray-700 hover:text-purple-600 px-2 py-2 text-sm font-medium transition-colors">Cómo funciona</a>
+          <a href="#use-cases" class="text-gray-700 hover:text-purple-600 px-2 py-2 text-sm font-medium transition-colors">Casos de uso</a>
         </div>
-      </div>
-      
-      <!-- Navigation Links -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-8">
-          <a href="#features" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Características</a>
-          <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Cómo funciona</a>
-          <a href="#use-cases" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Casos de uso</a>
-          <a href="#benefits" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Beneficios</a>
+
+        <div class="hidden md:flex items-center space-x-3">
+          <%= link_to "Iniciar sesión", new_user_session_path,
+              class: "text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium transition-colors" %>
+          <%= link_to "Crear cuenta gratis", new_user_registration_path,
+              class: "bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm" %>
         </div>
-      </div>
-      
-      <!-- CTA Buttons -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-center space-x-4">
-          <%= link_to "Iniciar Sesión", new_user_session_path, 
-              class: "text-gray-700 hover:text-blue-600 px-4 py-2 text-sm font-medium transition-colors" %>
-          <%= link_to "Comenzar Gratis", new_user_registration_path, 
-              class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm hover:shadow-md" %>
-        </div>
-      </div>
-      
-      <!-- Mobile menu button -->
-      <div class="md:hidden">
-        <button type="button" class="text-gray-700 hover:text-blue-600 p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+        <button type="button"
+                class="md:hidden text-gray-700 hover:text-purple-600 p-2"
+                data-action="click->mobile-menu#toggle"
+                aria-label="Abrir menú">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
     </div>
-  </div>
-  
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-      <a href="#features" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Características</a>
-      <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Cómo funciona</a>
-      <a href="#use-cases" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Casos de uso</a>
-      <a href="#benefits" class="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium">Beneficios</a>
-      <div class="border-t border-gray-200 mt-3 pt-3">
-        <%= link_to "Iniciar Sesión", new_user_session_path, 
-            class: "text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium" %>
-        <%= link_to "Comenzar Gratis", new_user_registration_path, 
-            class: "bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium mt-2" %>
+
+    <div data-mobile-menu-target="menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="px-4 pt-3 pb-4 space-y-1">
+        <a href="#features" class="text-gray-700 hover:text-purple-600 block px-3 py-2 text-base font-medium" data-action="click->mobile-menu#close">Funcionalidades</a>
+        <a href="#product-tour" class="text-gray-700 hover:text-purple-600 block px-3 py-2 text-base font-medium" data-action="click->mobile-menu#close">Tour del producto</a>
+        <a href="#how-it-works" class="text-gray-700 hover:text-purple-600 block px-3 py-2 text-base font-medium" data-action="click->mobile-menu#close">Cómo funciona</a>
+        <a href="#use-cases" class="text-gray-700 hover:text-purple-600 block px-3 py-2 text-base font-medium" data-action="click->mobile-menu#close">Casos de uso</a>
+        <div class="border-t border-gray-200 mt-3 pt-3 space-y-2">
+          <%= link_to "Iniciar sesión", new_user_session_path,
+              class: "text-gray-700 hover:text-purple-600 block px-3 py-2 text-base font-medium" %>
+          <%= link_to "Crear cuenta gratis", new_user_registration_path,
+              class: "bg-purple-600 hover:bg-purple-700 text-white block text-center px-3 py-2 rounded-lg text-base font-semibold" %>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-    <div class="text-center">
-      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
-        Simplifica la gestión de
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-          proyectos
-        </span>
+  <!-- Hero -->
+  <header class="relative pt-32 pb-20 bg-gradient-to-b from-purple-50 via-white to-white overflow-hidden">
+    <div class="absolute inset-x-0 top-24 -z-0 flex justify-center pointer-events-none" aria-hidden="true">
+      <div class="h-72 w-[42rem] bg-gradient-to-r from-purple-300/40 via-fuchsia-200/40 to-indigo-300/40 blur-3xl rounded-full"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold tracking-wide uppercase mb-6">
+        Hecho para equipos que se mueven rápido
+      </span>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight max-w-4xl mx-auto">
+        Gestiona proyectos con tu equipo,
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">sin caos</span>
       </h1>
-      <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-        Todo tu equipo, todas tus tareas, un solo lugar. La plataforma colaborativa que equipos modernos eligen para organizar, planificar y ejecutar.
+      <p class="mt-6 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        Tableros Kanban, listas de tareas, calendarios de publicaciones, anuncios y documentos: todo en un solo espacio colaborativo, listo en minutos.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <%= link_to "Comenzar Gratis", new_user_registration_path, 
-            class: "px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg" %>
-        <%= link_to "Ver Demo", "#features", 
-            class: "px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg border border-gray-200" %>
-      </div>
-      <p class="mt-4 text-sm text-gray-500">No requiere tarjeta de crédito</p>
-    </div>
-  </div>
-  
-  <!-- Hero Image Placeholder -->
-  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
-    <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-8">
-      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-[600px] flex items-center justify-center">
-        <div class="text-center">
-          <img src="<%= asset_url('hero-image.png') %>" alt="Hero Image" class="w-full h-full object-cover">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Features Section -->
-<section id="features" class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Todo lo que necesitas para colaborar
-      </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Funcionalidades potentes diseñadas para equipos modernos
-      </p>
-    </div>
-    
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Feature 1 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Gestión de Proyectos Colaborativos</h3>
-        <p class="text-gray-600">Crea proyectos ilimitados, invita a tu equipo con links únicos y define roles de owner y miembros.</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <%= link_to "Crear cuenta gratis", new_user_registration_path,
+            class: "px-7 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all text-base" %>
+        <a href="#product-tour"
+           class="px-7 py-3.5 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-lg shadow-sm border border-gray-200 transition-all text-base">
+          Ver el producto
+        </a>
       </div>
-
-      <!-- Feature 2 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Todo Lists Inteligentes</h3>
-        <p class="text-gray-600">Organiza tareas por listas, asigna múltiples usuarios, fechas de vencimiento y notas enriquecidas.</p>
-      </div>
-
-      <!-- Feature 3 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Tableros Kanban Visuales</h3>
-        <p class="text-gray-600">Drag & drop intuitivo, columnas personalizables y vinculación de tareas existentes.</p>
-      </div>
-
-      <!-- Feature 4 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Calendario de Publicaciones</h3>
-        <p class="text-gray-600">Planifica contenido mensualmente, vista de calendario visual y exporta como PNG/JPG.</p>
-      </div>
-
-      <!-- Feature 5 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-pink-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Centro de Documentos</h3>
-        <p class="text-gray-600">Sube y organiza archivos, estados de borrador/publicado/archivado y adjuntos ilimitados.</p>
-      </div>
-
-      <!-- Feature 6 -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Comunicación Integrada</h3>
-        <p class="text-gray-600">Anuncios de proyecto, sistema de comentarios y feed de actividad en tiempo real.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works -->
-<section id="how-it-works" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Cómo funciona Tivo
-      </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Comienza a organizar tu equipo en minutos
-      </p>
+      <p class="mt-4 text-sm text-gray-500">No requiere tarjeta de crédito · Configura tu primer proyecto en 2 minutos</p>
     </div>
 
-    <div class="grid md:grid-cols-4 gap-8">
-      <!-- Step 1 -->
-      <div class="text-center">
-        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-          1
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Crea tu cuenta</h3>
-        <p class="text-gray-600">Regístrate gratuitamente y configura tu perfil en segundos.</p>
+    <!-- Hero screenshot -->
+    <figure class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
+      <div class="rounded-2xl bg-white shadow-2xl ring-1 ring-gray-200 overflow-hidden">
+        <%= image_tag "landing/screen-project-show.png",
+            alt: "Panel de resumen de un proyecto en Tivo con métricas de tareas pendientes, completadas, próximas tareas y publicaciones",
+            class: "w-full h-auto block",
+            width: 2880, height: 1800, loading: "eager", fetchpriority: "high" %>
       </div>
+      <figcaption class="sr-only">Vista del dashboard de proyecto en Tivo</figcaption>
+    </figure>
+  </header>
 
-      <!-- Step 2 -->
-      <div class="text-center">
-        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-          2
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Crea proyectos</h3>
-        <p class="text-gray-600">Organiza tu trabajo en proyectos y genera enlaces de invitación.</p>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="text-center">
-        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-          3
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Invita a tu equipo</h3>
-        <p class="text-gray-600">Comparte los enlaces únicos y asigna roles a los miembros.</p>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="text-center">
-        <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-          4
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Empieza a colaborar</h3>
-        <p class="text-gray-600">Usa tareas, tableros y calendarios para lograr tus objetivos.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Use Cases -->
-<section id="use-cases" class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Perfecto para equipos modernos
-      </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Descubre cómo diferentes equipos utilizan Tivo
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <!-- Marketing Teams -->
-      <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
-        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos de Marketing</h3>
-        <p class="text-gray-700">Planifica campañas, coordina contenido y colabora en estrategias creativas.</p>
-      </div>
-
-      <!-- Product Teams -->
-      <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
-        <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos de Producto</h3>
-        <p class="text-gray-700">Gestiona sprints, haz seguimiento de features y coordina el roadmap.</p>
-      </div>
-
-      <!-- Remote Teams -->
-      <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
-        <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Equipos Remotos</h3>
-        <p class="text-gray-700">Mantén la sincronización, comparte actualizaciones y colabora sin fronteras.</p>
-      </div>
-
-      <!-- Startups -->
-      <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl">
-        <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Startups</h3>
-        <p class="text-gray-700">Muévete rápido, itera eficientemente y escala tu colaboración.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Lo que dicen nuestros usuarios
-      </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Miles de equipos confían en Tivo para su trabajo diario
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      <!-- Testimonial 1 -->
-      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <div class="flex items-center mb-4">
-          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-            <span class="text-white font-semibold">M</span>
-          </div>
-          <div class="ml-3">
-            <h4 class="font-semibold text-gray-900">María García</h4>
-            <p class="text-gray-600 text-sm">Product Manager</p>
-          </div>
-        </div>
-        <p class="text-gray-700 italic">"Tivo revolucionó cómo coordinamos nuestros sprints. El tablero Kanban es intuitivo y las notificaciones mantienen a todos al día."</p>
-        <div class="flex text-yellow-400 mt-3">
-          ★★★★★
-        </div>
-      </div>
-
-      <!-- Testimonial 2 -->
-      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <div class="flex items-center mb-4">
-          <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-            <span class="text-white font-semibold">C</span>
-          </div>
-          <div class="ml-3">
-            <h4 class="font-semibold text-gray-900">Carlos Rodríguez</h4>
-            <p class="text-gray-600 text-sm">Marketing Director</p>
-          </div>
-        </div>
-        <p class="text-gray-700 italic">"El calendario de publicaciones nos ayudó a planificar contenido mensual. La integración con tareas es perfecta."</p>
-        <div class="flex text-yellow-400 mt-3">
-          ★★★★★
-        </div>
-      </div>
-
-      <!-- Testimonial 3 -->
-      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <div class="flex items-center mb-4">
-          <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-            <span class="text-white font-semibold">A</span>
-          </div>
-          <div class="ml-3">
-            <h4 class="font-semibold text-gray-900">Ana López</h4>
-            <p class="text-gray-600 text-sm">CEO Startup</p>
-          </div>
-        </div>
-        <p class="text-gray-700 italic">"Desde que usamos Tivo, nuestros equipos remotos están más sincronizados. Los documentos compartidos ahorran horas semanales."</p>
-        <div class="flex text-yellow-400 mt-3">
-          ★★★★★
-        </div>
-      </div>
-    </div>
-
-    <!-- Social Proof Numbers -->
-    <div class="mt-16 grid md:grid-cols-4 gap-8 text-center">
+  <!-- Trust strip -->
+  <section class="py-10 bg-white border-y border-gray-100" aria-label="Resultados clave">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
       <div>
-        <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">10,000+</div>
-        <p class="text-gray-600">Usuarios activos</p>
+        <p class="text-3xl font-bold text-gray-900">2&nbsp;min</p>
+        <p class="text-sm text-gray-500 mt-1">Para crear tu primer proyecto</p>
       </div>
       <div>
-        <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">50,000+</div>
-        <p class="text-gray-600">Tareas completadas</p>
+        <p class="text-3xl font-bold text-gray-900">∞</p>
+        <p class="text-sm text-gray-500 mt-1">Proyectos y tareas, sin límites</p>
       </div>
       <div>
-        <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">2,500+</div>
-        <p class="text-gray-600">Proyectos gestionados</p>
+        <p class="text-3xl font-bold text-gray-900">1&nbsp;link</p>
+        <p class="text-sm text-gray-500 mt-1">Para invitar a todo tu equipo</p>
       </div>
       <div>
-        <div class="text-3xl md:text-4xl font-bold text-orange-600 mb-2">98%</div>
-        <p class="text-gray-600">Satisfacción cliente</p>
+        <p class="text-3xl font-bold text-gray-900">100%</p>
+        <p class="text-sm text-gray-500 mt-1">En la nube, desde cualquier dispositivo</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Benefits Section -->
-<section id="benefits" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Por qué elegir Tivo
-      </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        La diferencia está en los detalles que marcan la diferencia
-      </p>
+  <!-- Features grid -->
+  <section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Todo lo que tu equipo necesita</h2>
+        <p class="mt-4 text-lg text-gray-600">Funcionalidades pensadas para que dejes de saltar entre cinco herramientas distintas.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h6v12H4zM14 6h6v8h-6z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Tableros Kanban</h3>
+          <p class="text-gray-600 text-sm">Visualiza el flujo de tu sprint con columnas personalizables y drag & drop sobre tareas reales del proyecto.</p>
+        </article>
+
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Listas de tareas</h3>
+          <p class="text-gray-600 text-sm">Agrupa tareas por listas, asigna responsables y fechas, y marca el avance con un solo clic.</p>
+        </article>
+
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Calendario de publicaciones</h3>
+          <p class="text-gray-600 text-sm">Planifica contenido por día y mes, arrastra publicaciones entre fechas y mantén el roadmap visible para todos.</p>
+        </article>
+
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-pink-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Anuncios y comentarios</h3>
+          <p class="text-gray-600 text-sm">Comunica decisiones y novedades en el proyecto sin perder contexto entre Slack, email y reuniones.</p>
+        </article>
+
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Documentos del proyecto</h3>
+          <p class="text-gray-600 text-sm">Sube archivos, controla estados (borrador, publicado, archivado) y centraliza la documentación del equipo.</p>
+        </article>
+
+        <article class="p-6 rounded-2xl border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Miembros e invitaciones</h3>
+          <p class="text-gray-600 text-sm">Invita a tu equipo con un link único, asigna roles (owner o miembro) y revoca accesos cuando quieras.</p>
+        </article>
+      </div>
     </div>
+  </section>
 
-    <div class="grid md:grid-cols-3 gap-8">
-      <!-- Benefit 1 -->
-      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 text-center">
-        <div class="text-5xl font-bold text-blue-600 mb-4">🚀</div>
-        <div class="text-4xl font-bold text-blue-600 mb-4">10x</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Más Rápido</h3>
-        <p class="text-gray-600">Reduce el tiempo en reuniones improductivas y aumenta la productividad con comunicación centralizada y flujos de trabajo automatizados.</p>
+  <!-- Product tour with real screenshots -->
+  <section id="product-tour" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Un tour rápido por Tivo</h2>
+        <p class="mt-4 text-lg text-gray-600">Estas son capturas reales del producto, no mockups.</p>
       </div>
 
-      <!-- Benefit 2 -->
-      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300 text-center">
-        <div class="text-5xl font-bold text-purple-600 mb-4">👁️</div>
-        <div class="text-4xl font-bold text-purple-600 mb-4">100%</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Transparencia Total</h3>
-        <p class="text-gray-600">Todos en el equipo saben qué está pasando, quién trabaja en qué tarea y cuáles son los plazos reales. Fin a las sorpresas.</p>
+      <!-- Block 1 -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide mb-4">Tableros Kanban</span>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Visualiza el sprint en una sola pantalla</h3>
+          <p class="text-gray-600 text-lg mb-6">Crea columnas personalizadas, arrastra tareas entre estados y ve de un vistazo qué está bloqueado, en revisión o ya cerrado. Sin recargar la página, sin perder el foco.</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex gap-3"><span class="text-purple-600 mt-1">✓</span><span>Drag &amp; drop fluido entre columnas, con orden persistente.</span></li>
+            <li class="flex gap-3"><span class="text-purple-600 mt-1">✓</span><span>Estados sincronizados con las listas de tareas del proyecto.</span></li>
+            <li class="flex gap-3"><span class="text-purple-600 mt-1">✓</span><span>Filtros por miembro asignado, etiquetas y fecha.</span></li>
+          </ul>
+        </div>
+        <figure class="rounded-2xl overflow-hidden ring-1 ring-gray-200 shadow-xl bg-white order-first lg:order-last">
+          <%= image_tag "landing/screen-board-kanban.png",
+              alt: "Tablero Kanban del sprint 12 en Tivo con cuatro columnas — Por hacer, En progreso, En revisión y Completado — y tarjetas de tareas reales",
+              class: "w-full h-auto block", loading: "lazy" %>
+        </figure>
       </div>
 
-      <!-- Benefit 3 -->
-      <div class="bg-white p-8 rounded-xl border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 text-center">
-        <div class="text-5xl font-bold text-green-600 mb-4">🌐</div>
-        <div class="text-4xl font-bold text-green-600 mb-4">24/7</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Siempre Accesible</h3>
-        <p class="text-gray-600">Trabaja desde cualquier lugar, en cualquier momento, desde cualquier dispositivo. Tu equipo nunca para.</p>
+      <!-- Block 2 -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+        <figure class="rounded-2xl overflow-hidden ring-1 ring-gray-200 shadow-xl bg-white">
+          <%= image_tag "landing/screen-todos.png",
+              alt: "Listas de tareas agrupadas por equipo — Backend, Diseño y Marketing — con checkboxes, progreso por lista y tareas tachadas al completarse",
+              class: "w-full h-auto block", loading: "lazy" %>
+        </figure>
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-4">Listas de tareas</span>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Tareas, organizadas como tu equipo trabaja</h3>
+          <p class="text-gray-600 text-lg mb-6">Crea listas por área, sprint o iniciativa. Cada tarea tiene fechas, notas enriquecidas, comentarios y asignaciones múltiples. Marca el avance con un check y todo el equipo lo ve al instante.</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex gap-3"><span class="text-indigo-600 mt-1">✓</span><span>Progreso visible por lista, con barra y contador.</span></li>
+            <li class="flex gap-3"><span class="text-indigo-600 mt-1">✓</span><span>Notas con formato enriquecido (Action Text).</span></li>
+            <li class="flex gap-3"><span class="text-indigo-600 mt-1">✓</span><span>Comentarios, menciones y notificaciones por email.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Block 3 -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide mb-4">Calendario</span>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Planifica publicaciones mes a mes</h3>
+          <p class="text-gray-600 text-lg mb-6">Pensado para equipos de contenido y marketing: arrastra publicaciones entre fechas, vinculadas a tareas del proyecto, y mantén a todo el equipo alineado con el calendario editorial.</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex gap-3"><span class="text-blue-600 mt-1">✓</span><span>Vista mensual limpia con navegación entre meses.</span></li>
+            <li class="flex gap-3"><span class="text-blue-600 mt-1">✓</span><span>Cada publicación queda enlazada a su tarea.</span></li>
+            <li class="flex gap-3"><span class="text-blue-600 mt-1">✓</span><span>Cambia fechas arrastrando, sin formularios.</span></li>
+          </ul>
+        </div>
+        <figure class="rounded-2xl overflow-hidden ring-1 ring-gray-200 shadow-xl bg-white order-first lg:order-last">
+          <%= image_tag "landing/screen-calendar.png",
+              alt: "Calendario mensual de publicaciones del proyecto en Tivo, con publicaciones distribuidas entre los días del mes y enlazadas a tareas",
+              class: "w-full h-auto block", loading: "lazy" %>
+        </figure>
+      </div>
+
+      <!-- Block 4 -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <figure class="rounded-2xl overflow-hidden ring-1 ring-gray-200 shadow-xl bg-white">
+          <%= image_tag "landing/screen-members.png",
+              alt: "Pantalla de miembros del proyecto en Tivo con el equipo listado, sus roles y un link único de invitación copiable",
+              class: "w-full h-auto block", loading: "lazy" %>
+        </figure>
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold uppercase tracking-wide mb-4">Equipo</span>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Invita a tu equipo con un solo link</h3>
+          <p class="text-gray-600 text-lg mb-6">Genera un link de invitación único por proyecto. Cualquier persona con ese link se une como miembro; tú decides quién es owner. Si rotas el link, los anteriores quedan revocados automáticamente.</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex gap-3"><span class="text-emerald-600 mt-1">✓</span><span>Roles claros: owner y miembro, sin matrices complejas.</span></li>
+            <li class="flex gap-3"><span class="text-emerald-600 mt-1">✓</span><span>Regenera el link cuando lo necesites.</span></li>
+            <li class="flex gap-3"><span class="text-emerald-600 mt-1">✓</span><span>Email de bienvenida automático a nuevos miembros.</span></li>
+          </ul>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Additional Benefits -->
-    <div class="mt-16 grid md:grid-cols-2 gap-8">
-      <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">✅ Funcionalidades Completas</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li>✓ Gestión de proyectos ilimitados</li>
-          <li>✓ Tableros Kanban con drag & drop</li>
-          <li>✓ Calendario de publicaciones integrado</li>
-          <li>✓ Centro de documentos compartidos</li>
-          <li>✓ Sistema de comentarios y menciones</li>
-          <li>✓ Notificaciones en tiempo real</li>
+  <!-- How it works -->
+  <section id="how-it-works" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Cómo empezar con Tivo</h2>
+        <p class="mt-4 text-lg text-gray-600">Cuatro pasos. Sin onboarding pesado, sin sales calls.</p>
+      </div>
+
+      <ol class="grid md:grid-cols-4 gap-6">
+        <li class="text-center">
+          <div class="w-12 h-12 mx-auto bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3">1</div>
+          <h3 class="font-semibold text-gray-900">Crea tu cuenta</h3>
+          <p class="text-gray-600 text-sm mt-1">Regístrate gratis con tu email. Cero fricción.</p>
+        </li>
+        <li class="text-center">
+          <div class="w-12 h-12 mx-auto bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3">2</div>
+          <h3 class="font-semibold text-gray-900">Crea un proyecto</h3>
+          <p class="text-gray-600 text-sm mt-1">Dale nombre, descripción y elige si activas el calendario.</p>
+        </li>
+        <li class="text-center">
+          <div class="w-12 h-12 mx-auto bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3">3</div>
+          <h3 class="font-semibold text-gray-900">Invita al equipo</h3>
+          <p class="text-gray-600 text-sm mt-1">Copia el link único de invitación y compártelo.</p>
+        </li>
+        <li class="text-center">
+          <div class="w-12 h-12 mx-auto bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3">4</div>
+          <h3 class="font-semibold text-gray-900">Empieza a colaborar</h3>
+          <p class="text-gray-600 text-sm mt-1">Crea tareas, tableros y publicaciones desde el primer minuto.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Use cases -->
+  <section id="use-cases" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Para equipos como el tuyo</h2>
+        <p class="mt-4 text-lg text-gray-600">Tivo se adapta a cómo trabajas, no al revés.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <article class="bg-white p-6 rounded-2xl border border-gray-200">
+          <div class="text-3xl mb-3" aria-hidden="true">📣</div>
+          <h3 class="font-semibold text-gray-900">Marketing y contenido</h3>
+          <p class="text-gray-600 text-sm mt-2">Planifica campañas, calendario editorial y coordinación con creativos.</p>
+        </article>
+        <article class="bg-white p-6 rounded-2xl border border-gray-200">
+          <div class="text-3xl mb-3" aria-hidden="true">🧪</div>
+          <h3 class="font-semibold text-gray-900">Producto e ingeniería</h3>
+          <p class="text-gray-600 text-sm mt-2">Sprints, backlog, tableros Kanban y seguimiento de bugs.</p>
+        </article>
+        <article class="bg-white p-6 rounded-2xl border border-gray-200">
+          <div class="text-3xl mb-3" aria-hidden="true">🌍</div>
+          <h3 class="font-semibold text-gray-900">Equipos remotos</h3>
+          <p class="text-gray-600 text-sm mt-2">Asincrónicos por defecto: anuncios, comentarios y documentos centralizados.</p>
+        </article>
+        <article class="bg-white p-6 rounded-2xl border border-gray-200">
+          <div class="text-3xl mb-3" aria-hidden="true">🚀</div>
+          <h3 class="font-semibold text-gray-900">Startups y agencias</h3>
+          <p class="text-gray-600 text-sm mt-2">Un proyecto por cliente, miembros con roles y todo el contexto en un lugar.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 bg-gradient-to-br from-purple-600 to-indigo-600 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/10" aria-hidden="true"></div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white">Empieza hoy. Lleva tu equipo al siguiente nivel.</h2>
+      <p class="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">Crea tu cuenta en minutos. Sin tarjeta de crédito, sin instalaciones, sin compromisos.</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <%= link_to "Crear cuenta gratis", new_user_registration_path,
+            class: "px-8 py-3.5 bg-white text-purple-700 hover:bg-purple-50 font-semibold rounded-lg shadow-lg transition-colors text-base" %>
+        <%= link_to "Iniciar sesión", new_user_session_path,
+            class: "px-8 py-3.5 bg-transparent text-white border border-white/60 hover:bg-white/10 font-semibold rounded-lg transition-colors text-base" %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <%= image_tag "expressativo_logo.jpg", alt: "", class: "h-8 w-8 rounded-lg object-cover", aria: { hidden: "true" } %>
+          <span class="text-white font-bold text-lg">Tivo</span>
+        </div>
+        <p class="text-sm text-gray-400 max-w-xs">Gestión de proyectos colaborativa para equipos que valoran el foco.</p>
+      </div>
+
+      <div>
+        <h2 class="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Producto</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#features" class="hover:text-white transition-colors">Funcionalidades</a></li>
+          <li><a href="#product-tour" class="hover:text-white transition-colors">Tour</a></li>
+          <li><a href="#how-it-works" class="hover:text-white transition-colors">Cómo funciona</a></li>
         </ul>
       </div>
 
-      <div class="bg-gradient-to-r from-green-50 to-blue-50 p-8 rounded-xl">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">🎯 Resultados Comprobados</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li>✓ 40% reducción en tiempo de reuniones</li>
-          <li>✓ 60% mejora en visibilidad del progreso</li>
-          <li>✓ 25% aumento en productividad del equipo</li>
-          <li>✓ 95% de adopción por parte de usuarios</li>
-          <li>✓ Soporte 24/7 incluido gratis</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-  <div class="absolute inset-0 bg-black/10"></div>
-  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">
-      🚀 ¿Listo para revolucionar la colaboración de tu equipo?
-    </h2>
-    <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-      Únete a más de 10,000 equipos que ya están organizando su trabajo con Tivo. Comienza gratis hoy mismo.
-    </p>
-
-    <!-- Urgency Banner -->
-    <div class="bg-yellow-400 text-yellow-900 px-6 py-3 rounded-lg mb-8 inline-block">
-      <span class="font-semibold">⚡ Oferta limitada:</span> Primeros 100 usuarios obtienen soporte premium gratis por 6 meses
-    </div>
-
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-      <%= link_to "🚀 Comenzar Gratis Ahora", new_user_registration_path,
-          class: "px-10 py-5 bg-white text-blue-600 font-bold rounded-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 text-xl animate-pulse" %>
-      <%= link_to "Ver Demo Interactiva", "#features",
-          class: "px-10 py-5 bg-transparent hover:bg-white/20 text-white font-bold rounded-lg border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-300 text-xl" %>
-    </div>
-
-    <div class="mt-8 grid md:grid-cols-3 gap-6 text-center">
-      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-        <div class="text-2xl font-bold text-white">2 min</div>
-        <p class="text-blue-100">Configuración</p>
-      </div>
-      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-        <div class="text-2xl font-bold text-white">Gratis</div>
-        <p class="text-blue-100">Sin tarjeta</p>
-      </div>
-      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-        <div class="text-2xl font-bold text-white">24/7</div>
-        <p class="text-blue-100">Soporte</p>
-      </div>
-    </div>
-
-    <p class="mt-6 text-blue-100 text-sm">
-      ✅ Sin compromisos • ✅ Datos seguros • ✅ Cancelación gratuita
-    </p>
-  </div>
-</section>
-
-<!-- Final CTA Banner -->
-<section class="py-12 bg-gray-900">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">
-      ¿Todavía tienes dudas?
-    </h3>
-    <p class="text-gray-300 mb-6">
-      Prueba Tivo gratis durante 14 días. Sin riesgos, sin compromisos.
-    </p>
-    <%= link_to "Iniciar Prueba Gratuita", new_user_registration_path,
-        class: "px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200" %>
-    <p class="mt-4 text-gray-400 text-sm">
-      Más de 10,000 equipos ya confían en nosotros
-    </p>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-gray-900 text-gray-300 py-12">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-4 gap-8">
-      <!-- Company -->
       <div>
-        <h3 class="text-white font-semibold mb-4">Producto</h3>
-        <ul class="space-y-2">
-          <li><%= link_to "Características", "#features", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Precios", "#pricing", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Casos de uso", "#use-cases", class: "hover:text-white transition-colors" %></li>
+        <h2 class="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Cuenta</h2>
+        <ul class="space-y-2 text-sm">
+          <li><%= link_to "Crear cuenta", new_user_registration_path, class: "hover:text-white transition-colors" %></li>
+          <li><%= link_to "Iniciar sesión", new_user_session_path, class: "hover:text-white transition-colors" %></li>
         </ul>
       </div>
 
-      <!-- Company -->
       <div>
-        <h3 class="text-white font-semibold mb-4">Empresa</h3>
-        <ul class="space-y-2">
-          <li><%= link_to "Sobre nosotros", "#about", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Blog", "#blog", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Carreras", "#careers", class: "hover:text-white transition-colors" %></li>
-        </ul>
-      </div>
-
-      <!-- Resources -->
-      <div>
-        <h3 class="text-white font-semibold mb-4">Recursos</h3>
-        <ul class="space-y-2">
-          <li><%= link_to "Documentación", "#docs", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "API", "#api", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Soporte", "#support", class: "hover:text-white transition-colors" %></li>
-        </ul>
-      </div>
-
-      <!-- Legal -->
-      <div>
-        <h3 class="text-white font-semibold mb-4">Legal</h3>
-        <ul class="space-y-2">
-          <li><%= link_to "Privacidad", "#privacy", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Términos", "#terms", class: "hover:text-white transition-colors" %></li>
-          <li><%= link_to "Seguridad", "#security", class: "hover:text-white transition-colors" %></li>
+        <h2 class="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Recursos</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#use-cases" class="hover:text-white transition-colors">Casos de uso</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-      <p class="text-gray-400">© 2024 Tivo. Todos los derechos reservados.</p>
+    <div class="border-t border-gray-800 mt-10 pt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
+      <p class="text-gray-500">© <%= Date.current.year %> Tivo. Todos los derechos reservados.</p>
+      <p class="text-gray-500">Hecho con Ruby on Rails y Hotwire.</p>
     </div>
-  </div>
-</footer>
+  </footer>
+</div>

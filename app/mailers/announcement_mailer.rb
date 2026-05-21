@@ -9,7 +9,7 @@ class AnnouncementMailer < ApplicationMailer
 
     mail(
       to: @recipient.email,
-      subject: "Nuevo anuncio en #{@project.title}"
+      subject: "[#{@project.title.to_s.upcase}] - Nuevo anuncio"
     )
   end
 end

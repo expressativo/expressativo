@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :comment_mentions, dependent: :destroy
 
+  after_create_commit :notify_admin_of_registration
+
   # Validaciones de avatar movidas al controller para evitar errores en producción
   # validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
 
@@ -40,5 +42,13 @@ class User < ApplicationRecord
       # uncomment the line below to skip the confirmation emails.
       # u.skip_confirmation!
     end
+  end
+
+  private
+
+  def notify_admin_of_registration
+    AdminMailer.new_user_registered(self).deliver_later
+  rescue StandardError => e
+    Rails.logger.error("[AdminMailer] No se pudo encolar la notificación de registro para user##{id}: #{e.class} #{e.message}")
   end
 end

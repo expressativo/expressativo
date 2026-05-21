@@ -40,15 +40,35 @@ class ProjectInvitationsController < ApplicationController
   end
 
   def regenerate
-    @project = Project.for_user(current_user).find(params[:project_id])
-    
+    @project = Project.for_user(current_user).find(params[:id])
+
     if @project.owner == current_user
       @project.regenerate_invitation_token!
       flash[:notice] = "Link de invitación regenerado exitosamente."
     else
       flash[:alert] = "Solo el propietario puede regenerar el link de invitación."
     end
-    
+
+    redirect_to project_members_path(@project)
+  end
+
+  def send_invitation
+    @project = Project.for_user(current_user).find(params[:id])
+    email = params[:email].to_s.strip.downcase
+
+    unless email.match?(URI::MailTo::EMAIL_REGEXP)
+      flash[:alert] = "Introduce un email válido."
+      redirect_to project_members_path(@project) and return
+    end
+
+    existing_user = User.find_by(email: email)
+    if existing_user && @project.project_users.exists?(user_id: existing_user.id)
+      flash[:alert] = "#{email} ya es miembro de este proyecto."
+      redirect_to project_members_path(@project) and return
+    end
+
+    ProjectInvitationMailer.invite(project: @project, email: email, inviter: current_user).deliver_later
+    flash[:notice] = "Invitación enviada a #{email}."
     redirect_to project_members_path(@project)
   end
 

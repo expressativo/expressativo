@@ -118,6 +118,34 @@
           Cualquier persona con este link podrá unirse al proyecto.
         </p>
       </section>
+
+      <section class="bg-white border border-gray-200 rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </span>
+          <h3 class="text-base font-semibold text-gray-900">Invitar por email</h3>
+        </div>
+        <p class="text-xs text-gray-500 mb-3">
+          Envía la invitación directamente al correo de la persona.
+        </p>
+
+        <%= form_with url: send_invitation_project_path(@project), method: :post, local: true, class: "space-y-2" do |f| %>
+          <%= f.email_field :email,
+              required: true,
+              placeholder: "nombre@empresa.com",
+              autocomplete: "off",
+              class: "w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" %>
+          <%= f.submit "Enviar invitación",
+              class: "w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors cursor-pointer" %>
+        <% end %>
+
+        <p class="text-[11px] text-gray-400 mt-3">
+          Recibirá un correo con el link de invitación.
+        </p>
+      </section>
     </div>
   </div>
 <% end %>
