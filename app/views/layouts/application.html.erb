@@ -33,16 +33,14 @@
            data-chat-notifier-icon-url-value="<%= asset_path('expressativo_logo.jpg') %>"
            hidden></div>
     <% end %>
-    <% if notice %>
-    <div class="p-4 my-4 text-sm text-blue-800 rounded-lg bg-blue-50 max-w-4xl mx-auto" role="alert">
-      <%= notice %>
+    <div id="toasts" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+      <% if notice %>
+        <%= render "shared/toast", message: notice, type: "notice" %>
+      <% end %>
+      <% if alert %>
+        <%= render "shared/toast", message: alert, type: "alert" %>
+      <% end %>
     </div>
-    <% end %>
-    <% if alert %>
-    <div class="p-4 my-4 text-sm text-red-800 rounded-lg bg-red-50 max-w-4xl mx-auto" role="alert">
-      <%= alert %>
-    </div>
-    <% end %>
     <main class="max-w-[1800px] mx-auto px-2 md:px-5 lg:px-6">
       <%= yield %>
     </main>
