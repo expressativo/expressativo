@@ -27,6 +27,10 @@
         as: :boolean,
         label: "Habilitar calendario",
         hint: "Permite programar publicaciones y eventos en este proyecto." %>
+  <%= f.input :has_chat,
+      as: :booelan,
+      lable: "Habilitar chat",
+      hint: "Permite tener canales y mensajes personales" %>
 
   <div class="flex items-center justify-end gap-2 pt-5 mt-2 border-t border-gray-100">
     <%= link_to "Cancelar",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_21_162411) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_21_170250) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -278,6 +278,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_21_162411) do
     t.string "invitation_token"
     t.boolean "archived", default: false, null: false
     t.boolean "has_calendar"
+    t.boolean "has_chat", default: true, null: false
     t.index ["invitation_token"], name: "index_projects_on_invitation_token", unique: true
   end
 

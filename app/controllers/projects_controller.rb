@@ -91,6 +91,6 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.require(:project).permit(:title, :description, :has_calendar)
+    params.require(:project).permit(:title, :description, :has_calendar, :has_chat)
   end
 end
