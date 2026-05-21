@@ -81,7 +81,7 @@ class ColumnsController < ApplicationController
   private
 
   def set_project
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
   end
 
   def set_board
