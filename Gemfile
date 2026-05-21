@@ -83,3 +83,6 @@ gem "letter_opener"
 gem 'kaminari'
 
 gem "simple_form", "~> 5.4"
+
+# Markdown rendering para chat
+gem "commonmarker", "~> 2.0"

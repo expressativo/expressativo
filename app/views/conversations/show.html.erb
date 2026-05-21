@@ -1,0 +1,41 @@
+<% current_conversation = @conversation %>
+<% other = @conversation.other_user_for(current_user) %>
+<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6">
+  <%= render "channels/sidebar", project: @project, current_conversation: @conversation %>
+
+  <main class="flex-1 flex flex-col min-w-0 bg-white">
+    <header class="px-6 py-3 border-b border-gray-200 flex items-center gap-3 flex-shrink-0">
+      <div class="relative">
+        <% if other.avatar.attached? %>
+          <%= image_tag other.avatar, class: "w-8 h-8 rounded-md object-cover" %>
+        <% else %>
+          <div class="w-8 h-8 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-semibold"><%= (other.full_name.to_s.strip.first || other.email[0]).upcase %></div>
+        <% end %>
+        <%= render "shared/presence_dot", user: other %>
+      </div>
+      <div class="min-w-0">
+        <h1 class="font-semibold text-gray-900 text-base"><%= other.full_name.presence || other.email %></h1>
+        <p class="text-xs text-gray-500">Mensaje directo</p>
+      </div>
+    </header>
+
+    <section
+      class="flex-1 overflow-y-auto py-3"
+      data-controller="chat-messages chat-subscription"
+      data-chat-subscription-messageable-type-value="Conversation"
+      data-chat-subscription-messageable-id-value="<%= @conversation.id %>"
+      data-chat-subscription-mark-read-url-value="<%= mark_read_project_conversation_path(@project, @conversation) %>"
+      id="<%= dom_id(@conversation, :messages) %>"
+    >
+      <% if @messages.empty? %>
+        <div class="text-center text-sm text-gray-400 py-12">Empieza la conversación con <%= other.full_name.presence || other.email %>.</div>
+      <% else %>
+        <%= render partial: "messages/message", collection: @messages, locals: { project: @project, viewer: current_user } %>
+      <% end %>
+    </section>
+
+    <%= render "messages/form", message: @message, messageable: @conversation, project: @project %>
+  </main>
+
+  <%= turbo_frame_tag "thread_panel" %>
+</div>

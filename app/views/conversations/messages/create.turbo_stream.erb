@@ -1,0 +1,6 @@
+<%= turbo_stream.append dom_id(@conversation, :messages) do %>
+  <%= render "messages/message", message: @message, project: @project, viewer: current_user %>
+<% end %>
+<%= turbo_stream.replace "message_form" do %>
+  <%= render "messages/form", message: @conversation.messages.build, messageable: @conversation, project: @project %>
+<% end %>

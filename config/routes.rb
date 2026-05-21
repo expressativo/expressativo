@@ -63,6 +63,29 @@ Rails.application.routes.draw do
       end
     end
 
+    # Chat: canales del proyecto
+    resources :channels do
+      member do
+        patch :mark_read
+      end
+      resources :messages, module: :channels, only: [ :create, :update, :destroy ] do
+        resources :replies, module: :messages, only: [ :index, :create ]
+      end
+    end
+
+    # Chat: mensajes directos (DMs) entre miembros del proyecto
+    resources :conversations, only: [ :index, :show, :create, :destroy ] do
+      member do
+        patch :mark_read
+      end
+      resources :messages, module: :conversations, only: [ :create, :update, :destroy ] do
+        resources :replies, module: :messages, only: [ :index, :create ]
+      end
+    end
+
+    # Autocomplete de miembros para @menciones de chat
+    get "chat/members", to: "chat/members#index", as: :chat_members
+
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
       patch :archive
