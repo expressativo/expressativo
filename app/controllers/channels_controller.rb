@@ -10,8 +10,9 @@ class ChannelsController < ApplicationController
   end
 
   def show
-    @messages = @channel.messages.kept.top_level.includes(:user, :mentioned_users, replies: :user).chronological.last(50)
+    @messages = @channel.messages.kept.top_level.with_attached_files.includes(:user, :mentioned_users, replies: :user).chronological.last(100)
     @message = @channel.messages.build
+    @previous_last_read_at = membership&.last_read_at
     membership.update(last_read_at: Time.current) if membership
   end
 

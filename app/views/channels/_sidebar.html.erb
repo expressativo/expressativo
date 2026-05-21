@@ -17,14 +17,15 @@
           <% membership = ch.channel_memberships.find_by(user_id: current_user.id) %>
           <% unread = chat_unread_count_for(membership, ch) %>
           <% active = defined?(current_channel) && current_channel && current_channel.id == ch.id %>
+          <% has_unread = unread.positive? && !active %>
           <li>
-            <%= link_to project_channel_path(project, ch), class: "flex items-center justify-between gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-700 hover:bg-gray-100'}" do %>
-              <span class="truncate">
+            <%= link_to project_channel_path(project, ch),
+                  data: { chat_id: "channel-#{ch.id}", unread: has_unread.to_s },
+                  class: "flex items-center justify-between gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : (has_unread ? 'text-gray-900 font-semibold' : 'text-gray-700 hover:bg-gray-100')}" do %>
+              <span class="truncate" data-chat-label>
                 <span class="text-gray-400 mr-1">#</span><%= ch.name %>
               </span>
-              <% if unread.positive? && !active %>
-                <span class="bg-red-500 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center"><%= unread > 99 ? "99+" : unread %></span>
-              <% end %>
+              <span data-chat-badge class="<%= 'hidden ' unless has_unread %>bg-red-500 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center"><%= has_unread ? (unread > 99 ? "99+" : unread) : "" %></span>
             <% end %>
           </li>
         <% end %>
@@ -42,17 +43,25 @@
         <% Conversation.for_user(current_user).where(project_id: project.id).includes(:user_one, :user_two).order(last_message_at: :desc).each do |conv| %>
           <% other = conv.other_user_for(current_user) %>
           <% active = defined?(current_conversation) && current_conversation && current_conversation.id == conv.id %>
+          <% participant = conv.conversation_participants.find_by(user_id: current_user.id) %>
+          <% unread = chat_unread_count_for_conversation(participant, conv) %>
+          <% has_unread = unread.positive? && !active %>
           <li>
-            <%= link_to project_conversation_path(project, conv), class: "flex items-center gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-700 hover:bg-gray-100'}" do %>
-              <div class="relative w-5 h-5 flex-shrink-0">
-                <% if other.avatar.attached? %>
-                  <%= image_tag other.avatar, class: "w-5 h-5 rounded object-cover" %>
-                <% else %>
-                  <div class="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold"><%= (other.full_name.to_s.strip.first || other.email[0]).upcase %></div>
-                <% end %>
-                <%= render "shared/presence_dot", user: other %>
-              </div>
-              <span class="truncate"><%= other.full_name.presence || other.email %></span>
+            <%= link_to project_conversation_path(project, conv),
+                  data: { chat_id: "conversation-#{conv.id}", unread: has_unread.to_s },
+                  class: "flex items-center justify-between gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : (has_unread ? 'text-gray-900 font-semibold' : 'text-gray-700 hover:bg-gray-100')}" do %>
+              <span class="flex items-center gap-2 min-w-0">
+                <span class="relative w-5 h-5 flex-shrink-0">
+                  <% if other.avatar.attached? %>
+                    <%= image_tag other.avatar, class: "w-5 h-5 rounded object-cover" %>
+                  <% else %>
+                    <span class="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold"><%= (other.full_name.to_s.strip.first || other.email[0]).upcase %></span>
+                  <% end %>
+                  <%= render "shared/presence_dot", user: other %>
+                </span>
+                <span class="truncate" data-chat-label><%= other.full_name.presence || other.email %></span>
+              </span>
+              <span data-chat-badge class="<%= 'hidden ' unless has_unread %>bg-red-500 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center"><%= has_unread ? (unread > 99 ? "99+" : unread) : "" %></span>
             <% end %>
           </li>
         <% end %>

@@ -68,7 +68,7 @@ Rails.application.routes.draw do
       member do
         patch :mark_read
       end
-      resources :messages, module: :channels, only: [ :create, :update, :destroy ] do
+      resources :messages, module: :channels, only: [ :index, :create, :update, :destroy ] do
         resources :replies, module: :messages, only: [ :index, :create ]
       end
     end
@@ -78,7 +78,7 @@ Rails.application.routes.draw do
       member do
         patch :mark_read
       end
-      resources :messages, module: :conversations, only: [ :create, :update, :destroy ] do
+      resources :messages, module: :conversations, only: [ :index, :create, :update, :destroy ] do
         resources :replies, module: :messages, only: [ :index, :create ]
       end
     end
@@ -112,6 +112,9 @@ Rails.application.routes.draw do
   # Rutas de invitación (fuera del namespace de projects para URLs más limpias)
   get "invite/:token", to: "project_invitations#show", as: :project_invitation
   post "invite/:token/accept", to: "project_invitations#accept", as: :accept_project_invitation
+
+  # Reacciones a mensajes de chat (toggle)
+  post "messages/:message_id/reactions", to: "message_reactions#toggle", as: :message_reactions
 
   resources :documents, only: %i[show edit update destroy] do
     member do

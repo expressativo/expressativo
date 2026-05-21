@@ -1,8 +1,22 @@
 class Channels::MessagesController < ApplicationController
+  PAGE_SIZE = 100
+
   before_action :authenticate_user!
   before_action :set_context
   before_action :set_message, only: [ :update, :destroy ]
   before_action :ensure_author, only: [ :update, :destroy ]
+
+  def index
+    scope = @channel.messages.kept.top_level.with_attached_files.includes(:user, :mentioned_users, replies: :user)
+    scope = scope.where("messages.id < ?", params[:before_id]) if params[:before_id].present?
+    @messages = scope.order(id: :desc).limit(PAGE_SIZE).reverse
+    has_more = @messages.any? && @channel.messages.kept.top_level.where("messages.id < ?", @messages.first.id).exists?
+    response.set_header("X-Has-More", has_more.to_s)
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
 
   def create
     @message = @channel.messages.build(message_params)
@@ -61,6 +75,6 @@ class Channels::MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:body, :parent_message_id)
+    params.require(:message).permit(:body, :parent_message_id, files: [])
   end
 end

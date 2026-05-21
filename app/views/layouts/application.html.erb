@@ -26,9 +26,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css">
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-white" data-controller="lightbox">
+  <body class="bg-white" data-controller="lightbox reactions-launcher">
     <% if user_signed_in? %>
       <%= render 'layouts/navbar'%>
+      <div data-controller="chat-notifier"
+           data-chat-notifier-icon-url-value="<%= asset_path('expressativo_logo.jpg') %>"
+           hidden></div>
     <% end %>
     <% if notice %>
     <div class="p-4 my-4 text-sm text-blue-800 rounded-lg bg-blue-50 max-w-4xl mx-auto" role="alert">

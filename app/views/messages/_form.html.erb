@@ -1,18 +1,13 @@
-<%= form_with model: message,
-              url: messageable.is_a?(Channel) ? project_channel_messages_path(project, messageable) : project_conversation_messages_path(project, messageable),
-              data: { controller: "chat-form", "chat-form-members-url-value": project_chat_members_path(project), action: "turbo:submit-end->chat-form#reset" },
-              class: "border-t border-gray-200 bg-white px-4 py-3" do |f| %>
-  <div id="message_form" class="flex items-end gap-2">
-    <%= f.text_area :body,
-                    rows: 1,
-                    placeholder: "Escribe un mensaje. Enter envía, Shift+Enter nueva línea. Usa @ para mencionar.",
-                    class: "flex-1 resize-none rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-3 py-2 text-sm",
-                    data: { "chat-form-target": "input" } %>
-    <%= f.submit "Enviar", class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-md", data: { "chat-form-target": "submit" } %>
+<%
+  form_url = messageable.is_a?(Channel) ? project_channel_messages_path(project, messageable) : project_conversation_messages_path(project, messageable)
+%>
+<%= render "messages/composer",
+           form_url: form_url,
+           project: project,
+           placeholder: "Escribe un mensaje. Enter envía, Shift+Enter nueva línea. Usa @ para mencionar.",
+           submit_title: "Enviar mensaje (Enter)" %>
+<% if message.errors.any? %>
+  <div class="px-4 -mt-2 mb-2 text-xs text-red-600">
+    <%= message.errors.full_messages.to_sentence %>
   </div>
-  <% if message.errors.any? %>
-    <div class="mt-1 text-xs text-red-600">
-      <%= message.errors.full_messages.to_sentence %>
-    </div>
-  <% end %>
 <% end %>

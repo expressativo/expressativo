@@ -1,4 +1,4 @@
-Rails.application.config.active_storage.variant_processor = :vips
+Rails.application.config.active_storage.variant_processor = :mini_magick
 
 # ⚠️  RIESGO DE SEGURIDAD ACEPTADO: XSS vía SVG inline.
 #

@@ -15,6 +15,12 @@ module ChatHelper
     end
   end
 
+  def chat_attachment_size(bytes)
+    return "" if bytes.nil? || bytes.zero?
+
+    number_to_human_size(bytes, precision: 2, significant: false)
+  end
+
   def chat_thread_path(message, project)
     case message.messageable
     when Channel
@@ -29,6 +35,14 @@ module ChatHelper
 
     scope = channel.messages.kept.top_level
     scope = scope.where("messages.created_at > ?", membership.last_read_at) if membership.last_read_at
+    scope.count
+  end
+
+  def chat_unread_count_for_conversation(participant, conversation)
+    return 0 if participant.nil?
+
+    scope = conversation.messages.kept.top_level
+    scope = scope.where("messages.created_at > ?", participant.last_read_at) if participant.last_read_at
     scope.count
   end
 end

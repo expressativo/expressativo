@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_20_150006) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_21_162411) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -218,6 +218,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_150006) do
     t.index ["user_id"], name: "index_message_mentions_on_user_id"
   end
 
+  create_table "message_reactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "message_id", null: false
+    t.bigint "user_id", null: false
+    t.string "emoji", limit: 16, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id", "user_id", "emoji"], name: "idx_message_reactions_unique", unique: true
+    t.index ["message_id"], name: "index_message_reactions_on_message_id"
+    t.index ["user_id"], name: "index_message_reactions_on_user_id"
+  end
+
   create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "messageable_type", null: false
     t.bigint "messageable_id", null: false
@@ -377,6 +388,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_150006) do
   add_foreign_key "folders", "users", column: "created_by_id"
   add_foreign_key "message_mentions", "messages"
   add_foreign_key "message_mentions", "users"
+  add_foreign_key "message_reactions", "messages"
+  add_foreign_key "message_reactions", "users"
   add_foreign_key "messages", "messages", column: "parent_message_id"
   add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"

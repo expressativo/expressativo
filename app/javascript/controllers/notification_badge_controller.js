@@ -21,6 +21,7 @@ export default class extends Controller {
 
   onReceive(data) {
     if (!data) return
+    if (data.action === "chat_message") return
 
     if (typeof data.unread_count === "number") {
       this.displayCount(data.unread_count)

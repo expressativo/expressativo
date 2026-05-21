@@ -36,11 +36,15 @@ export default class extends Controller {
 
   received(data) {
     if (!data || !data.html) return
-    if (data.scope === "thread") return
 
     const existing = document.getElementById(`message_${data.message_id}`)
 
     if (data.action === "create" && Number(data.user_id) === this.currentUserId && existing) {
+      return
+    }
+
+    if (data.scope === "thread") {
+      this.handleThreadMessage(data, existing)
       return
     }
 
@@ -51,6 +55,23 @@ export default class extends Controller {
         this.element.insertAdjacentHTML("beforeend", data.html)
       }
       this.element.scrollTop = this.element.scrollHeight
+      window.dispatchEvent(new CustomEvent("chat:dom-updated"))
+    }
+    requestAnimationFrame(insert)
+  }
+
+  handleThreadMessage(data, existing) {
+    const repliesContainer = document.getElementById(`replies_message_${data.thread_root_id}`)
+    if (!repliesContainer) return
+
+    const insert = () => {
+      if (existing) {
+        existing.outerHTML = data.html
+      } else {
+        repliesContainer.insertAdjacentHTML("beforeend", data.html)
+      }
+      repliesContainer.scrollTop = repliesContainer.scrollHeight
+      window.dispatchEvent(new CustomEvent("chat:dom-updated"))
     }
     requestAnimationFrame(insert)
   }

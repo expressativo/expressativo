@@ -1,6 +1,6 @@
 <% other = @conversation.other_user_for(current_user) %>
 <%= turbo_frame_tag "thread_panel" do %>
-  <aside class="fixed inset-y-0 right-0 w-96 bg-white border-l border-gray-200 shadow-lg z-40 flex flex-col" data-controller="thread-panel">
+  <aside class="w-96 max-w-[28rem] flex-shrink-0 bg-white border-l border-gray-200 h-full flex flex-col" data-controller="thread-panel">
     <header class="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
       <div>
         <h2 class="font-semibold text-gray-900 text-sm">Hilo</h2>
@@ -23,14 +23,11 @@
       <% end %>
     </div>
 
-    <%= form_with url: project_conversation_message_replies_path(@project, @conversation, @parent),
-                  scope: :message,
-                  data: { controller: "chat-form", "chat-form-members-url-value": project_chat_members_path(@project), action: "turbo:submit-end->chat-form#reset" },
-                  class: "border-t border-gray-200 px-3 py-2 flex-shrink-0" do |f| %>
-      <div class="flex items-end gap-2">
-        <%= f.text_area :body, rows: 1, placeholder: "Responder al hilo…", class: "flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm", data: { "chat-form-target": "input" } %>
-        <%= f.submit "Responder", class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-3 py-2 rounded-md", data: { "chat-form-target": "submit" } %>
-      </div>
-    <% end %>
+    <%= render "messages/composer",
+               form_url: project_conversation_message_replies_path(@project, @conversation, @parent),
+               project: @project,
+               placeholder: "Responder al hilo…",
+               wrapper_class: "border-t border-gray-200 px-3 py-2 flex-shrink-0",
+               submit_title: "Responder (Enter)" %>
   </aside>
 <% end %>

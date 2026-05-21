@@ -161,4 +161,58 @@
         @apply w-full h-full max-w-full max-h-full;
         object-fit: contain;
     }
+
+    /* ===== Chat message body (rendered markdown) ===== */
+    .chat-body > * + * {
+        @apply mt-1.5;
+    }
+
+    .chat-body p {
+        @apply leading-relaxed;
+    }
+
+    .chat-body a {
+        @apply text-indigo-700 hover:underline;
+    }
+
+    .chat-body strong {
+        @apply font-semibold text-gray-900;
+    }
+
+    .chat-body em {
+        @apply italic;
+    }
+
+    .chat-body del {
+        @apply line-through text-gray-500;
+    }
+
+    .chat-body ul {
+        @apply list-disc pl-5 my-1 space-y-0.5 marker:text-gray-400;
+    }
+
+    .chat-body ol {
+        @apply list-decimal pl-5 my-1 space-y-0.5 marker:text-gray-400 marker:font-medium;
+    }
+
+    .chat-body li {
+        @apply leading-snug;
+    }
+
+    .chat-body li > ul,
+    .chat-body li > ol {
+        @apply my-0.5;
+    }
+
+    .chat-body blockquote {
+        @apply border-l-4 border-gray-300 pl-3 my-1 text-gray-600 italic;
+    }
+
+    .chat-body code {
+        @apply font-mono text-[0.85em] bg-rose-50 text-rose-700 border border-rose-100 rounded px-1 py-0.5;
+    }
+
+    .chat-body pre code {
+        @apply bg-transparent text-inherit border-0 p-0 rounded-none;
+    }
 }

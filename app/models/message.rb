@@ -5,8 +5,13 @@ class Message < ApplicationRecord
   has_many :replies, class_name: "Message", foreign_key: "parent_message_id", dependent: :destroy
   has_many :message_mentions, dependent: :destroy
   has_many :mentioned_users, through: :message_mentions, source: :user
+  has_many :reactions, class_name: "MessageReaction", dependent: :destroy
+  has_many_attached :files
 
-  validates :body, presence: true, length: { maximum: 10_000 }
+  validates :body, length: { maximum: 10_000 }
+  validates :files,
+            size: { less_than: 25.megabytes, message: "no puede superar 25 MB" }
+  validate :body_or_files_present
   validate :parent_belongs_to_same_messageable
 
   scope :kept, -> { where(deleted_at: nil) }
@@ -31,6 +36,17 @@ class Message < ApplicationRecord
     parent_message_id.present?
   end
 
+  def reactions_summary(viewer = nil)
+    reactions.includes(:user).group_by(&:emoji).map do |emoji, list|
+      {
+        emoji: emoji,
+        count: list.size,
+        users: list.map(&:user),
+        reacted_by_viewer: viewer.present? && list.any? { |r| r.user_id == viewer.id }
+      }
+    end.sort_by { |r| -r[:count] }
+  end
+
   def project
     case messageable
     when Channel then messageable.project
@@ -39,6 +55,13 @@ class Message < ApplicationRecord
   end
 
   private
+
+  def body_or_files_present
+    return if body.to_s.strip.present?
+    return if files.attached?
+
+    errors.add(:body, "no puede estar vacío")
+  end
 
   def parent_belongs_to_same_messageable
     return if parent_message.nil?

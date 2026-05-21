@@ -25,6 +25,13 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def initials
+    parts = [ first_name, last_name ].map { |s| s.to_s.strip }.reject(&:empty?)
+    return parts.map { |p| p[0] }.join.upcase[0, 2] if parts.any?
+
+    email.to_s.strip[0, 2].upcase
+  end
+
   def mention_handle
     base = "#{first_name}.#{last_name}".downcase.gsub(/[^a-z0-9.]/, "")
     base = email.to_s.split("@").first.to_s.downcase.gsub(/[^a-z0-9.]/, "") if base.gsub(".", "").empty?

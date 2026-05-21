@@ -1,4 +1,7 @@
-<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6">
+<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6 gap-2">
+  <div class="hidden md:block py-2 pl-2 flex-shrink-0">
+    <%= render "projects/sidebar", project: @project, active: :chat %>
+  </div>
   <%= render "channels/sidebar", project: @project %>
 
   <main class="flex-1 flex items-center justify-center bg-white">

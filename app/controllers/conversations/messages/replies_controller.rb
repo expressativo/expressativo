@@ -3,7 +3,7 @@ class Conversations::Messages::RepliesController < ApplicationController
   before_action :set_context
 
   def index
-    @replies = @parent.replies.kept.includes(:user, :mentioned_users).chronological
+    @replies = @parent.replies.kept.with_attached_files.includes(:user, :mentioned_users).chronological
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -37,6 +37,6 @@ class Conversations::Messages::RepliesController < ApplicationController
   end
 
   def reply_params
-    params.require(:message).permit(:body)
+    params.require(:message).permit(:body, files: [])
   end
 end

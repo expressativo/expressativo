@@ -1,0 +1,5 @@
+<% if @messages.any? %>
+  <%= turbo_stream.prepend dom_id(@channel, :messages) do %>
+    <%= render partial: "messages/message", collection: @messages, locals: { project: @project, viewer: current_user } %>
+  <% end %>
+<% end %>
