@@ -1,0 +1,62 @@
+<aside class="w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 flex flex-col" data-controller="presence-indicator" data-presence-indicator-project-id-value="<%= project.id %>">
+  <div class="p-4 border-b border-gray-200">
+    <h2 class="font-semibold text-gray-900 text-sm"><%= project.title %></h2>
+    <p class="text-xs text-gray-500 mt-0.5">Chat del proyecto</p>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto py-2">
+    <div class="px-3 mb-3">
+      <div class="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wide px-2 mb-1">
+        <span>Canales</span>
+        <%= link_to new_project_channel_path(project), class: "text-gray-400 hover:text-indigo-600", title: "Nuevo canal" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <% end %>
+      </div>
+      <ul class="space-y-0.5">
+        <% project.channels.active.order(:name).each do |ch| %>
+          <% membership = ch.channel_memberships.find_by(user_id: current_user.id) %>
+          <% unread = chat_unread_count_for(membership, ch) %>
+          <% active = defined?(current_channel) && current_channel && current_channel.id == ch.id %>
+          <li>
+            <%= link_to project_channel_path(project, ch), class: "flex items-center justify-between gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-700 hover:bg-gray-100'}" do %>
+              <span class="truncate">
+                <span class="text-gray-400 mr-1">#</span><%= ch.name %>
+              </span>
+              <% if unread.positive? && !active %>
+                <span class="bg-red-500 text-white text-xs rounded-full px-1.5 min-w-[18px] text-center"><%= unread > 99 ? "99+" : unread %></span>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="px-3">
+      <div class="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wide px-2 mb-1">
+        <span>Mensajes directos</span>
+        <%= link_to project_conversations_path(project), class: "text-gray-400 hover:text-indigo-600", title: "Ver miembros" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <% end %>
+      </div>
+      <ul class="space-y-0.5">
+        <% Conversation.for_user(current_user).where(project_id: project.id).includes(:user_one, :user_two).order(last_message_at: :desc).each do |conv| %>
+          <% other = conv.other_user_for(current_user) %>
+          <% active = defined?(current_conversation) && current_conversation && current_conversation.id == conv.id %>
+          <li>
+            <%= link_to project_conversation_path(project, conv), class: "flex items-center gap-2 px-2 py-1 rounded text-sm #{active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-700 hover:bg-gray-100'}" do %>
+              <div class="relative w-5 h-5 flex-shrink-0">
+                <% if other.avatar.attached? %>
+                  <%= image_tag other.avatar, class: "w-5 h-5 rounded object-cover" %>
+                <% else %>
+                  <div class="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold"><%= (other.full_name.to_s.strip.first || other.email[0]).upcase %></div>
+                <% end %>
+                <%= render "shared/presence_dot", user: other %>
+              </div>
+              <span class="truncate"><%= other.full_name.presence || other.email %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+</aside>

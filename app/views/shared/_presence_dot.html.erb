@@ -1,0 +1,7 @@
+<% online = Chat::Presence::Tracker.online?(user) %>
+<span
+  class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white <%= online ? 'bg-green-500' : 'bg-gray-300' %>"
+  data-presence-indicator-target="dot"
+  data-user-id="<%= user.id %>"
+  title="<%= online ? 'En línea' : 'Desconectado' %>"
+></span>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_20_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_20_150006) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -92,6 +92,37 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_120000) do
     t.index ["project_id"], name: "index_boards_on_project_id"
   end
 
+  create_table "channel_memberships", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "channel_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "last_read_at"
+    t.string "notifications_setting", default: "all", null: false
+    t.datetime "muted_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id", "user_id"], name: "index_channel_memberships_on_channel_id_and_user_id", unique: true
+    t.index ["channel_id"], name: "index_channel_memberships_on_channel_id"
+    t.index ["user_id", "last_read_at"], name: "index_channel_memberships_on_user_id_and_last_read_at"
+    t.index ["user_id"], name: "index_channel_memberships_on_user_id"
+  end
+
+  create_table "channels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "created_by_id", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description"
+    t.string "kind", default: "public", null: false
+    t.datetime "archived_at"
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_channels_on_created_by_id"
+    t.index ["project_id", "name"], name: "index_channels_on_project_id_and_name", unique: true
+    t.index ["project_id", "slug"], name: "index_channels_on_project_id_and_slug", unique: true
+    t.index ["project_id"], name: "index_channels_on_project_id"
+  end
+
   create_table "columns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "position"
@@ -123,6 +154,30 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_120000) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "conversation_participants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "user_one_id", null: false
+    t.bigint "user_two_id", null: false
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "user_one_id", "user_two_id"], name: "index_conversations_on_project_and_users", unique: true
+    t.index ["project_id"], name: "index_conversations_on_project_id"
+    t.index ["user_one_id"], name: "index_conversations_on_user_one_id"
+    t.index ["user_two_id"], name: "index_conversations_on_user_two_id"
+  end
+
   create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -151,6 +206,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_120000) do
     t.index ["parent_folder_id"], name: "index_folders_on_parent_folder_id"
     t.index ["project_id", "name"], name: "index_folders_on_project_id_and_name"
     t.index ["project_id"], name: "index_folders_on_project_id"
+  end
+
+  create_table "message_mentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "message_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id", "user_id"], name: "index_message_mentions_on_message_id_and_user_id", unique: true
+    t.index ["message_id"], name: "index_message_mentions_on_message_id"
+    t.index ["user_id"], name: "index_message_mentions_on_user_id"
+  end
+
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "messageable_type", null: false
+    t.bigint "messageable_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "parent_message_id"
+    t.text "body", null: false
+    t.datetime "edited_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["messageable_type", "messageable_id", "created_at"], name: "index_messages_on_messageable_and_created_at"
+    t.index ["parent_message_id", "created_at"], name: "index_messages_on_parent_message_id_and_created_at"
+    t.index ["parent_message_id"], name: "index_messages_on_parent_message_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -274,17 +355,30 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_20_120000) do
   add_foreign_key "announcement_comments", "users"
   add_foreign_key "announcements", "projects"
   add_foreign_key "boards", "projects"
+  add_foreign_key "channel_memberships", "channels"
+  add_foreign_key "channel_memberships", "users"
+  add_foreign_key "channels", "projects"
+  add_foreign_key "channels", "users", column: "created_by_id"
   add_foreign_key "columns", "boards"
   add_foreign_key "comment_mentions", "comments"
   add_foreign_key "comment_mentions", "users"
   add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
+  add_foreign_key "conversation_participants", "conversations"
+  add_foreign_key "conversation_participants", "users"
+  add_foreign_key "conversations", "projects"
+  add_foreign_key "conversations", "users", column: "user_one_id"
+  add_foreign_key "conversations", "users", column: "user_two_id"
   add_foreign_key "documents", "folders"
   add_foreign_key "documents", "projects"
   add_foreign_key "documents", "users", column: "created_by_id"
   add_foreign_key "folders", "folders", column: "parent_folder_id"
   add_foreign_key "folders", "projects"
   add_foreign_key "folders", "users", column: "created_by_id"
+  add_foreign_key "message_mentions", "messages"
+  add_foreign_key "message_mentions", "users"
+  add_foreign_key "messages", "messages", column: "parent_message_id"
+  add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"

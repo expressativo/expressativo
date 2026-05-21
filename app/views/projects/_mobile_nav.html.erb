@@ -8,6 +8,7 @@
   ]
   items << { id: :publications, label: "Calendario", href: project_publications_path(project) } if project.has_calendar
   items << { id: :announcements, label: "Anuncios",  href: project_announcements_path(project) }
+  items << { id: :chat,          label: "Chat",      href: project_channels_path(project) }
   items << { id: :members,       label: "Miembros",  href: project_members_path(project) }
 %>
 <nav class="bg-white border border-gray-200 rounded-xl px-2 overflow-x-auto">

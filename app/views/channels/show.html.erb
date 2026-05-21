@@ -1,0 +1,38 @@
+<% current_channel = @channel %>
+<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6">
+  <%= render "channels/sidebar", project: @project, current_channel: @channel %>
+
+  <main class="flex-1 flex flex-col min-w-0 bg-white">
+    <header class="px-6 py-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+      <div class="min-w-0">
+        <h1 class="font-semibold text-gray-900 text-base flex items-center gap-2">
+          <span class="text-gray-400">#</span>
+          <%= @channel.name %>
+        </h1>
+        <% if @channel.description.present? %>
+          <p class="text-xs text-gray-500 truncate"><%= @channel.description %></p>
+        <% end %>
+      </div>
+      <div class="text-xs text-gray-500"><%= pluralize(@channel.members.count, "miembro") %></div>
+    </header>
+
+    <section
+      class="flex-1 overflow-y-auto py-3"
+      data-controller="chat-messages chat-subscription"
+      data-chat-subscription-messageable-type-value="Channel"
+      data-chat-subscription-messageable-id-value="<%= @channel.id %>"
+      data-chat-subscription-mark-read-url-value="<%= mark_read_project_channel_path(@project, @channel) %>"
+      id="<%= dom_id(@channel, :messages) %>"
+    >
+      <% if @messages.empty? %>
+        <div class="text-center text-sm text-gray-400 py-12">No hay mensajes todavía. ¡Empieza la conversación!</div>
+      <% else %>
+        <%= render partial: "messages/message", collection: @messages, locals: { project: @project, viewer: current_user } %>
+      <% end %>
+    </section>
+
+    <%= render "messages/form", message: @message, messageable: @channel, project: @project %>
+  </main>
+
+  <%= turbo_frame_tag "thread_panel" %>
+</div>

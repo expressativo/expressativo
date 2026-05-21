@@ -1,0 +1,30 @@
+<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6">
+  <%= render "channels/sidebar", project: @project %>
+
+  <main class="flex-1 overflow-y-auto bg-white p-6">
+    <h1 class="text-lg font-semibold text-gray-900 mb-4">Mensajes directos</h1>
+
+    <% if @other_members.any? %>
+      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Iniciar conversación con</h2>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-2xl">
+        <% @other_members.each do |user| %>
+          <li>
+            <%= button_to project_conversations_path(@project, user_id: user.id), method: :post, class: "w-full flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-md hover:bg-gray-50 text-left" do %>
+              <div class="relative">
+                <% if user.avatar.attached? %>
+                  <%= image_tag user.avatar, class: "w-8 h-8 rounded-md object-cover" %>
+                <% else %>
+                  <div class="w-8 h-8 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-semibold"><%= (user.full_name.to_s.strip.first || user.email[0]).upcase %></div>
+                <% end %>
+                <%= render "shared/presence_dot", user: user %>
+              </div>
+              <span class="text-sm text-gray-900"><%= user.full_name.presence || user.email %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-gray-500">No hay otros miembros en este proyecto.</p>
+    <% end %>
+  </main>
+</div>

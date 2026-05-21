@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@message) do %>
+  <%= render "messages/message", message: @message, project: @project, viewer: current_user %>
+<% end %>
