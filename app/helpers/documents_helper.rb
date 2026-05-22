@@ -50,13 +50,13 @@ module DocumentsHelper
     return nil unless document_previewable?(document)
 
     file = document.file
-    if document_kind(document) == :image && file.content_type == "image/svg+xml"
-      return document_svg_inline(document, **html_options)
-    end
-
     src =
       if document_kind(document) == :image
-        url_for(file.representation(resize_to_limit: size))
+        if file.content_type == "image/svg+xml"
+          url_for(file)
+        else
+          url_for(file.representation(resize_to_limit: size))
+        end
       else
         url_for(file.preview(resize_to_limit: size))
       end
