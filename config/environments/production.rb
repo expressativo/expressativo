@@ -63,6 +63,9 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "1.expressativo.com" }
 
+  # Set host for ActionController renderer and ActiveStorage URLs outside requests
+  config.action_controller.default_url_options = { host: "1.expressativo.com" }
+
   config.action_mailer.delivery_method = :resend
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

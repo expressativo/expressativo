@@ -29,8 +29,18 @@ module Chat
       recipients.each do |user|
         next if user.id == @message.user_id
 
-        NotificationsChannel.broadcast_to(user, user_notification_payload)
+        if Chat::Presence::Tracker.online?(user)
+          NotificationsChannel.broadcast_to(user, user_notification_payload)
+        else
+          send_email_notification(user)
+        end
       end
+    end
+
+    def send_email_notification(user)
+      ChatMailer.new_message(user, @message).deliver_later
+    rescue => e
+      Rails.logger.error("[Chat::MessageBroadcaster] Email failed for user #{user.id}: #{e.class}: #{e.message}")
     end
 
     def recipients
@@ -54,10 +64,26 @@ module Chat
         project_id: project&.id,
         sender_id: sender&.id,
         sender_name: sender&.full_name.presence || sender&.email,
+        sender_avatar_url: sender_avatar_url,
         title: notification_title(msgable),
         preview: @message.body.to_s.truncate(140),
         url: notification_url(project, msgable)
       }
+    end
+
+    def sender_avatar_url
+      sender = @message.user
+      return nil unless sender&.avatar&.attached?
+
+      # Intentar URL directa del servicio (S3/R2)
+      blob = sender.avatar.blob
+      url = blob.url if blob.respond_to?(:url)
+      return url if url.present?
+
+      # Fallback a ruta de ActiveStorage (requiere host configurado)
+      Rails.application.routes.url_helpers.rails_blob_url(sender.avatar)
+    rescue => e
+      nil
     end
 
     def notification_title(msgable)

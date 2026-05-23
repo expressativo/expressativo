@@ -9,11 +9,26 @@ export default class extends Controller {
   }
 
   connect() {
+    this.originalTitle = document.title
+    this.unreadCount = 0
+
+    this._visibilityHandler = () => {
+      if (!document.hidden) this.resetTitle()
+    }
+    document.addEventListener("visibilitychange", this._visibilityHandler)
+
     this.subscription = consumer.subscriptions.create("NotificationsChannel", {
-      received: (data) => this.handle(data)
+      received: (data) => this.handle(data),
+      connected: () => {
+        console.log("[ChatNotifier] Conectado a NotificationsChannel")
+      },
+      disconnected: () => {
+        console.warn("[ChatNotifier] Desconectado de NotificationsChannel")
+      }
     })
     this.maybeShowPermissionToast()
     document.addEventListener("click", this._initAudio.bind(this), { once: true })
+    console.log("[ChatNotifier] permission:", Notification.permission)
   }
 
   disconnect() {
@@ -21,7 +36,22 @@ export default class extends Controller {
       this.subscription.unsubscribe()
       this.subscription = null
     }
+    if (this._visibilityHandler) {
+      document.removeEventListener("visibilitychange", this._visibilityHandler)
+    }
     this.removeToast()
+  }
+
+  resetTitle() {
+    if (this.unreadCount > 0) {
+      document.title = this.originalTitle
+      this.unreadCount = 0
+    }
+  }
+
+  incrementTitle() {
+    this.unreadCount += 1
+    document.title = `(${this.unreadCount}) ${this.originalTitle}`
   }
 
   _initAudio() {
@@ -133,6 +163,7 @@ export default class extends Controller {
     this.updateSidebar(data)
     this.notify(data)
     this.playChime()
+    this.incrementTitle()
   }
 
   isViewingMessageable(data) {
@@ -170,12 +201,13 @@ export default class extends Controller {
       : (data.title || "Nuevo mensaje")
     const body = (data.preview || "").trim() || "Tienes un nuevo mensaje"
     const tag = `chat-${data.messageable_type}-${data.messageable_id}`
+    const icon = data.sender_avatar_url || this.iconUrlValue || undefined
 
     try {
       const n = new Notification(title, {
         body,
         tag,
-        icon: this.iconUrlValue || undefined,
+        icon,
         renotify: true
       })
       if (data.url) {

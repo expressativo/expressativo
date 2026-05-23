@@ -30,7 +30,7 @@
     <% if user_signed_in? %>
       <%= render 'layouts/navbar'%>
       <div data-controller="chat-notifier"
-           data-chat-notifier-icon-url-value="<%= asset_path('expressativo_logo.jpg') %>"
+           data-chat-notifier-icon-url-value="<%= asset_url('expressativo_logo.jpg') %>"
            hidden></div>
     <% end %>
     <div id="toasts" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
