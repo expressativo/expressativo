@@ -3,12 +3,14 @@
     <div class="comment">
       <div class="input-wrapper">
         <%= f.label :content, "Tu comentario (usa @ para mencionar)", class: "label" %>
-        <div data-controller="trix-mentions"
-             data-trix-mentions-project-id-value="<%= @project.id %>"
-             data-trix-mentions-todo-id-value="<%= @todo.id %>"
-             data-trix-mentions-task-id-value="<%= @task.id %>">
-          <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" %>
-        </div>
+        <%= render 'shared/lexical_editor',
+              form: f,
+              field: :content,
+              placeholder: "Escribe tu comentario... Usa @ para mencionar",
+              mentions: true,
+              project_id: @project.id,
+              todo_id: @todo.id,
+              task_id: @task.id %>
       </div>
       <div class="flex gap-2">
         <%= f.submit "Agregar Comentario", class: "button", data: {

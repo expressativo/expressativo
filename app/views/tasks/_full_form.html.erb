@@ -1,7 +1,6 @@
 <section class="bg-white border border-gray-200 rounded-2xl p-6">
   <%= form_with model: [@project, @todo, @task], data: { turbo_frame: "#{dom_id(@task)}_show" } do |form| %>
     <%= hidden_field_tag :from, "full_form" %>
-
     <div class="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100">
       <div class="flex items-center gap-2 text-xs text-gray-500 font-mono">
         <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,7 +19,6 @@
             data: { turbo_submits_with: "Guardando..." } %>
       </div>
     </div>
-
     <div class="flex items-center gap-3">
       <label class="flex-shrink-0 cursor-pointer">
         <%= form.check_box :completed, class: "sr-only peer" %>
@@ -34,7 +32,6 @@
             class: "flex-1 text-2xl md:text-3xl font-bold text-gray-900 leading-tight bg-transparent border-0 border-b border-transparent focus:border-purple-500 focus:ring-0 focus:outline-none px-0 py-1",
             placeholder: "Describe esta tarea" %>
     </div>
-
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vence el</label>
@@ -45,7 +42,6 @@
         <%= render 'tasks/status_selector', form: form, task: @task %>
       </div>
     </div>
-
     <div class="mt-6">
       <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Descripción</label>
       <%= form.rich_text_area :notes,
@@ -54,5 +50,19 @@
             autofocus: true,
             data: { controller: "trix" } %>
     </div>
-  <% end %>
-</section>
+  </div>
+  <div class="my-6">
+    <%= render 'shared/lexical_editor',
+          form: form,
+          field: :notes,
+          placeholder: "Escribe la descripción de tu tarea aquí" %>
+  </div>
+  <div class="flex gap-2">
+    <%= form.submit "Guardar", class: "button", data: {
+      turbo_submits_with: "Guardando..."
+    }%>
+    <%= link_to "Cancelar", project_todo_task_path(@project, @todo, @task), 
+                class: "button-outline",
+                data: { turbo_frame: "#{dom_id(@task)}_show" } %>
+  </div>
+<% end %>
