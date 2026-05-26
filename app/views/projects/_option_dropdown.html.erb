@@ -1,24 +1,25 @@
+<% project = local_assigns[:project] || @project %>
 <div data-controller="dropdown" class="relative">
 
-<button 
+<button
  data-dropdown-target="button"
  data-action="click->dropdown#toggle"
- class="cursor-pointer"
+ class="cursor-pointer p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-700"
 >
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
 </button>
 
 <!-- Dropdown menu -->
-<div  data-dropdown-target="menu" class="hidden absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+<div  data-dropdown-target="menu" class="hidden absolute right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-lg border border-gray-200 w-44">
     <ul class="py-2 text-sm text-gray-700">
+        <li>
+          <%= link_to "Editar", edit_project_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        </li>
       <li>
-        <%= link_to "Miembros", project_members_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        <%= link_to "Miembros", project_members_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
       </li>
       <li>
-        <%= link_to "Editar", edit_project_path(@project), class: "block px-4 py-2 hover:bg-gray-100" %>
-      </li>
-      <li>
-        <%= button_to "Archivar", archive_project_path(@project),
+        <%= button_to "Archivar", archive_project_path(project),
         method: :patch,
         form: {
           data: { turbo_confirm: "¿Estás seguro de que deseas archivar este proyecto?" },
@@ -27,7 +28,7 @@
         class: "block px-4 py-2 hover:bg-gray-100 text-left w-full" %>
       </li>
       <li>
-        <%= button_to "Eliminar", project_path(@project),
+        <%= button_to "Eliminar", project_path(project),
         method: :delete,
         form: {
           data: { turbo_confirm: "¿Estás seguro de que deseas eliminar este proyecto?" },
@@ -36,4 +37,4 @@
         class: "block px-4 py-2 hover:bg-gray-100 text-left w-full text-red-600" %>
       </li>
     </ul>
-</div> 
+</div>

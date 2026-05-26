@@ -8,6 +8,8 @@ class Project < ApplicationRecord
   has_many :activities, dependent: :destroy
   has_many :boards, dependent: :destroy
   has_many :publications, dependent: :destroy
+  has_many :channels, dependent: :destroy
+  has_many :conversations, dependent: :destroy
   validates :title, presence: true
 
   before_create :generate_invitation_token

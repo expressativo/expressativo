@@ -1,5 +1,29 @@
-<%= turbo_frame_tag "#{dom_id(@task)}_show"  do %>
-  <section class="rounded-xl p-4 md:px-16 md:max-w-6xl m-auto border border-gray-200">
-    <%=  render 'tasks/full_form' %>
-  </section>
+<%# When triggered via turbo-frame from show, only the inner frame swaps. %>
+<%# Full-page visits to /edit get the same layout shell as the show. %>
+<% rendered_in_frame = request.headers["Turbo-Frame"].present? %>
+
+<% if rendered_in_frame %>
+  <%= turbo_frame_tag "#{dom_id(@task)}_show" do %>
+    <%= render 'tasks/full_form' %>
+  <% end %>
+<% else %>
+  <%= render layout: 'projects/layout', locals: { project: @project, active: :todos } do %>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 space-y-4">
+        <div>
+          <%= link_to project_todo_task_path(@project, @todo, @task), class: "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-purple-600 transition-colors mb-2" do %>
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+            <span>Cancelar edición</span>
+          <% end %>
+        </div>
+        <%= turbo_frame_tag "#{dom_id(@task)}_show" do %>
+          <%= render 'tasks/full_form' %>
+        <% end %>
+      </div>
+
+      <aside class="space-y-4">
+        <%= render 'tasks/details_sidebar', task: @task %>
+      </aside>
+    </div>
+  <% end %>
 <% end %>

@@ -1,27 +1,38 @@
-<div>
-  <h2 class="text-2xl font-bold text-center mb-4">
-    Tivo
-  </h2>
-  <section class="mb-4 flex justify-center">
-    <div class="mt-2">
-      <div>
-        <%= link_to "Crear proyecto", new_project_path, class: "button" %>
-      </div>
+<div class="py-6">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+    <div>
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Tivo</p>
+      <h1 class="text-2xl font-bold text-gray-900">Proyectos</h1>
     </div>
-  </section>
-  <section class="mt-4">
-    <% if @projects.any? %>
-      <%= render 'projects/list', projects: @projects %>
-    <% else %>
-    <div class="flex justify-center">
-      <div>
-      <h3 class="text-xl font-semibold mb-2 text-center">
-        Registra tu primer proyecto
-      </h3>
-      <figure class="h-[300px]">
-        <img src="undraw_no-data_ig65.svg" alt="No hay datos" class="h-full">
+    <div class="flex items-center gap-2">
+      <%= link_to archived_projects_path,
+            class: "inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        </svg>
+        Archivados
+      <% end %>
+      <%= link_to new_project_path,
+            class: "inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors shadow-sm" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear proyecto
+      <% end %>
+    </div>
+  </div>
+
+  <% if @projects.any? %>
+    <%= render 'projects/list', projects: @projects %>
+  <% else %>
+    <div class="bg-white border border-gray-200 rounded-lg p-12 text-center">
+      <figure class="h-[220px] mx-auto mb-6">
+        <img src="undraw_no-data_ig65.svg" alt="No hay datos" class="h-full mx-auto">
       </figure>
-      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Registra tu primer proyecto</h3>
+      <p class="text-sm text-gray-500 mb-5">Crea un proyecto para empezar a organizar tu trabajo.</p>
+      <%= link_to "+ Crear proyecto", new_project_path,
+            class: "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors" %>
     </div>
-    <% end %>
-  </section >
+  <% end %>
+</div>

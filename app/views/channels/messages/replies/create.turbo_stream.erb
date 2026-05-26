@@ -1,0 +1,6 @@
+<%= turbo_stream.append dom_id(@parent, :replies) do %>
+  <%= render "messages/message", message: @reply, project: @project, viewer: current_user %>
+<% end %>
+<%= turbo_stream.replace dom_id(@parent) do %>
+  <%= render "messages/message", message: @parent, project: @project, viewer: current_user %>
+<% end %>

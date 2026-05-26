@@ -42,9 +42,9 @@ class CommentsController < ApplicationController
   private
 
   def set_context
-    @project = Project.find(params[:project_id])
-    @todo = Todo.find(params[:todo_id])
-    @task = Task.find(params[:task_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
+    @todo = @project.todos.find(params[:todo_id])
+    @task = @todo.tasks.find(params[:task_id])
   end
 
   def set_comment

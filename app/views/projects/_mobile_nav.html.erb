@@ -1,0 +1,24 @@
+<%
+  active ||= :summary
+  items = [
+    { id: :summary,    label: "Resumen",    href: project_path(project) },
+    { id: :boards,     label: "Tableros",   href: project_boards_path(project) },
+    { id: :todos,      label: "To-dos",     href: project_todos_path(project) },
+    { id: :documents,  label: "Documentos", href: project_documents_path(project) }
+  ]
+  items << { id: :publications, label: "Calendario", href: project_publications_path(project) } if project.has_calendar
+  items << { id: :announcements, label: "Anuncios",  href: project_announcements_path(project) }
+  items << { id: :chat,          label: "Chat",      href: project_channels_path(project) }
+  items << { id: :members,       label: "Miembros",  href: project_members_path(project) }
+%>
+<nav class="bg-white border border-gray-200 rounded-xl px-2 overflow-x-auto">
+  <ul class="flex items-center gap-1 min-w-max">
+    <% items.each do |item| %>
+      <% is_active = item[:id] == active %>
+      <li>
+        <%= link_to item[:label], item[:href],
+              class: "inline-flex items-center px-3 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap #{is_active ? 'text-purple-600 border-purple-500' : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'}" %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

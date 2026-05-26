@@ -75,7 +75,7 @@ class BoardsController < ApplicationController
   def add_tasks
     @todos = @project.todos.includes(:tasks).map do |todo|
       # Filter out done tasks from each todo
-      available_tasks = todo.tasks.where(done: false)
+      available_tasks = todo.tasks.not_done
       todo.define_singleton_method(:tasks) { available_tasks }
       todo
     end

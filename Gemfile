@@ -76,11 +76,13 @@ gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.15"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
-# Sentry GEMS
-gem "sentry-ruby"
-gem "sentry-rails"
-
-gem "mailtrap", "~> 2.5"
+gem "resend", "~> 1.0"
+gem "letter_opener"
 
 # Paginación
 gem 'kaminari'
+
+gem "simple_form", "~> 5.4"
+
+# Markdown rendering para chat
+gem "commonmarker", "~> 2.0"

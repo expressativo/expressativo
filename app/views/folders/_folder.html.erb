@@ -1,18 +1,38 @@
-<%= link_to project_folder_path(folder.project, folder) do %>
-  <article id="<%= dom_id folder %>" class="border border-gray-300 rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition">
-    <div class="flex items-center gap-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+<article id="<%= dom_id folder %>"
+         class="drive-folder group relative flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-purple-400 hover:bg-purple-50/40 transition-colors"
+         data-drive-filter-target="item"
+         data-name="<%= folder.name.to_s.downcase %>">
+  <%= link_to project_folder_path(folder.project, folder), class: "flex items-center gap-3 min-w-0 flex-1" do %>
+    <span class="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
+      <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
       </svg>
-      <div class="flex-1">
-        <h2 class="text-xl font-bold">
-          <%= folder.name %>
-        </h2>
-        <p class="text-sm text-gray-500 mt-1">
-          <%= pluralize(folder.subfolders.count, "carpeta") %>,
-          <%= pluralize(folder.documents.count, "documento") %>
-        </p>
+    </span>
+    <div class="min-w-0 flex-1">
+      <div class="text-sm font-semibold text-gray-900 truncate"><%= folder.name %></div>
+      <div class="text-xs text-gray-500">
+        <%= pluralize(folder.subfolders.count, "carpeta") %> · <%= pluralize(folder.documents.count, "documento") %>
       </div>
     </div>
-  </article>
-<% end %>
+  <% end %>
+
+  <div class="relative" data-controller="dropdown">
+    <button type="button"
+            data-dropdown-target="button"
+            data-action="click->dropdown#toggle"
+            class="opacity-0 group-hover:opacity-100 p-1.5 rounded hover:bg-gray-100 text-gray-500 transition"
+            aria-label="Acciones">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4z"/>
+      </svg>
+    </button>
+    <div class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 hidden z-30 py-1"
+         data-dropdown-target="menu">
+      <%= link_to "Abrir", project_folder_path(folder.project, folder), class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <%= link_to "Renombrar", edit_project_folder_path(folder.project, folder), class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <%= button_to "Eliminar", project_folder_path(folder.project, folder), method: :delete,
+                    data: { turbo_confirm: "¿Eliminar la carpeta y todo su contenido?" },
+                    class: "block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50" %>
+    </div>
+  </div>
+</article>

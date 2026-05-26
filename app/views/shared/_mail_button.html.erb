@@ -1,0 +1,14 @@
+<%# Bulletproof email button. Locals: url, label, bg (default #4F46E5), color (default #ffffff). %>
+<% bg     = local_assigns[:bg]    || "#4F46E5" %>
+<% color  = local_assigns[:color] || "#ffffff" %>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 16px 0;">
+  <tr>
+    <td align="center" bgcolor="<%= bg %>" style="border-radius: 8px; background-color: <%= bg %>;">
+      <a href="<%= url %>"
+         target="_blank"
+         style="display: inline-block; padding: 12px 28px; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 600; line-height: 1; color: <%= color %> !important; text-decoration: none; background-color: <%= bg %>; border-radius: 8px; mso-padding-alt: 0;">
+        <span style="color: <%= color %> !important; text-decoration: none;"><%= label %></span>
+      </a>
+    </td>
+  </tr>
+</table>

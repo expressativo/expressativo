@@ -63,8 +63,32 @@ Rails.application.routes.draw do
       end
     end
 
+    # Chat: canales del proyecto
+    resources :channels do
+      member do
+        patch :mark_read
+      end
+      resources :messages, module: :channels, only: [ :index, :create, :update, :destroy ] do
+        resources :replies, module: :messages, only: [ :index, :create ]
+      end
+    end
+
+    # Chat: mensajes directos (DMs) entre miembros del proyecto
+    resources :conversations, only: [ :index, :show, :create, :destroy ] do
+      member do
+        patch :mark_read
+      end
+      resources :messages, module: :conversations, only: [ :index, :create, :update, :destroy ] do
+        resources :replies, module: :messages, only: [ :index, :create ]
+      end
+    end
+
+    # Autocomplete de miembros para @menciones de chat
+    get "chat/members", to: "chat/members#index", as: :chat_members
+
     member do
       post :regenerate_invitation, to: "project_invitations#regenerate"
+      post :send_invitation,       to: "project_invitations#send_invitation"
       patch :archive
       patch :unarchive
     end
@@ -88,6 +112,9 @@ Rails.application.routes.draw do
   # Rutas de invitación (fuera del namespace de projects para URLs más limpias)
   get "invite/:token", to: "project_invitations#show", as: :project_invitation
   post "invite/:token/accept", to: "project_invitations#accept", as: :accept_project_invitation
+
+  # Reacciones a mensajes de chat (toggle)
+  post "messages/:message_id/reactions", to: "message_reactions#toggle", as: :message_reactions
 
   resources :documents, only: %i[show edit update destroy] do
     member do

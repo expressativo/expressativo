@@ -12,6 +12,7 @@ class AnnouncementsController < ApplicationController
   def create
     @announcement = @project.announcements.build(announcement_params)
     if @announcement.save
+      notify_project_members(@announcement)
       redirect_to project_announcements_path(@project), notice: "Anuncio creado correctamente"
     else
       render :new
@@ -46,10 +47,17 @@ class AnnouncementsController < ApplicationController
   private
 
   def set_project
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
   end
 
   def announcement_params
     params.require(:announcement).permit(:content)
+  end
+
+  def notify_project_members(announcement)
+    recipients = @project.users.where.not(id: current_user.id).where.not(email: [ nil, "" ])
+    recipients.find_each do |recipient|
+      AnnouncementMailer.new_announcement_notification(announcement, recipient, current_user).deliver_later
+    end
   end
 end

@@ -107,15 +107,17 @@ class DocumentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_document
-      @document = Document.find(params.expect(:id))
+      @document = Document.joins(project: :project_users)
+                          .where(project_users: { user_id: current_user.id })
+                          .find(params.expect(:id))
     end
 
     def set_project
-      @project = Project.find(params[:project_id])
+      @project = Project.for_user(current_user).find(params[:project_id])
     end
 
     def set_folder
-      @folder = params[:folder_id].present? ? Folder.find(params[:folder_id]) : nil
+      @folder = params[:folder_id].present? ? @project.folders.find(params[:folder_id]) : nil
     end
 
     # Only allow a list of trusted parameters through.

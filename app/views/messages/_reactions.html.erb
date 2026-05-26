@@ -1,0 +1,22 @@
+<%
+  viewer = local_assigns[:viewer]
+  summary = message.reactions_summary(viewer)
+%>
+<% if summary.any? %>
+  <div class="mt-1 flex flex-wrap gap-1 items-center">
+    <% summary.each do |r| %>
+      <%
+        names = r[:users].map { |u| u.full_name.presence || u.email }
+        tooltip = "#{names.join(', ')} reaccionó con #{r[:emoji]}"
+        active = r[:reacted_by_viewer]
+      %>
+      <%= link_to message_reactions_path(message_id: message.id, emoji: r[:emoji]),
+                  data: { turbo_method: :post },
+                  title: tooltip,
+                  class: "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs border transition-colors #{active ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'}" do %>
+        <span class="text-sm leading-none"><%= r[:emoji] %></span>
+        <span class="font-medium tabular-nums"><%= r[:count] %></span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

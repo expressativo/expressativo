@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light only">
+  </head>
+  <body style="margin: 0; padding: 24px; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+            <tr>
+              <td style="background-color: #4F46E5; padding: 24px;">
+                <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 700;">Nuevo anuncio en <%= @project.title %></h2>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 24px; background-color: #f9fafb;">
+                <p style="margin: 0 0 12px;">Hola <%= @recipient.full_name.presence || @recipient.email %>,</p>
+
+                <% if @author.present? %>
+                  <p style="margin: 0 0 12px;">
+                    <strong><%= @author.full_name.presence || @author.email %></strong>
+                    ha publicado un nuevo anuncio en el proyecto
+                    <strong><%= @project.title %></strong>.
+                  </p>
+                <% else %>
+                  <p style="margin: 0 0 12px;">
+                    Se ha publicado un nuevo anuncio en el proyecto
+                    <strong><%= @project.title %></strong>.
+                  </p>
+                <% end %>
+
+                <div class="trix-content" style="background-color: #ffffff; padding: 16px; border-left: 4px solid #F59E0B; margin: 16px 0; color: #1f2937;">
+                  <%= @announcement.content %>
+                </div>
+
+                <%= render "shared/mail_button",
+                    url: project_announcement_url(@project, @announcement),
+                    label: "Ver anuncio" %>
+
+                <p style="text-align: center; color: #6b7280; font-size: 12px; margin: 24px 0 0;">
+                  Este es un correo automático de Expressativo.<br>
+                  No respondas a este mensaje.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

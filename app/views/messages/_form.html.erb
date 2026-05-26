@@ -1,0 +1,13 @@
+<%
+  form_url = messageable.is_a?(Channel) ? project_channel_messages_path(project, messageable) : project_conversation_messages_path(project, messageable)
+%>
+<%= render "messages/composer",
+           form_url: form_url,
+           project: project,
+           placeholder: "Escribe un mensaje. Enter envía, Shift+Enter nueva línea. Usa @ para mencionar.",
+           submit_title: "Enviar mensaje (Enter)" %>
+<% if message.errors.any? %>
+  <div class="px-4 -mt-2 mb-2 text-xs text-red-600">
+    <%= message.errors.full_messages.to_sentence %>
+  </div>
+<% end %>

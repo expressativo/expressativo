@@ -52,7 +52,7 @@ Rails.application.configure do
   # Replace the default in-process and non-durable queuing backend for Active Job.
   config.active_job.queue_adapter = :solid_queue
   # Skip database connection during asset precompilation
-  unless defined?(Rake) && Rake.application.top_level_tasks.include?("assets:precompile")
+  unless defined?(Rake) && Rake.respond_to?(:application) && Rake.application.top_level_tasks.include?("assets:precompile")
     config.solid_queue.connects_to = { database: { writing: :queue } }
   end
 
@@ -63,12 +63,10 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "1.expressativo.com" }
 
-  # Temporarily disable email delivery in production
-  config.action_mailer.delivery_method = :mailtrap
-  config.action_mailer.mailtrap_settings = {
-    api_key: Rails.application.credentials.dig(:mailtrap, :api_key)
-  }
-  config.action_mailer.perform_deliveries = true
+  # Set host for ActionController renderer and ActiveStorage URLs outside requests
+  config.action_controller.default_url_options = { host: "1.expressativo.com" }
+
+  config.action_mailer.delivery_method = :resend
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

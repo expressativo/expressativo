@@ -1,4 +1,5 @@
-<h2>
-  <%= @announcement.content %>
-</h2>
-<%= render 'announcements/form', locals: { announcement: @announcement } %>
+<% content_for :title, "Editar anuncio" %>
+
+<%= render layout: 'projects/layout', locals: { project: @project, active: :announcements } do %>
+  <%= render 'announcements/form', announcement: @announcement %>
+<% end %>

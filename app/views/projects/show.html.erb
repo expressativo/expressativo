@@ -1,23 +1,20 @@
-<div>
-  <div class="bg-white border border-gray-200 rounded-2xl px-0 pt-6 pb-8 mb-4 sm:w-full mx-auto">
-    <div class="relative">
-      <h1 class="text-2xl text-center font-semibold">
-        <%= link_to @project.title, edit_project_path(@project) %>
-      </h1>
-      <div class="flex justify-center">
-        <%= render 'project_member', project: @project %>
-      </div>
-      <div class="absolute top-0 left-4">
-        <%= render 'projects/option_dropdown' %>
-      </div>
+<%= render layout: 'projects/layout', locals: { project: @project, active: :summary } do %>
+  <%= render 'project_header', project: @project %>
+
+  <%= render 'summary_stats' %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+    <div class="lg:col-span-2 space-y-4">
+      <%= render 'upcoming_tasks' %>
+      <%= render 'recent_activity' %>
+      <%= render 'docs' %>
     </div>
-    <section class="mt-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <%= render 'projects/todo'%>
-          <%= render 'projects/docs' %>
-          <%= render 'projects/boards' %>
-          <%= render 'projects/publications' %>
-      </div>
-    </section>
+
+    <div class="space-y-4">
+      <% if @project.has_calendar %>
+        <%= render 'publications' %>
+      <% end %>
+      <%= render 'announcements_panel' %>
+    </div>
   </div>
-</div>
+<% end %>

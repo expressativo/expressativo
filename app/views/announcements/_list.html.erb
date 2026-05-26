@@ -1,14 +1,26 @@
-<div>
+<ul class="divide-y divide-gray-100">
   <% @announcements.each do |announcement| %>
-    <% if announcement.content.present? %>
-      <div class="p-4 border-gray-200 border-b flex justify-between items-center">
-        <%= link_to project_announcement_path(@project, announcement) do %>
-         <h3><%= announcement.content %></h3>
-        <% end %>
-         <%= form_with model: [ @project, announcement ], method: :delete, data: { turbo_confirm: "¿Estás seguro?" } do |form|%>
-          <%= form.submit "Eliminar", class: "button-outline" %>
-        <% end %>
-      </div>
-    <% end %>
+    <% plain = announcement.content.to_plain_text.to_s.strip %>
+    <% next if plain.blank? %>
+    <li class="flex items-center justify-between gap-4 px-6 py-4 hover:bg-gray-50 transition-colors group">
+      <%= link_to project_announcement_path(@project, announcement), class: "flex items-start gap-3 min-w-0 flex-1" do %>
+        <span class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+        </span>
+        <div class="min-w-0 flex-1">
+          <h3 class="text-sm font-semibold text-gray-900 truncate group-hover:text-purple-600 transition-colors">
+            <%= plain %>
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">
+            <%= time_ago_in_words(announcement.created_at) %> atrás
+          </p>
+        </div>
+      <% end %>
+      <%= form_with model: [ @project, announcement ], method: :delete, data: { turbo_confirm: "¿Eliminar este anuncio?" }, class: "flex-shrink-0" do |form| %>
+        <%= form.submit "Eliminar", class: "opacity-0 group-hover:opacity-100 px-3 py-1.5 text-xs font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 transition cursor-pointer" %>
+      <% end %>
+    </li>
   <% end %>
-</div>
+</ul>

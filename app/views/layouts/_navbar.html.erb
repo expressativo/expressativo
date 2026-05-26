@@ -1,7 +1,7 @@
 <nav>
   <% if user_signed_in? %>
-    <div class="mx-auto container px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
+    <div class="max-w-[1800px] mx-auto sm:px-6 lg:px-8">
+      <div class="relative flex h-12 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <button id="mobile-menu-button" type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
             <span class="absolute -inset-0.5"></span>
@@ -17,17 +17,12 @@
           </button>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex shrink-0 items-center">
-          </div>
-          <div class="hidden sm:ml-6 sm:block">
-            <div class="flex space-x-4">
-              <%= link_to "Mis proyectos", projects_path,  class: "rounded-md px-3 py-2 text-sm font-medium text-purple-500" %>
-            </div>
-          </div>
-          <div class="hidden sm:ml-6 sm:block">
-            <div class="flex space-x-4">
-              <%= link_to "Mis tareas", my_task_path,  class: "rounded-md px-3 py-2 text-sm font-medium text-purple-500" %>
-            </div>
+          <%= link_to projects_path, class: "flex shrink-0 items-center gap-2 group", title: "Mis proyectos", "aria-label": "Mis proyectos" do %>
+            <%= image_tag "expressativo_logo.jpg", class: "w-7 h-7 rounded-md object-cover group-hover:opacity-90 transition", alt: "Tivo" %>
+            <span class="hidden sm:inline text-base font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Tivo</span>
+          <% end %>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <%= link_to "Mis tareas", my_task_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition-colors" %>
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -68,9 +63,10 @@
       </div>
     </div>
     <!-- Mobile menu, show/hide based on menu state. -->
-    <div class="sm:hidden bg-white" id="mobile-menu">
+    <div class="sm:hidden bg-white border-t border-gray-100" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3">
-        <%= link_to "Proyectos",  projects_path, class:"block rounded-md px-3 py-2 text-base font-medium text-black hover:bg-gray-700 hover:text-white" %>
+        <%= link_to "Mis proyectos", projects_path, class: "block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-purple-600 transition-colors" %>
+        <%= link_to "Mis tareas",    my_task_path, class: "block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-purple-600 transition-colors" %>
       </div>
     </div>
   <% end %>

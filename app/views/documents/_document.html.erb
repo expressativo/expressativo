@@ -1,31 +1,81 @@
-<article id="<%= dom_id document %>" class="border border-gray-300 rounded-lg p-4 max-h-[300px] overflow-hidden hover:border-blue-500 transition relative">
-  <div class="flex items-start gap-3">
-    <div class="flex-1">
-      <%= link_to document do %>
-      <div class="flex gap-2">
-        <% if document.document_type == "file" %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          <% else %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-        <% end %>
-        <h2 class="text-xl font-bold mb-2 hover:text-blue-600 transition">
-          <%= document.name %>
-        </h2>
-      </div>
-      <% end %>
-      <% if document.document_type == "document" && document.body.present? %>
-        <div class="fade-text text-sm text-gray-600">
-          <%= strip_tags(document.body) %>
+<%
+  kind = document_kind(document)
+  thumb = document_thumbnail_tag(document, size: [ 600, 400 ], class: "w-full h-full object-cover")
+  ext = document_file_extension(document)
+%>
+<article id="<%= dom_id document %>"
+         class="drive-document group relative flex flex-col bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-purple-400 hover:shadow-md transition"
+         data-drive-filter-target="item"
+         data-name="<%= document.name.to_s.downcase %>">
+
+  <%= link_to document_path(document), class: "flex flex-col flex-1 min-w-0" do %>
+    <div class="relative aspect-[4/3] bg-gray-50 flex items-center justify-center overflow-hidden border-b border-gray-100">
+      <% if thumb %>
+        <%= thumb %>
+      <% elsif kind == :rich_text && document.body.present? %>
+        <div class="absolute inset-0 p-3 text-[10px] leading-snug text-gray-500 overflow-hidden">
+          <%= strip_tags(document.body.to_s).truncate(420) %>
         </div>
-      <% elsif document.file.attached? %>
-        <p class="text-sm text-gray-500">
-          <%= document.file.filename %> (<%= number_to_human_size(document.file.byte_size) %>)
-        </p>
+        <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white to-transparent"></div>
+      <% else %>
+        <%= document_kind_icon(document, css_class: "w-16 h-16") %>
       <% end %>
+
+      <% if ext.present? %>
+        <span class="absolute top-2 left-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-white/90 backdrop-blur text-gray-600 rounded">
+          <%= ext %>
+        </span>
+      <% elsif kind == :rich_text %>
+        <span class="absolute top-2 left-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-blue-50 text-blue-600 rounded">
+          Doc
+        </span>
+      <% end %>
+
+      <% if document.respond_to?(:status) && !document.published? %>
+        <span class="absolute top-2 right-2 px-1.5 py-0.5 text-[10px] font-medium rounded
+              <%= document.draft? ? 'bg-gray-100 text-gray-600' : 'bg-amber-100 text-amber-700' %>">
+          <%= document.status %>
+        </span>
+      <% end %>
+    </div>
+
+    <div class="flex items-start gap-2 px-3 py-2.5 flex-1">
+      <%= document_kind_icon(document, css_class: "w-8 h-8") %>
+      <div class="min-w-0 flex-1">
+        <h3 class="text-sm font-semibold text-gray-900 truncate"><%= document.name %></h3>
+        <p class="text-xs text-gray-500 truncate">
+          <% if document.file.attached? %>
+            <%= document_size(document) %> · Editado <%= time_ago_in_words(document.updated_at) %>
+          <% else %>
+            Editado <%= time_ago_in_words(document.updated_at) %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="absolute top-2 right-2" data-controller="dropdown">
+    <button type="button"
+            data-dropdown-target="button"
+            data-action="click->dropdown#toggle"
+            class="opacity-0 group-hover:opacity-100 p-1.5 rounded-md bg-white/90 backdrop-blur shadow-sm border border-gray-200 text-gray-600 hover:bg-white transition"
+            aria-label="Acciones">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4z"/>
+      </svg>
+    </button>
+    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden z-30 py-1"
+         data-dropdown-target="menu">
+      <%= link_to "Abrir", document_path(document), class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <%= link_to "Editar", edit_document_path(document), class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <% if document.file.attached? %>
+        <%= link_to "Descargar", download_document_path(document), class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <% end %>
+      <%= button_to "Duplicar", duplicate_document_path(document), method: :post, class: "block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <%= button_to "Archivar", archive_document_path(document), method: :patch, class: "block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+      <%= button_to "Eliminar", document_path(document), method: :delete,
+                    data: { turbo_confirm: "¿Eliminar este documento?" },
+                    class: "block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50" %>
     </div>
   </div>
 </article>

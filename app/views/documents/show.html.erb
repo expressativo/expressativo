@@ -1,177 +1,103 @@
 <% content_for :title, @document.name %>
+<% kind = document_kind(@document) %>
 
-<div class="app_container">
-  <div class="main_header">
-    <header>
-      <h2 class="font-bold text-xl text-center">
-        <%= link_to @project.title, project_path(@project), class: "underline font-semibold capitalize" %>
-        <span>-</span>
-        <%= link_to "Documentos", project_folders_path(@project), class: "underline font-semibold capitalize" %>
-        <% if @document.folder %>
-          <% @document.folder.path.each do |parent| %>
-            <span>-</span>
-            <%= link_to parent.name, project_folder_path(@project, parent), class: "underline font-semibold" %>
+<%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
+  <% back_url = @document.folder ? project_folder_path(@project, @document.folder) : project_folders_path(@project) %>
+  <% back_label = @document.folder ? @document.folder.name : "Documentos" %>
+
+  <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+    <header class="flex items-start justify-between gap-4 px-6 py-4 border-b border-gray-100">
+      <div class="flex items-start gap-3 min-w-0">
+        <%= link_to back_url, class: "p-1.5 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors flex-shrink-0 mt-1.5", title: "Volver a #{back_label}", "aria-label": "Volver a #{back_label}" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+        <%= document_kind_icon(@document, css_class: "w-12 h-12") %>
+        <div class="min-w-0">
+          <h1 class="text-xl font-bold text-gray-900 truncate"><%= @document.name %></h1>
+          <p class="text-xs text-gray-500 mt-0.5">
+            <%= document_kind_label(@document) %>
+            <% if @document.file.attached? %>
+              · <%= document_size(@document) %>
+            <% end %>
+            · <%= @document.created_by&.full_name %>
+            · <%= l(@document.updated_at, format: :long) rescue @document.updated_at.strftime("%d/%m/%Y") %>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <%= link_to edit_document_path(@document), class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          Editar
+        <% end %>
+        <% if @document.file.attached? %>
+          <%= link_to download_document_path(@document), class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Descargar
           <% end %>
         <% end %>
-      </h2>
-    </header>
-  </div>
-  <div class="main_content">
-    <div class="relative">
-      <h1 class="font-bold text-4xl text-center">
-        <%= @document.name %>
-      </h1>
-      <div class="absolute top-4 right-4 flex gap-2">
-        <div>
-        <%= link_to "Editar", edit_document_path(@document), class: "text-sm text-gray-500 hover:text-gray-700" %>
-        </div>
-        <% if @document.file.attached? %>
-          <%= link_to "Descargar", download_document_path(@document), class: "text-sm text-blue-500 hover:text-blue-700" %>
+        <%= button_to document_path(@document), method: :delete,
+                      data: { turbo_confirm: "¿Eliminar este documento?" },
+                      class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 transition-colors" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
+          </svg>
+          Eliminar
         <% end %>
-        <div>
-        <%= button_to "Eliminar", document_path(@document), method: :delete, data: { turbo_confirm: "¿Estás seguro de eliminar este documento?" }, class: "text-sm text-red-500 hover:text-red-700" %>
-        </div>
       </div>
-    </div>
-    <hr class="max-w-[100px] mx-auto text-gray-300">
-    <div class="text-center my-2">
-      <% if @document.created_by %>
-        <%= @document.created_by.full_name %> -
+    </header>
+
+    <div class="p-6">
+      <% if kind == :rich_text %>
+        <div class="prose max-w-none" id="document-content" data-controller="document-images">
+          <%= @document.body %>
+        </div>
+
+      <% elsif kind == :image %>
+        <div class="flex justify-center bg-gray-50 rounded-xl p-4">
+          <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
+        </div>
+
+      <% elsif kind == :pdf %>
+        <div class="rounded-xl overflow-hidden border border-gray-200">
+          <iframe src="<%= url_for(@document.file) %>" class="w-full h-[80vh]" frameborder="0"></iframe>
+        </div>
+
+      <% elsif kind == :video %>
+        <div class="flex justify-center bg-black rounded-xl overflow-hidden">
+          <video controls class="max-w-full max-h-[80vh]">
+            <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+            Tu navegador no soporta video HTML5.
+          </video>
+        </div>
+
+      <% elsif kind == :audio %>
+        <div class="flex justify-center py-8">
+          <audio controls class="w-full max-w-xl">
+            <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+            Tu navegador no soporta audio HTML5.
+          </audio>
+        </div>
+
+      <% elsif kind == :text %>
+        <pre class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-800 overflow-auto max-h-[70vh] whitespace-pre-wrap"><%= @document.file.download.force_encoding("UTF-8") rescue "(No se pudo leer el contenido)" %></pre>
+
+      <% else %>
+        <div class="text-center py-12 border-2 border-dashed border-gray-200 rounded-xl">
+          <%= document_kind_icon(@document, css_class: "w-20 h-20 mx-auto") %>
+          <p class="mt-3 font-semibold text-gray-700"><%= @document.file.filename %></p>
+          <p class="text-sm text-gray-500"><%= document_size(@document) %></p>
+          <p class="text-xs text-gray-400 mt-2">Vista previa no disponible para este tipo de archivo.</p>
+          <%= link_to "Descargar archivo", download_document_path(@document), class: "inline-block mt-4 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors" %>
+        </div>
       <% end %>
-      <%= l(@document.created_at, format: :long) %>
     </div>
+  </section>
+<% end %>
 
-    <% if @document.document_type == "file" && @document.file.attached? %>
-      <div class="text-center my-6">
-        <div class="inline-block p-6 border border-gray-300 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          <p class="font-semibold text-lg"><%= @document.file.filename %></p>
-          <p class="text-gray-500 text-sm"><%= number_to_human_size(@document.file.byte_size) %></p>
-          <div class="flex justify-center mt-4">
-            <%= link_to "Descargar archivo", download_document_path(@document), class: "button" %>
-          </div>
-        </div>
-      </div>
-    <% elsif @document.document_type == "document" %>
-      <div class="prose max-w-none mt-6" id="document-content">
-        <%= @document.body %>
-      </div>
-    <% end %>
-  </div>
-</div>
-
-<style>
-  .image-wrapper {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-  }
-
-  .image-wrapper img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .image-download-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    opacity: 0;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    z-index: 10;
-  }
-
-  .image-wrapper:hover .image-download-btn {
-    opacity: 1;
-  }
-
-  .image-download-btn:hover {
-    background-color: rgba(59, 130, 246, 0.9);
-    transform: scale(1.05);
-  }
-
-  .image-download-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const documentContent = document.getElementById('document-content');
-
-    if (documentContent) {
-      // Encontrar todas las imágenes en el contenido
-      const images = documentContent.querySelectorAll('img');
-
-      images.forEach(function(img) {
-        // No procesar si ya está envuelta
-        if (img.parentElement.classList.contains('image-wrapper')) {
-          return;
-        }
-
-        // Crear contenedor wrapper
-        const wrapper = document.createElement('div');
-        wrapper.className = 'image-wrapper';
-
-        // Crear botón de descarga
-        const downloadBtn = document.createElement('a');
-        downloadBtn.className = 'image-download-btn';
-        downloadBtn.innerHTML = `
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          Descargar
-        `;
-
-        // Envolver la imagen
-        img.parentNode.insertBefore(wrapper, img);
-        wrapper.appendChild(img);
-        wrapper.appendChild(downloadBtn);
-
-        // Manejar click en el botón de descarga
-        downloadBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          downloadImage(img.src, getImageName(img.src));
-        });
-      });
-    }
-
-    function downloadImage(url, filename) {
-      fetch(url)
-        .then(response => response.blob())
-        .then(blob => {
-          const link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(link.href);
-        })
-        .catch(error => {
-          console.error('Error al descargar la imagen:', error);
-          // Fallback: abrir en nueva pestaña
-          window.open(url, '_blank');
-        });
-    }
-
-    function getImageName(url) {
-      const parts = url.split('/');
-      const filename = parts[parts.length - 1];
-      return filename || 'imagen.jpg';
-    }
-  });
-</script>

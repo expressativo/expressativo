@@ -1,0 +1,14 @@
+<div class="flex h-[calc(100vh-4rem)] -mx-2 md:-mx-5 lg:-mx-6 gap-2">
+  <div class="hidden md:block py-2 pl-2 flex-shrink-0">
+    <%= render "projects/sidebar", project: @project, active: :chat %>
+  </div>
+  <%= render "channels/sidebar", project: @project %>
+
+  <main class="flex-1 flex items-center justify-center bg-white">
+    <div class="text-center max-w-sm">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">No hay canales todavía</h2>
+      <p class="text-sm text-gray-500 mb-4">Crea el primer canal del proyecto para empezar a conversar.</p>
+      <%= link_to "Nuevo canal", new_project_channel_path(@project), class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-md" %>
+    </div>
+  </main>
+</div>
