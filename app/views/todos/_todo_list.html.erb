@@ -23,7 +23,7 @@
           </div>
 
           <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
-            <ul class="space-y-1.5">
+            <ul class="space-y-3">
               <%= render 'todos/todo_item', tasks: todo.tasks.not_done, todo: todo %>
               <%= render 'todos/todo_item', tasks: todo.tasks.done.order(updated_at: :desc).limit(5), todo: todo %>
               <% if completed > 5 %>
