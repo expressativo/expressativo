@@ -4,12 +4,15 @@ import GLightbox from "glightbox"
 export default class extends Controller {
   connect() {
     this._turboLoadHandler = this.initializeLightbox.bind(this)
+    this._refreshHandler = this.initializeLightbox.bind(this)
     document.addEventListener("turbo:load", this._turboLoadHandler)
+    window.addEventListener("chat:dom-updated", this._refreshHandler)
     this.initializeLightbox()
   }
 
   disconnect() {
     document.removeEventListener("turbo:load", this._turboLoadHandler)
+    window.removeEventListener("chat:dom-updated", this._refreshHandler)
     if (this.lightbox) {
       this.lightbox.destroy()
     }

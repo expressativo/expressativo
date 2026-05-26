@@ -58,15 +58,15 @@ class FoldersController < ApplicationController
   private
 
   def set_folder
-    @folder = Folder.find(params[:id])
+    @folder = @project.folders.find(params[:id])
   end
 
   def set_project
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
   end
 
   def set_parent_folder
-    @parent_folder = params[:parent_folder_id].present? ? Folder.find(params[:parent_folder_id]) : nil
+    @parent_folder = params[:parent_folder_id].present? ? @project.folders.find(params[:parent_folder_id]) : nil
   end
 
   def folder_params

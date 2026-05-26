@@ -1,17 +1,13 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_context, except: :my_task
+  before_action :set_task, only: %i[show edit update destroy add_comment search_members]
 
   def index
     @tasks = @todo.tasks
   end
 
   def show
-    @task = Task.includes(:assigned_users, :created_by, :publication, comments: :user).find(params[:id])
-    @todo = Todo.find(params[:todo_id])
-    @project = Project.find(params[:project_id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to project_todos_path(params[:project_id]), alert: "La tarea que buscas no existe o fue eliminada."
   end
 
   def new
@@ -31,15 +27,12 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task = Task.find(params[:id])
   end
+
   def update
-    @task = Task.find(params[:id])
-    logger.debug "params: #{params.inspect}"
-    logger.debug "params: #{tasks_params}"
     if @task.update(tasks_params)
-      if params[:from] == "full_form"
-        redirect_to project_todo_task_path(@project), notice: "Tarea actualizada correctamente."
+      if params[:from] == "full_form" || params[:from] == "show"
+        redirect_to project_todo_task_path(@project, @todo, @task), notice: "Tarea actualizada correctamente."
       else
         redirect_to project_todos_path(@project), notice: "Tarea actualizada correctamente."
       end
@@ -49,7 +42,6 @@ class TasksController < ApplicationController
   end
 
   def add_comment
-    @task = Task.find(params[:id])
     @comment = @task.comments.new(comment_params)
     @comment.user = current_user
     if @comment.save
@@ -64,7 +56,6 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task = Task.find(params[:id])
     @task.destroy
     redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
   end
@@ -72,7 +63,7 @@ class TasksController < ApplicationController
   # task assigned to current user
   def my_task
     @tasks = current_user.tasks
-      .where(done: false)
+      .not_done
       .includes(todo: :project)
       .order(Arel.sql("CASE WHEN due_date IS NULL THEN 1 ELSE 0 END, due_date ASC"))
 
@@ -84,9 +75,6 @@ class TasksController < ApplicationController
   end
 
   def search_members
-    @task = Task.find(params[:id])
-    @project = @task.todo.project
-
     query = params[:q].to_s.downcase
 
     users = @project.users.where(
@@ -109,10 +97,19 @@ class TasksController < ApplicationController
   private
 
   def set_context
-    @todo = Todo.find(params[:todo_id])
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
+    @todo = @project.todos.find(params[:todo_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to projects_path, alert: "El recurso solicitado no existe o no tienes acceso."
   end
+
+  def set_task
+    @task = @todo.tasks.includes(:assigned_users, :created_by, :publication, comments: :user).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to project_todos_path(@project), alert: "La tarea que buscas no existe o fue eliminada."
+  end
+
   def tasks_params
-    params.require(:task).permit(:title, :done, :from, :notes, :due_date, :column_id)
+    params.require(:task).permit(:title, :completed, :status, :from, :notes, :due_date, :column_id)
   end
 end

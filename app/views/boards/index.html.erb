@@ -1,49 +1,93 @@
-<div class="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 app-container">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold">
-      Tableros de <%= @project.title %>
-    </h1>
-    <div class="flex gap-2">
-      <%= link_to "Nuevo tablero", new_project_board_path(@project), class: "button" %>
-      <%= link_to "Volver al proyecto", project_path(@project), class: "button-outline" %>
-    </div>
-  </div>
+<%= render layout: 'projects/layout', locals: { project: @project, active: :boards } do %>
+  <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+    <header class="px-6 py-4 border-b border-gray-200 flex items-center justify-between gap-4 flex-wrap">
+      <div class="min-w-0">
+        <h2 class="text-lg font-semibold text-gray-900">Tableros</h2>
+        <p class="text-sm text-gray-500">Organiza tus tareas en tableros Kanban</p>
+      </div>
+      <% if @boards.any? %>
+        <%= link_to new_project_board_path(@project),
+              class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md transition shadow-sm" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Nuevo tablero
+        <% end %>
+      <% end %>
+    </header>
 
-  <% if @boards.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <% @boards.each do |board| %>
-        <div class="border border-gray-300 rounded-lg p-4 hover:shadow-lg transition-shadow">
-          <%= link_to project_board_path(@project, board), class: "block" do %>
-            <h3 class="text-lg font-semibold mb-2"><%= board.title %></h3>
-            <% if board.description.present? %>
-              <p class="text-gray-600 text-sm mb-3"><%= truncate(board.description, length: 100) %></p>
-            <% end %>
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
-              <span><%= board.columns.count %> columnas</span>
+    <% if @boards.any? %>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @boards.each do |board| %>
+            <div class="group bg-white border border-gray-200 hover:border-purple-400 rounded-xl p-4 hover:shadow-md transition relative">
+              <%= link_to project_board_path(@project, board), class: "block" do %>
+                <div class="flex items-start gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v6a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+                    </svg>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="text-base font-semibold text-gray-900 group-hover:text-purple-600 transition-colors truncate">
+                      <%= board.title %>
+                    </h3>
+                    <% if board.description.present? %>
+                      <p class="text-xs text-gray-500 mt-1 line-clamp-2">
+                        <%= truncate(board.description, length: 100) %>
+                      </p>
+                    <% else %>
+                      <p class="text-xs text-gray-400 italic mt-1">Sin descripción</p>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 text-xs text-gray-500 pt-3 border-t border-gray-100">
+                  <span class="inline-flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                    <%= pluralize(board.columns.count, "columna") %>
+                  </span>
+                  <span class="text-gray-300">·</span>
+                  <span>Actualizado <%= time_ago_in_words(board.updated_at) %></span>
+                </div>
+              <% end %>
+
+              <%= button_to project_board_path(@project, board),
+                    method: :delete,
+                    form: {
+                      data: { turbo_confirm: "¿Estás seguro de eliminar este tablero?" },
+                      class: "absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    },
+                    class: "p-1.5 rounded text-gray-400 hover:text-red-600 hover:bg-red-50",
+                    title: "Eliminar tablero" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" />
+                </svg>
+              <% end %>
             </div>
           <% end %>
-          <div class="mt-3 flex gap-2">
-            <div>
-              <%= link_to "Ver", project_board_path(@project, board), class: "text-sm text-blue-600 hover:underline" %>
-            </div>
-            <div>
-              <%= button_to "Eliminar", 
-                project_board_path(@project, board), 
-                method: :delete,
-                form: { data: { turbo_confirm: "¿Estás seguro?" } },
-                class: "text-sm text-red-600 hover:underline" %>
-            </div>
-          </div>
         </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="text-center py-12 text-gray-500">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
-      <p class="text-lg mb-2">No hay tableros creados</p>
-      <p class="text-sm mb-4">Crea tu primer tablero Kanban para organizar tus tareas</p>
-      <%= link_to "Crear tablero", new_project_board_path(@project), class: "button" %>
-    </div>
-  <% end %>
-</div>
+      </div>
+    <% else %>
+      <div class="px-6 py-16 text-center">
+        <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v6a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Crea tu primer tablero</h3>
+        <p class="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
+          Organiza tus tareas en columnas tipo Kanban y visualiza el progreso del proyecto de un vistazo.
+        </p>
+        <%= link_to new_project_board_path(@project),
+              class: "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md transition shadow-sm" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Crear tablero
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+<% end %>

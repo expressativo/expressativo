@@ -25,9 +25,14 @@ if [[ "$(uname)" == "Darwin" ]]; then
   bundle config build.mysql2 \
     --with-ldflags="-L$(brew --prefix zstd)/lib -L$(brew --prefix openssl@3)/lib" \
     --with-cppflags="-I$(brew --prefix zstd)/include -I$(brew --prefix openssl@3)/include"
-else
+elif command -v pacman &>/dev/null; then
+  sudo pacman -S --needed --noconfirm mariadb-libs zstd openssl
+elif command -v apt-get &>/dev/null; then
   sudo apt-get update -qq
   sudo apt-get install -y -qq libmysqlclient-dev libzstd-dev libssl-dev
+else
+  echo "==> Gestor de paquetes no soportado. Instala manualmente: mysql client libs, zstd, openssl"
+  exit 1
 fi
 
 echo "==> Instalando gemas..."

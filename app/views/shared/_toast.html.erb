@@ -1,0 +1,33 @@
+<%# locals: (message:, type: "notice") %>
+<%
+  icon_svg = {
+    "notice" => '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    "alert" => '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>',
+    "success" => '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+  }
+
+  type_classes = {
+    "notice" => "bg-blue-600 text-white",
+    "success" => "bg-green-600 text-white",
+    "alert" => "bg-red-600 text-white",
+    "error" => "bg-red-600 text-white",
+    "warning" => "bg-yellow-500 text-white"
+  }
+%>
+<div data-controller="toast" data-toast-delay-value="4000" class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 <%= type_classes[type] || type_classes["notice"] %> transition-all duration-300 ease-out translate-y-2 opacity-0">
+  <div class="p-4">
+    <div class="flex items-start gap-3">
+      <div class="shrink-0 opacity-90">
+        <%= raw (icon_svg[type] || icon_svg["notice"]) %>
+      </div>
+      <div class="flex-1 text-sm font-medium pt-0.5">
+        <%= message %>
+      </div>
+      <button type="button" class="inline-flex shrink-0 items-center justify-center rounded-md opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 -mr-1 -mt-1 p-1" data-action="click->toast#close">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

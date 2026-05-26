@@ -2,19 +2,28 @@ class ColumnsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
   before_action :set_board
-  before_action :set_column, only: [:update, :destroy, :update_position]
+  before_action :set_column, only: [ :update, :destroy, :update_position ]
 
   def create
     @column = @board.columns.new(column_params)
-    @column.position = @board.columns.maximum(:position).to_i + 1
+    @column.kind ||= "custom"
+
+    done_column = @board.columns.find_by(kind: "done")
+    @column.position =
+      if done_column
+        done_column.position
+      else
+        @board.columns.maximum(:position).to_i + 1
+      end
 
     if @column.save
-      render json: { 
-        success: true, 
+      render json: {
+        success: true,
         column: {
           id: @column.id,
           title: @column.title,
-          position: @column.position
+          position: @column.position,
+          kind: @column.kind
         }
       }
     else
@@ -31,26 +40,37 @@ class ColumnsController < ApplicationController
   end
 
   def destroy
+    if @column.done?
+      return render json: { success: false, errors: [ "La columna 'Done' no se puede eliminar" ] }, status: :unprocessable_entity
+    end
+
     @column.destroy
     render json: { success: true }
   end
 
   def update_position
+    if @column.done?
+      return render json: { success: false, error: "La columna 'Done' no puede moverse" }, status: :unprocessable_entity
+    end
+
     new_position = params[:position].to_i
     old_position = @column.position
 
-    # Reordenar columnas
+    done_column = @board.columns.where.not(id: @column.id).find_by(kind: "done")
+    if done_column
+      new_position = [ new_position, done_column.position - 1 ].min
+    end
+
     if new_position < old_position
-      # Mover hacia la izquierda: incrementar posición de columnas entre new y old
       @board.columns.where("position >= ? AND position < ?", new_position, old_position)
+                    .where.not(id: @column.id)
                     .update_all("position = position + 1")
     elsif new_position > old_position
-      # Mover hacia la derecha: decrementar posición de columnas entre old y new
       @board.columns.where("position > ? AND position <= ?", old_position, new_position)
+                    .where.not(id: @column.id)
                     .update_all("position = position - 1")
     end
 
-    # Actualizar posición de la columna movida
     @column.update(position: new_position)
 
     render json: { success: true }
@@ -61,7 +81,7 @@ class ColumnsController < ApplicationController
   private
 
   def set_project
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
   end
 
   def set_board

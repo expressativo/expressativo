@@ -1,0 +1,8 @@
+<% always_online = local_assigns.fetch(:always_online, false) %>
+<% online = always_online || Chat::Presence::Tracker.online?(user) %>
+<span
+  class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ring-1 ring-black/5 <%= online ? 'bg-green-500' : 'bg-gray-300' %>"
+  <% unless always_online %>data-presence-indicator-target="dot"<% end %>
+  data-user-id="<%= user.id %>"
+  title="<%= online ? 'En línea' : 'Desconectado' %>"
+></span>

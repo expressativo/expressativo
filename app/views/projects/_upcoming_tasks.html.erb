@@ -1,0 +1,62 @@
+<section class="bg-white border border-gray-200 rounded-2xl">
+  <header class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <h2 class="text-base font-semibold text-gray-900">Próximas tareas</h2>
+    </div>
+    <%= link_to "Ver todas", my_task_path, class: "text-xs font-medium text-purple-600 hover:text-purple-700" %>
+  </header>
+
+  <% if @upcoming_tasks.any? %>
+    <ul class="divide-y divide-gray-100">
+      <% @upcoming_tasks.each do |task| %>
+        <% due = task.due_date.to_date %>
+        <% overdue = due < Date.today %>
+        <% today = due == Date.today %>
+        <% soon = due > Date.today && due <= Date.today + 3 %>
+        <li class="px-5 py-3 hover:bg-gray-50 transition-colors">
+          <%= link_to project_todo_task_path(@project, task.todo, task), class: "flex items-center gap-3" do %>
+            <div class="w-2 h-2 rounded-full flex-shrink-0 <%= overdue ? 'bg-red-500' : today ? 'bg-amber-500' : soon ? 'bg-yellow-400' : 'bg-gray-300' %>"></div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-900 truncate"><%= task.title %></div>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-xs text-gray-500 truncate">en <%= task.todo.name %></span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+              <% if task.assigned_users.any? %>
+                <div class="flex -space-x-1.5">
+                  <% task.assigned_users.first(3).each do |u| %>
+                    <span class="ring-2 ring-white rounded-full" title="<%= u.first_name %>">
+                      <%= user_avatar(u, size: 6, class: 'w-6 h-6 rounded-full object-cover') %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+              <span class="text-xs font-medium px-2 py-1 rounded
+                <%= overdue ? 'bg-red-50 text-red-700' : today ? 'bg-amber-50 text-amber-700' : soon ? 'bg-yellow-50 text-yellow-700' : 'bg-gray-100 text-gray-600' %>">
+                <% if overdue %>
+                  Atrasada
+                <% elsif today %>
+                  Hoy
+                <% else %>
+                  <%= due.strftime("%d %b") %>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="px-5 py-10 text-center">
+      <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      <p class="text-sm text-gray-500">No hay tareas con fecha próxima.</p>
+      <%= link_to "Ir a To-dos", project_todos_path(@project), class: "inline-block mt-2 text-xs font-medium text-purple-600 hover:text-purple-700" %>
+    </div>
+  <% end %>
+</section>

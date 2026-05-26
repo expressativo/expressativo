@@ -1,3 +1,5 @@
-<div>
+<% content_for :title, "Nuevo anuncio" %>
+
+<%= render layout: 'projects/layout', locals: { project: @project, active: :announcements } do %>
   <%= render "announcements/form", announcement: @announcement %>
-</div>
+<% end %>

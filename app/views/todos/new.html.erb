@@ -1,5 +1,35 @@
-<div class="md:max-w-2xl mx-auto">
-<div class="card p-4">
-  <%= render 'todos/form', todo: @todo, project: @project, task: @task %>
-</div>
+<div class="max-w-3xl mx-auto py-4">
+  <nav class="flex items-center text-sm text-gray-500 mb-3 flex-wrap" aria-label="Breadcrumb">
+    <%= link_to "Proyectos", projects_path, class: "hover:text-purple-600 transition-colors" %>
+    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+    <%= link_to @project.title, project_path(@project), class: "hover:text-purple-600 transition-colors truncate" %>
+    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+    <%= link_to "To-dos", project_todos_path(@project), class: "hover:text-purple-600 transition-colors" %>
+    <svg class="w-4 h-4 mx-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+    <span class="text-gray-800 font-medium">Nueva lista</span>
+  </nav>
+
+  <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+    <header class="px-6 py-5 border-b border-gray-200">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900">Nueva lista de tareas</h1>
+          <p class="text-sm text-gray-500">Agrupa tareas relacionadas dentro de una lista.</p>
+        </div>
+      </div>
+    </header>
+
+    <%= render 'todos/form', todo: @todo, project: @project %>
+  </section>
 </div>

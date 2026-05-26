@@ -1,7 +1,7 @@
 class TodosController < ApplicationController
     before_action :authenticate_user!
     before_action :set_project
-    before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks ]
+    before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks, :show ]
 
     def index
       @todos = @project.todos.includes(tasks: [ :assigned_users, :todo ])
@@ -13,6 +13,10 @@ class TodosController < ApplicationController
 
       # Usar la preferencia guardada del usuario
       @view_type = current_user.todos_view_preference || "list"
+    end
+
+    def show
+      @todo = @project.todos.find(params[:id])
     end
 
     def new
@@ -49,12 +53,12 @@ class TodosController < ApplicationController
     end
 
     def completed_tasks
-      @completed_tasks = @todo.tasks.where(done: true)
+      @completed_tasks = @todo.tasks.done
     end
 
     private
     def set_project
-      @project = Project.find(params[:project_id])
+      @project = Project.for_user(current_user).find(params[:project_id])
     end
 
     def set_todo

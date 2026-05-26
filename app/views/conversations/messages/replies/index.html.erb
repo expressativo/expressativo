@@ -1,0 +1,33 @@
+<% other = @conversation.other_user_for(current_user) %>
+<%= turbo_frame_tag "thread_panel" do %>
+  <aside class="w-96 max-w-[28rem] flex-shrink-0 bg-white border-l border-gray-200 h-full flex flex-col" data-controller="thread-panel">
+    <header class="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+      <div>
+        <h2 class="font-semibold text-gray-900 text-sm">Hilo</h2>
+        <p class="text-xs text-gray-500"><%= other.full_name.presence || other.email %></p>
+      </div>
+      <%= link_to project_conversation_path(@project, @conversation), data: { turbo_frame: "thread_panel", turbo_action: "replace" }, class: "text-gray-400 hover:text-gray-600 p-1", aria: { label: "Cerrar hilo" } do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <% end %>
+    </header>
+
+    <div class="flex-1 overflow-y-auto" id="<%= dom_id(@parent, :replies) %>">
+      <div class="border-b border-gray-200">
+        <%= render "messages/message", message: @parent, project: @project, viewer: current_user %>
+      </div>
+
+      <% if @replies.any? %>
+        <%= render partial: "messages/message", collection: @replies, locals: { project: @project, viewer: current_user } %>
+      <% else %>
+        <p class="text-center text-xs text-gray-400 py-6">Sin respuestas todavía.</p>
+      <% end %>
+    </div>
+
+    <%= render "messages/composer",
+               form_url: project_conversation_message_replies_path(@project, @conversation, @parent),
+               project: @project,
+               placeholder: "Responder al hilo…",
+               wrapper_class: "border-t border-gray-200 px-3 py-2 flex-shrink-0",
+               submit_title: "Responder (Enter)" %>
+  </aside>
+<% end %>

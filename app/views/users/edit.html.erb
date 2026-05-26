@@ -1,9 +1,4 @@
 <div class="custom_container">
   <h2 class="title mb-4"> Editar perfil</h2>
-  <% if notice %>
-    <div class="success">
-      <%= notice %>
-    </div>
-  <% end %>
   <%= render 'users/form', user: @current_user %>
 </div>

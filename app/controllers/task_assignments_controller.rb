@@ -3,7 +3,7 @@ class TaskAssignmentsController < ApplicationController
   before_action :set_task
 
   def create
-    @user = User.find(params[:user_id])
+    @user = @project.users.find(params[:user_id])
     @assignment = @task.task_assignments.new(user: @user)
 
     if @assignment.save
@@ -39,13 +39,12 @@ class TaskAssignmentsController < ApplicationController
   end
 
   def search
-    project = @task.todo.project
     query = params[:query].to_s.downcase
 
     # Buscar usuarios del proyecto que no estén ya asignados
     assigned_user_ids = @task.assigned_users.pluck(:id)
 
-    users = project.users
+    users = @project.users
       .where.not(id: assigned_user_ids)
       .where("LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?",
              "%#{query}%", "%#{query}%", "%#{query}%")
@@ -57,6 +56,8 @@ class TaskAssignmentsController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:task_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
+    @todo = @project.todos.find(params[:todo_id])
+    @task = @todo.tasks.find(params[:task_id])
   end
 end

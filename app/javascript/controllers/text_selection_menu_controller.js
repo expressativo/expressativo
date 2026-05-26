@@ -130,7 +130,6 @@ export default class extends Controller {
 
     const formData = new FormData()
     formData.append("task[title]", title)
-    formData.append("task[done]", "false")
     const notes = this.taskNotesTarget.value.trim()
     if (notes) formData.append("task[notes]", notes)
 

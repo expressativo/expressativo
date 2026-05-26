@@ -31,7 +31,7 @@ class AnnouncementCommentsController < ApplicationController
   end
 
   def set_context
-    @project = Project.find(params[:project_id])
+    @project = Project.for_user(current_user).find(params[:project_id])
     @announcement = @project.announcements.find(params[:announcement_id])
   end
 end

@@ -11,6 +11,11 @@
           <%= image_tag blob.representation(resize_to_limit: local_assigns[:in_gallery] ? [ 800, 600 ] : [ 1024, 768 ]), class: "max-w-full h-auto cursor-pointer hover:opacity-80 transition-opacity" %>
         <% end %>
       <% end %>
+  <% elsif blob.content_type.to_s == "image/svg+xml" %>
+    <%# Los SVGs no son representables por Active Storage pero sí se pueden mostrar directamente %>
+    <%= link_to rails_blob_path(blob, only_path: true), class: "glightbox", data: { type: "image", gallery: "gallery" } do %>
+      <%= image_tag rails_blob_path(blob, only_path: true), class: "max-w-full h-auto cursor-pointer hover:opacity-80 transition-opacity" %>
+    <% end %>
   <% end %>
  <%# Botón de descarga en la esquina superior derecha - siempre visible %>
  <div class="flex items-center justify-center gap-2">

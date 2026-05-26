@@ -116,9 +116,19 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    childprocess (5.1.0)
+      logger (~> 1.5)
+    commonmarker (2.8.2-aarch64-linux)
+    commonmarker (2.8.2-aarch64-linux-musl)
+    commonmarker (2.8.2-arm-linux)
+    commonmarker (2.8.2-arm64-darwin)
+    commonmarker (2.8.2-x86_64-darwin)
+    commonmarker (2.8.2-x86_64-linux)
+    commonmarker (2.8.2-x86_64-linux-musl)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     crass (1.0.6)
+    csv (3.3.5)
     date (3.4.1)
     debug (1.11.0)
       irb (~> 1.10)
@@ -158,6 +168,10 @@ GEM
       activesupport (>= 6.1)
     hashie (5.1.0)
       logger
+    httparty (0.24.2)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -192,6 +206,12 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
+    launchy (3.1.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+      logger (~> 1.6)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.24.1)
@@ -202,8 +222,6 @@ GEM
       net-imap
       net-pop
       net-smtp
-    mailtrap (2.5.0)
-      base64
     marcel (1.0.4)
     matrix (0.4.3)
     mini_magick (5.3.1)
@@ -339,6 +357,9 @@ GEM
     regexp_parser (2.11.2)
     reline (0.6.2)
       io-console (~> 0.5)
+    resend (1.3.0)
+      base64
+      httparty (>= 0.22.0)
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -383,12 +404,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sentry-rails (5.26.0)
-      railties (>= 5.0)
-      sentry-ruby (~> 5.26.0)
-    sentry-ruby (5.26.0)
-      bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
     simple_form (5.4.1)
       actionpack (>= 7.0)
       activemodel (>= 7.0)
@@ -486,6 +501,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   capybara
+  commonmarker (~> 2.0)
   debug
   devise (~> 4.9)
   devise-i18n (~> 1.15)
@@ -493,17 +509,16 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kaminari
-  mailtrap (~> 2.5)
+  letter_opener
   mysql2
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
+  resend (~> 1.0)
   rubocop-rails-omakase
   selenium-webdriver
-  sentry-rails
-  sentry-ruby
   simple_form (~> 5.4)
   solid_cable
   solid_cache

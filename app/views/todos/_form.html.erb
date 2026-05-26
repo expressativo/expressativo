@@ -1,23 +1,31 @@
-<% if todo.errors.any? %>
-  <div class="errors">
-    <ul>
-      <% todo.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= form_with model: [project, todo], local: true, class: "p-6" do |form| %>
+  <% if todo.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-5 text-sm text-red-700">
+      <p class="font-medium mb-1">
+        Hay <%= pluralize(todo.errors.count, "error") %> que corregir:
+      </p>
+      <ul class="list-disc list-inside space-y-0.5">
+        <% todo.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= form_with model: [project, todo], local: true do |form| %>
-  <div class="mb-4 ">
-    <%= form.label 'Título' , class: "label"%>
-    <%= form.text_field :name, class: "input mt-2", placeholder: "Describe esta lista de tareas", autofocus: true %>
+  <div class="mb-4 space-y-1.5">
+    <%= form.label :name, "Título", class: "block text-gray-700 text-sm font-medium" %>
+    <%= form.text_field :name,
+          class: "w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition",
+          placeholder: "Ej. Backlog, Sprint actual, Ideas…",
+          autofocus: true %>
+    <p class="text-gray-500 text-xs">Un nombre corto que describa el contenido de la lista.</p>
   </div>
-  
-  <div class="flex items-center space-x-2 mt-6">
-    <%= form.submit "Guardar", class: "button", id: "submit_todo", data: {
-      turbo_submits_with: "Guardando..."
-    } %>
-    <%= link_to "Cancelar", project_todos_path(project), class: "button-outline" %>
+
+  <div class="flex items-center justify-end gap-2 pt-5 mt-2 border-t border-gray-100">
+    <%= link_to "Cancelar", project_todos_path(project),
+          class: "inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-md transition" %>
+    <%= form.submit todo.persisted? ? "Guardar cambios" : "Crear lista",
+          class: "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md shadow-sm transition cursor-pointer",
+          data: { turbo_submits_with: "Guardando..." } %>
   </div>
 <% end %>

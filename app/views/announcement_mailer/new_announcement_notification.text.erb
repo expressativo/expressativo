@@ -1,0 +1,17 @@
+Hola <%= @recipient.full_name.presence || @recipient.email %>,
+
+<% if @author.present? %>
+<%= @author.full_name.presence || @author.email %> ha publicado un nuevo anuncio en el proyecto <%= @project.title %>.
+<% else %>
+Se ha publicado un nuevo anuncio en el proyecto <%= @project.title %>.
+<% end %>
+
+Anuncio:
+---
+<%= @announcement.content.to_plain_text %>
+---
+
+Ver anuncio: <%= project_announcement_url(@project, @announcement) %>
+
+---
+Este es un correo automático de Expressativo.

@@ -1,0 +1,15 @@
+NUEVO REGISTRO EN LA PLATAFORMA
+================================
+
+Acaba de registrarse un nuevo usuario en Tivo.
+
+Email:  <%= @user.email %>
+<% if @user.full_name.to_s.strip.present? -%>
+Nombre: <%= @user.full_name %>
+<% end -%>
+Origen: <%= @user.provider.present? ? @user.provider.titleize : "Email + contraseña" %>
+ID:     #<%= @user.id %>
+Fecha:  <%= @user.created_at.strftime("%d/%m/%Y %H:%M") %>
+
+--
+Notificación automática de Tivo.

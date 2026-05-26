@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light only">
+  </head>
+  <body style="margin: 0; padding: 24px; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+            <tr>
+              <td bgcolor="#7c3aed" style="background-color: #7c3aed; padding: 24px;">
+                <span style="display: inline-block; background-color: #ffffff33; color: #ffffff; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.6px; text-transform: uppercase;">Invitación</span>
+                <h1 style="margin: 12px 0 4px; color: #ffffff; font-size: 22px; font-weight: 700;">Te han invitado a un proyecto en Tivo</h1>
+                <p style="margin: 0; color: #ffffff; opacity: 0.9; font-size: 14px;">
+                  <%= @inviter&.full_name.to_s.strip.presence || @inviter&.email || "Alguien" %>
+                  te invitó a colaborar.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 24px; background-color: #ffffff;">
+                <p style="margin: 0 0 12px;">Hola,</p>
+                <p style="margin: 0 0 12px;">
+                  <% if @inviter %>
+                    <strong><%= @inviter.full_name.to_s.strip.presence || @inviter.email %></strong>
+                  <% else %>
+                    Alguien
+                  <% end %>
+                  te ha invitado a unirte al proyecto
+                  <strong><%= @project.title %></strong> en Tivo.
+                </p>
+
+                <% if @project.description.present? %>
+                  <div style="background-color: #f9fafb; padding: 16px; border-left: 4px solid #7c3aed; margin: 16px 0; color: #374151; font-size: 14px;">
+                    <%= simple_format(@project.description) %>
+                  </div>
+                <% end %>
+
+                <p style="margin: 16px 0 0;">Para unirte, sólo haz clic en el botón:</p>
+
+                <%= render "shared/mail_button",
+                    url: @invitation_url,
+                    label: "Unirme al proyecto",
+                    bg: "#7c3aed" %>
+
+                <p style="margin: 16px 0 0; font-size: 13px; color: #6b7280;">
+                  ¿El botón no funciona? Copia y pega este enlace en tu navegador:<br>
+                  <a href="<%= @invitation_url %>" style="color: #6d28d9; word-break: break-all;"><%= @invitation_url %></a>
+                </p>
+
+                <p style="text-align: center; color: #9ca3af; font-size: 12px; margin: 28px 0 0;">
+                  Si no esperabas esta invitación, puedes ignorar este correo.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

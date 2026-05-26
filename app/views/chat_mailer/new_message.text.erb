@@ -1,0 +1,12 @@
+Hola <%= @user.full_name.presence || @user.email %>,
+
+<%= @sender.full_name.presence || @sender.email %> te envió un mensaje en <%= @chat_name %> del proyecto <%= @project.title %>.
+
+---
+<%= @message.body.to_plain_text.truncate(300) %>
+---
+
+Ver mensaje: <%= @url %>
+
+---
+Este es un correo automático de Expressativo. No respondas a este mensaje.
