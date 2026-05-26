@@ -1,6 +1,6 @@
 <% tasks.each do |task| %>
   <%= turbo_frame_tag dom_id(task) do %>
-    <li class="flex items-center gap-2 group/task">
+    <li class="flex items-center gap-2 group/task mb-1">
       <%= form_with class: "flex items-center", model: [@project, todo, task], method: :patch, data: { turbo_frame: dom_id(todo) } do |f| %>
         <%= f.check_box :completed, {
               class: "w-4 h-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer",
