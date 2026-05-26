@@ -1,10 +1,7 @@
 <%= form_with model: [@project, @announcement , AnnouncementComment.new], local: true do |form| %>
   <div>
     <%= form.label :content, "New Comment", class: "label" %><br>
-    <%= render 'shared/lexical_editor',
-          form: form,
-          field: :content,
-          placeholder: "Escribe tu comentario..." %>
+    <%= form.rich_text_area :content, placeholder: "Escribe tu comentario..." %>
   </div>
   <div class="mt-4">
     <%= form.submit "Add Comment", class:"button" %>

@@ -3,14 +3,7 @@
     <div class="comment">
       <div class="input-wrapper">
         <%= f.label :content, "Tu comentario (usa @ para mencionar)", class: "label" %>
-        <%= render 'shared/lexical_editor',
-              form: f,
-              field: :content,
-              placeholder: "Escribe tu comentario... Usa @ para mencionar",
-              mentions: true,
-              project_id: @project.id,
-              todo_id: @todo.id,
-              task_id: @task.id %>
+        <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" %>
       </div>
       <div class="flex gap-2">
         <%= f.submit "Agregar Comentario", class: "button", data: {

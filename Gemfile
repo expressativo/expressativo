@@ -86,3 +86,5 @@ gem "simple_form", "~> 5.4"
 
 # Markdown rendering para chat
 gem "commonmarker", "~> 2.0"
+
+gem "lexxy", "~> 0.1.26.beta"

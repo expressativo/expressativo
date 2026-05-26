@@ -25,10 +25,7 @@
 
   <div class="px-6 py-5 space-y-2">
     <%= form.label :content, "Contenido", class: "block text-sm font-medium text-gray-700" %>
-    <%= render 'shared/lexical_editor',
-        form: form,
-        field: :content,
-        placeholder: "Escribe el anuncio que quieres compartir con el equipo..." %>
+    <%= form.rich_text_area :content, placeholder: "Escribe el anuncio que quieres compartir con el equipo..." %>
     <% if @announcement.new_record? %>
       <p class="text-xs text-gray-500 flex items-center gap-1.5 pt-1">
         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
