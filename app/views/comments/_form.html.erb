@@ -6,12 +6,15 @@
       
       <div class="mb-4">
         <%= f.label :content, "Editar comentario (usa @ para mencionar)", class: "label text-sm font-medium text-gray-700" %>
-        <div data-controller="trix-mentions"
-             data-trix-mentions-project-id-value="<%= @project.id %>"
-             data-trix-mentions-todo-id-value="<%= @todo.id %>"
-             data-trix-mentions-task-id-value="<%= @task.id %>">
-          <%= f.rich_text_area :content, class: "mt-2" %>
-        </div>
+        <%= render 'shared/lexical_editor',
+              form: f,
+              field: :content,
+              placeholder: "Escribe tu comentario... Usa @ para mencionar",
+              mentions: true,
+              project_id: @project.id,
+              todo_id: @todo.id,
+              task_id: @task.id,
+              wrapper_class: "mt-2" %>
       </div>
       
       <div class="flex items-center space-x-2">
