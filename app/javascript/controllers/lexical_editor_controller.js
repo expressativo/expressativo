@@ -28,6 +28,7 @@ import {
 import { registerHistory, createEmptyHistoryState } from "@lexical/history"
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html"
 import { CodeNode, CodeHighlightNode, registerCodeHighlighting, $createCodeNode, $isCodeNode } from "@lexical/code"
+import Prism from "prismjs"
 import Tribute from "tributejs"
 
 export default class extends Controller {
@@ -49,6 +50,7 @@ export default class extends Controller {
 
     this.editor.setRootElement(this.editorTarget)
 
+    window.Prism = Prism
     registerRichText(this.editor)
     registerList(this.editor)
     registerCodeHighlighting(this.editor)
