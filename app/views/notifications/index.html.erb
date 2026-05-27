@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-gray-900">Notificaciones</h1>
     
-    <% if @notifications.unread.any? %>
+    <% if current_user.notifications.unread.any? %>
       <%= button_to "Marcar todas como leídas", 
           mark_all_as_read_notifications_path,
           method: :post,
@@ -10,44 +10,29 @@
     <% end %>
   </div>
 
+  <!-- Configuración de notificaciones push -->
+  <div data-push-notifications-target="settingsRow" class="hidden mb-6 bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-purple-50 rounded-lg">
+        <svg data-push-notifications-target="settingsIconOn" class="hidden w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <svg data-push-notifications-target="settingsIconOff" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900">Notificaciones push</h3>
+        <p data-push-notifications-target="settingsText" class="text-xs text-gray-500">Recibí alertas incluso cuando no estés en la app</p>
+      </div>
+    </div>
+    <button type="button" data-action="click->push-notifications#toggle" class="flex items-center gap-2 cursor-pointer focus:outline-none">
+      <div data-push-notifications-target="track" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+        <span data-push-notifications-target="knob" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+      </div>
+    </button>
+  </div>
+
   <% if @notifications.any? %>
     <div class="space-y-2">
       <% @notifications.each do |notification| %>
-        <%= link_to notification_path(notification), 
-            class: "block bg-white border rounded-lg p-4 hover:shadow-md transition-shadow #{notification.read? ? 'border-gray-200' : 'border-indigo-300 bg-indigo-50'}" do %>
-          
-          <div class="flex items-start gap-3">
-            <% if !notification.read? %>
-              <div class="w-2 h-2 bg-indigo-600 rounded-full mt-2"></div>
-            <% end %>
-            
-            <div class="flex-1">
-              <div class="flex items-center gap-2 mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-indigo-600">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <span class="font-semibold text-gray-900">
-                  <%= notification.metadata['mentioned_by'] %>
-                </span>
-                <span class="text-gray-600">te mencionó en</span>
-                <span class="font-medium text-gray-900">
-                  <%= notification.metadata['task_title'] %>
-                </span>
-              </div>
-              
-              <p class="text-sm text-gray-600 ml-7">
-                "<%= notification.metadata['comment_preview'] %>"
-              </p>
-              
-              <p class="text-xs text-gray-500 ml-7 mt-2">
-                <%= time_ago_in_words(notification.created_at) %> atrás
-              </p>
-            </div>
-          </div>
-        <% end %>
+        <%= render "notifications/notification", notification: notification %>
       <% end %>
     </div>
 

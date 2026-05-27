@@ -1,0 +1,87 @@
+<% meta = notification.metadata || {} %>
+<%= link_to notification_path(notification),
+    class: "block bg-white border rounded-lg p-4 hover:shadow-md transition-shadow #{notification.read? ? 'border-gray-200' : 'border-indigo-300 bg-indigo-50'}" do %>
+
+  <div class="flex items-start gap-3">
+    <% unless notification.read? %>
+      <div class="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+    <% end %>
+
+    <div class="flex-1 min-w-0">
+      <% case notification.notification_type %>
+      <% when "mention" %>
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-indigo-600 flex-shrink-0">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span class="font-semibold text-gray-900"><%= meta['mentioned_by'] %></span>
+          <span class="text-gray-600">te mencionó en</span>
+          <span class="font-medium text-gray-900"><%= meta['task_title'] %></span>
+        </div>
+        <% if meta['comment_preview'].present? %>
+          <p class="text-sm text-gray-600 ml-7 truncate">"<%= meta['comment_preview'] %>"</p>
+        <% end %>
+
+      <% when "task_assignment" %>
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-600 flex-shrink-0">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+          <span class="font-semibold text-gray-900"><%= meta['assigned_by'] %></span>
+          <span class="text-gray-600">te asignó la tarea</span>
+          <span class="font-medium text-gray-900"><%= meta['task_title'] %></span>
+        </div>
+        <p class="text-sm text-gray-600 ml-7">Proyecto: <%= meta['project_title'] %></p>
+
+      <% when "direct_message" %>
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-600 flex-shrink-0">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="font-semibold text-gray-900"><%= meta['sender_name'] %></span>
+          <span class="text-gray-600">te envió un mensaje directo</span>
+        </div>
+        <% if meta['preview'].present? %>
+          <p class="text-sm text-gray-600 ml-7 truncate">"<%= meta['preview'] %>"</p>
+        <% else %>
+          <p class="text-sm text-gray-400 ml-7 italic">Archivo adjunto</p>
+        <% end %>
+
+      <% when "chat_mention" %>
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-orange-600 flex-shrink-0">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          <span class="font-semibold text-gray-900"><%= meta['mentioned_by'] %></span>
+          <span class="text-gray-600">te mencionó en chat</span>
+        </div>
+        <% if meta['preview'].present? %>
+          <p class="text-sm text-gray-600 ml-7 truncate">"<%= meta['preview'] %>"</p>
+        <% end %>
+
+      <% else %>
+        <div class="flex items-center gap-2 mb-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-600 flex-shrink-0">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="font-medium text-gray-900">Nueva notificación</span>
+        </div>
+        <% if meta['preview'].present? %>
+          <p class="text-sm text-gray-600 ml-7"><%= meta['preview'] %></p>
+        <% else %>
+          <p class="text-sm text-gray-400 ml-7 italic">Tienes una nueva notificación</p>
+        <% end %>
+      <% end %>
+
+      <p class="text-xs text-gray-500 ml-7 mt-2">
+        <%= time_ago_in_words(notification.created_at) %> atrás
+      </p>
+    </div>
+  </div>
+<% end %>
