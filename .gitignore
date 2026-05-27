@@ -44,3 +44,4 @@
 
 
 .playwright-mcp
+/config/credentials/environment.key

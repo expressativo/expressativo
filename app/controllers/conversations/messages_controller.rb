@@ -24,6 +24,7 @@ class Conversations::MessagesController < ApplicationController
 
     if @message.save
       Chat::MentionDispatcher.call(@message)
+      Chat::ConversationNotifier.call(@message)
       Chat::MessageBroadcaster.call(@message)
       respond_to do |format|
         format.turbo_stream

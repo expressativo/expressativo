@@ -75,23 +75,14 @@ class TasksController < ApplicationController
   end
 
   def search_members
-    query = params[:q].to_s.downcase
+    query = params[:filter].to_s.downcase
 
     users = @project.users.where(
       "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?",
       "%#{query}%", "%#{query}%", "%#{query}%"
-    ).limit(5)
+    ).limit(8)
 
-    render json: {
-      users: users.map do |user|
-        {
-          id: user.id,
-          name: user.full_name.presence || user.email,
-          email: user.email,
-          initials: user.full_name.present? ? user.full_name.split.map(&:first).join.upcase : user.email[0].upcase
-        }
-      end
-    }
+    render partial: "tasks/mention_prompt_items", locals: { users: users }
   end
 
   private

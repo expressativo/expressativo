@@ -1,9 +1,11 @@
 <div class="border border-2 border-gray-200 rounded-lg p-4" data-controller="show-comment-section">
   <%= form_for :comment, url: add_comment_project_todo_task_path(@project, @todo, @task), class: "hidden", method: :post do |f| %>
-    <div class="comment">
+    <div class="comment" data-controller="mention-form">
       <div class="input-wrapper">
         <%= f.label :content, "Tu comentario (usa @ para mencionar)", class: "label" %>
-        <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" %>
+        <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar" do %>
+          <lexxy-prompt trigger="@" src="<%= search_members_project_todo_task_path(@project, @todo, @task) %>" remote-filtering insert-editable-text empty-results="Sin coincidencias"></lexxy-prompt>
+        <% end %>
       </div>
       <div class="flex gap-2">
         <%= f.submit "Agregar Comentario", class: "button", data: {

@@ -131,6 +131,8 @@ export default class extends Controller {
             icon: this.iconUrlValue || undefined
           })
         } catch (_) { /* ignore */ }
+        // Notify push-notifications controller that permission was granted
+        document.dispatchEvent(new CustomEvent("push-permission-granted", { detail: { source: "chat-notifier" } }))
       }
     } catch (_) {
       this.removeToast()

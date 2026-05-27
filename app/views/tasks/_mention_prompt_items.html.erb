@@ -1,0 +1,9 @@
+<% users.each do |user| %>
+  <lexxy-prompt-item search="<%= "#{user.full_name} #{user.mention_handle}" %>">
+    <template type="menu">
+      <span class="font-semibold"><%= user.full_name.presence || user.email %></span>
+      <span class="text-gray-500 text-xs">@<%= user.mention_handle %></span>
+    </template>
+    <template type="editor">@<%= user.mention_handle %> </template>
+  </lexxy-prompt-item>
+<% end %>

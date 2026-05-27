@@ -12,6 +12,10 @@
     <% if user_signed_in? %>
       <meta name="current-user-id" content="<%= current_user.id %>">
     <% end %>
+    <% vapid_public_key = Rails.application.credentials.dig(:web_push, :public_key) %>
+    <% if vapid_public_key.present? %>
+      <meta name="vapid-public-key" content="<%= vapid_public_key %>">
+    <% end %>
     <%= yield :head %>
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
@@ -27,7 +31,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css">
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-white" data-controller="lightbox reactions-launcher">
+  <body class="bg-white" data-controller="lightbox reactions-launcher push-notifications">
     <% if user_signed_in? %>
       <%= render 'layouts/navbar'%>
       <div data-controller="chat-notifier"

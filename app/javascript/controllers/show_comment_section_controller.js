@@ -28,10 +28,8 @@ export default class extends Controller {
     
     // Si el formulario se está mostrando, enfocar el campo de texto
     if (!form.classList.contains('hidden')) {
-      const textarea = form.querySelector('rich-text-editor, textarea');
-      if (textarea) {
-        textarea.focus();
-      }
+      const editor = form.querySelector('lexxy-editor')
+      if (editor) editor.focus()
     }
   }
 }

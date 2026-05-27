@@ -135,6 +135,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # Push subscriptions (Web Push API)
+  resource :push_subscription, only: [ :create, :destroy ]
+
   # resources :registers, only: %i[new create]
+
   root to: "home#index"
 end

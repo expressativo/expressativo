@@ -23,4 +23,8 @@ export default class extends Controller {
             this.menuTarget.classList.add("hidden");
         }
     }
+
+    hideMenu() {
+        this.menuTarget.classList.add("hidden");
+    }
 }

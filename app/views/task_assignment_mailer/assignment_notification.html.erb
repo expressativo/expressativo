@@ -28,7 +28,7 @@
                 <% if @task.notes.present? || @task.due_date.present? %>
                   <div style="background-color: #ffffff; padding: 16px; border-left: 4px solid #4F46E5; margin: 16px 0;">
                     <% if @task.notes.present? %>
-                      <div class="trix-content" style="margin: 0 0 8px;"><%= @task.notes %></div>
+                      <div class="lexxy-content" style="margin: 0 0 8px;"><%= @task.notes %></div>
                     <% end %>
                     <% if @task.due_date.present? %>
                       <p style="margin: 0;"><strong>Fecha límite:</strong> <%= l(@task.due_date, format: :long) %></p>

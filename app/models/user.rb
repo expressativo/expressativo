@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :task_assignments, dependent: :destroy
   has_many :tasks, through: :task_assignments
   has_many :notifications, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
   has_many :comment_mentions, dependent: :destroy
   has_many :channel_memberships, dependent: :destroy
   has_many :channels, through: :channel_memberships

@@ -35,6 +35,24 @@ class NotificationsController < ApplicationController
         comment.task,
         anchor: "comment_#{comment.id}"
       )
+    when "Message"
+      message = @notification.notifiable
+      msgable = message.messageable
+      project = message.project
+      if msgable.is_a?(Conversation)
+        redirect_to project_conversation_path(project, msgable)
+      elsif msgable.is_a?(Channel)
+        redirect_to project_channel_path(project, msgable)
+      else
+        redirect_to notifications_path
+      end
+    when "Task"
+      task = @notification.notifiable
+      redirect_to project_todo_task_path(
+        task.todo.project,
+        task.todo,
+        task
+      )
     else
       redirect_to notifications_path
     end
