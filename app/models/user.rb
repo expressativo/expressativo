@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :conversation_participants, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :message_mentions, dependent: :destroy
+  has_many :quick_notes, dependent: :destroy
 
   after_create_commit :notify_admin_of_registration
 

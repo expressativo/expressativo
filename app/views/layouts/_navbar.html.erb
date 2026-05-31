@@ -26,8 +26,37 @@
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <!-- Notas rápidas -->
+          <div data-controller="quick-notes-panel"
+               data-action="click@window->quick-notes-panel#hide"
+               class="relative mr-1">
+            <button data-action="click->quick-notes-panel#toggle"
+                    type="button"
+                    title="Notas rápidas"
+                    class="relative p-2 text-gray-600 hover:text-amber-500 transition-colors rounded-full hover:bg-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+            </button>
+            <div data-quick-notes-panel-target="panel"
+                 class="hidden absolute right-0 z-30 mt-2 w-80 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden">
+              <%= turbo_frame_tag "quick_notes_panel", src: quick_notes_path, loading: "lazy" do %>
+                <div class="flex items-center justify-center py-8">
+                  <svg class="animate-spin w-5 h-5 text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
           <!-- Indicador de notificaciones -->
-          <div data-controller="notification-badge" 
+          <div data-controller="notification-badge"
                data-notification-badge-url-value="<%= unread_count_notifications_path %>"
                class="relative mr-3">
             <%= link_to notifications_path, class: "relative p-2 text-gray-600 hover:text-indigo-600 transition-colors" do %>

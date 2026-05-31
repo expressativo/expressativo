@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_26_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_31_021353) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -308,6 +308,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_26_120000) do
     t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
 
+  create_table "quick_notes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "content", null: false
+    t.string "color", default: "yellow"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "position"], name: "index_quick_notes_on_user_id_and_position"
+    t.index ["user_id"], name: "index_quick_notes_on_user_id"
+  end
+
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -422,6 +433,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_26_120000) do
   add_foreign_key "publications", "tasks"
   add_foreign_key "publications", "users", column: "created_by_id"
   add_foreign_key "push_subscriptions", "users"
+  add_foreign_key "quick_notes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "task_assignments", "tasks"
   add_foreign_key "task_assignments", "users"

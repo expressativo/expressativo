@@ -1,0 +1,2 @@
+<%= turbo_stream.prepend "quick_notes_list", partial: "quick_notes/quick_note", locals: { note: @quick_note } %>
+<%= turbo_stream.replace "new_quick_note_form", partial: "quick_notes/form", locals: { note: @new_note } %>

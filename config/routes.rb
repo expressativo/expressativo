@@ -138,6 +138,9 @@ Rails.application.routes.draw do
   # Push subscriptions (Web Push API)
   resource :push_subscription, only: [ :create, :destroy ]
 
+  # Notas rápidas (personales del usuario)
+  resources :quick_notes, only: [ :index, :create, :update, :destroy ]
+
   # resources :registers, only: %i[new create]
 
   root to: "home#index"

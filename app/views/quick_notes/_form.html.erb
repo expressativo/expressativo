@@ -1,0 +1,34 @@
+<div id="new_quick_note_form">
+  <%= form_with model: note, url: quick_notes_path, method: :post,
+        data: { controller: "quick-note-form", turbo_stream: true } do |f| %>
+    <div class="flex items-start gap-2">
+      <div class="flex-1">
+        <%= f.text_area :content,
+              placeholder: "Nueva nota...",
+              rows: 2,
+              class: "w-full text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent transition",
+              data: { quick_note_form_target: "input", action: "keydown->quick-note-form#handleKey" } %>
+        <!-- Selector de color y botón submit -->
+        <div data-quick-note-form-target="controls" class="hidden mt-2 flex items-center justify-between">
+          <div class="flex gap-1.5">
+            <% QuickNote::COLORS.each_with_index do |c, i| %>
+              <label class="cursor-pointer">
+                <%= f.radio_button :color, c,
+                      checked: i == 0,
+                      class: "sr-only" %>
+                <span class="block w-4 h-4 rounded-full border-2 transition-all
+                  <%= i == 0 ? 'border-gray-500 scale-110' : 'border-transparent hover:border-gray-300' %>
+                  <%= { 'yellow' => 'bg-amber-400', 'pink' => 'bg-pink-400', 'blue' => 'bg-blue-400', 'green' => 'bg-green-400' }[c] %>"
+                     data-action="click->quick-note-form#selectColor"
+                     data-color="<%= c %>">
+                </span>
+              </label>
+            <% end %>
+          </div>
+          <%= f.submit "Agregar",
+                class: "text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-1 rounded-lg cursor-pointer font-medium transition-colors" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

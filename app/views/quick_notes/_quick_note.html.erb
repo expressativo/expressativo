@@ -1,0 +1,71 @@
+<% color_classes = {
+  "yellow" => "bg-amber-50 border-amber-200",
+  "pink"   => "bg-pink-50 border-pink-200",
+  "blue"   => "bg-blue-50 border-blue-200",
+  "green"  => "bg-green-50 border-green-200"
+} %>
+<% dot_classes = {
+  "yellow" => "bg-amber-400",
+  "pink"   => "bg-pink-400",
+  "blue"   => "bg-blue-400",
+  "green"  => "bg-green-400"
+} %>
+
+<div id="quick_note_<%= note.id %>"
+     data-controller="quick-note"
+     class="group relative rounded-lg border p-3 <%= color_classes[note.color] || color_classes['yellow'] %>">
+
+  <!-- Vista de lectura -->
+  <div data-quick-note-target="view" class="flex items-start gap-2">
+    <div class="mt-1.5 w-2 h-2 rounded-full flex-shrink-0 <%= dot_classes[note.color] || dot_classes['yellow'] %>"></div>
+    <p class="text-sm text-gray-700 flex-1 leading-relaxed break-words cursor-pointer"
+       data-action="click->quick-note#startEdit">
+      <%= note.content %>
+    </p>
+    <%= button_to quick_note_path(note),
+          method: :delete,
+          data: { turbo_confirm: "¿Seguro que deseas eliminar esta nota?" },
+          class: "opacity-0 group-hover:opacity-100 transition-opacity ml-1 flex-shrink-0 text-gray-400 hover:text-red-500 p-0.5 rounded",
+          form: { class: "inline" } do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14H6L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+        <path d="M9 6V4h6v2"/>
+      </svg>
+    <% end %>
+  </div>
+
+  <!-- Vista de edición -->
+  <%= form_with model: note, url: quick_note_path(note), method: :patch,
+        data: { quick_note_target: "form", turbo_stream: true },
+        class: "hidden" do |f| %>
+    <%= f.text_area :content,
+          class: "w-full text-sm text-gray-700 bg-transparent border-0 resize-none focus:ring-0 focus:outline-none p-0 leading-relaxed",
+          rows: 3,
+          autofocus: true,
+          data: { action: "blur->quick-note#submitEdit keydown->quick-note#handleKey" } %>
+    <div class="flex items-center justify-between mt-2">
+      <!-- Selector de color -->
+      <div class="flex gap-1.5">
+        <% QuickNote::COLORS.each do |c| %>
+          <label class="cursor-pointer">
+            <%= f.radio_button :color, c, class: "sr-only", data: { action: "change->quick-note#changeColor" } %>
+            <span class="block w-4 h-4 rounded-full border-2 transition-all
+              <%= c == note.color ? 'border-gray-500 scale-110' : 'border-transparent hover:border-gray-300' %>
+              <%= { 'yellow' => 'bg-amber-400', 'pink' => 'bg-pink-400', 'blue' => 'bg-blue-400', 'green' => 'bg-green-400' }[c] %>">
+            </span>
+          </label>
+        <% end %>
+      </div>
+      <div class="flex gap-1">
+        <button type="button" data-action="click->quick-note#cancelEdit"
+                class="text-xs text-gray-400 hover:text-gray-600 px-1.5 py-0.5 rounded">
+          Esc
+        </button>
+        <%= f.submit "Guardar",
+              class: "text-xs text-white bg-gray-600 hover:bg-gray-700 px-2 py-0.5 rounded cursor-pointer" %>
+      </div>
+    </div>
+  <% end %>
+</div>
