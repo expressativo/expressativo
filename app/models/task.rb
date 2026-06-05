@@ -15,14 +15,16 @@ class Task < ApplicationRecord
   validates :title, presence: true
   validates :status, inclusion: { in: STATUSES }
 
-  scope :pending,     -> { where(status: "pending") }
-  scope :in_progress, -> { where(status: "in_progress") }
-  scope :done,        -> { where(status: "done") }
-  scope :completed,   -> { where(status: "done") }
-  scope :not_done,    -> { where.not(status: "done") }
-  scope :ordered,     -> { order(:position, :id) }
+  scope :pending,      -> { where(status: "pending") }
+  scope :in_progress,  -> { where(status: "in_progress") }
+  scope :done,         -> { where(status: "done") }
+  scope :completed,    -> { where(status: "done") }
+  scope :not_done,     -> { where.not(status: "done") }
+  scope :ordered,      -> { order(:position, :id) }
+  scope :list_ordered, -> { order(:list_position, :id) }
 
   before_create :set_default_position
+  before_create :set_default_list_position
   before_save :sync_status_with_column
   before_save :sync_column_with_status
   after_update :sync_publication
@@ -54,6 +56,12 @@ class Task < ApplicationRecord
     return if position.present? && position.positive?
 
     self.position = (todo.tasks.maximum(:position) || -1) + 1
+  end
+
+  def set_default_list_position
+    return if list_position.present? && list_position.positive?
+
+    self.list_position = (todo.tasks.maximum(:list_position) || -1) + 1
   end
 
   # Cuando el usuario cambia la columna de la tarea, ajustar status para que

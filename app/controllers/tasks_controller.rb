@@ -64,11 +64,11 @@ class TasksController < ApplicationController
     new_position = params[:position].to_i
 
     Task.transaction do
-      @task.update!(position: new_position)
+      @task.update!(list_position: new_position)
 
-      @todo.tasks.not_done.where.not(id: @task.id).order(:position, :id).each_with_index do |t, i|
+      @todo.tasks.not_done.where.not(id: @task.id).order(:list_position, :id).each_with_index do |t, i|
         pos = i >= new_position ? i + 1 : i
-        t.update_column(:position, pos) if t.position != pos
+        t.update_column(:list_position, pos) if t.list_position != pos
       end
     end
 

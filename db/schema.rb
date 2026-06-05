@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_31_021353) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_05_000000) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -359,9 +359,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_31_021353) do
     t.bigint "column_id"
     t.integer "position", default: 0
     t.string "status", default: "pending", null: false
+    t.integer "list_position", default: 0
     t.index ["column_id"], name: "index_tasks_on_column_id"
     t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
     t.index ["status"], name: "index_tasks_on_status"
+    t.index ["todo_id", "list_position"], name: "index_tasks_on_todo_id_and_list_position"
     t.index ["todo_id"], name: "index_tasks_on_todo_id"
   end
 

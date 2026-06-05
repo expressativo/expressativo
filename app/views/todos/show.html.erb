@@ -35,7 +35,7 @@
             <ul class="space-y-1.5 mb-1"
                 data-controller="task-sortable"
                 data-task-sortable-url-template-value="<%= update_position_project_todo_task_path(@project, @todo, ':id') %>">
-              <%= render 'todos/todo_item', tasks: @todo.tasks.not_done.ordered, todo: @todo %>
+              <%= render 'todos/todo_item', tasks: @todo.tasks.not_done.list_ordered, todo: @todo %>
             </ul>
             <ul class="space-y-1.5 mb-3">
               <%= render 'todos/todo_item', tasks: @todo.tasks.done.order(updated_at: :desc).limit(5), todo: @todo %>

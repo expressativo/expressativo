@@ -6,12 +6,16 @@ export default class extends Controller {
   static values = { urlTemplate: String };
 
   connect() {
+    console.log("[task-sortable] connect", this.element);
     this.sortable = new Sortable(this.element, {
       animation: 150,
       handle: ".task-drag-handle",
       ghostClass: "bg-purple-50",
       dragClass: "opacity-50",
-      onEnd: (event) => this.handleDrop(event)
+      onEnd: (event) => {
+        console.log("[task-sortable] onEnd", event.oldIndex, "->", event.newIndex, event.item);
+        this.handleDrop(event);
+      }
     });
   }
 
