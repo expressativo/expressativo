@@ -32,8 +32,12 @@
           <% if total.zero? %>
             <p class="text-sm text-gray-500 italic mb-3">Aún no hay tareas en esta lista.</p>
           <% else %>
+            <ul class="space-y-1.5 mb-1"
+                data-controller="task-sortable"
+                data-task-sortable-url-template-value="<%= update_position_project_todo_task_path(@project, @todo, ':id') %>">
+              <%= render 'todos/todo_item', tasks: @todo.tasks.not_done.ordered, todo: @todo %>
+            </ul>
             <ul class="space-y-1.5 mb-3">
-              <%= render 'todos/todo_item', tasks: @todo.tasks.not_done, todo: @todo %>
               <%= render 'todos/todo_item', tasks: @todo.tasks.done.order(updated_at: :desc).limit(5), todo: @todo %>
               <% if completed > 5 %>
                 <li class="pl-6">

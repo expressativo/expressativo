@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         member do
           post :add_comment
           get :search_members
+          patch :update_position
         end
         resources :assignments, controller: "task_assignments", only: [ :create, :destroy ] do
           collection do

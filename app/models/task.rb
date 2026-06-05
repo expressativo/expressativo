@@ -20,7 +20,9 @@ class Task < ApplicationRecord
   scope :done,        -> { where(status: "done") }
   scope :completed,   -> { where(status: "done") }
   scope :not_done,    -> { where.not(status: "done") }
+  scope :ordered,     -> { order(:position, :id) }
 
+  before_create :set_default_position
   before_save :sync_status_with_column
   before_save :sync_column_with_status
   after_update :sync_publication
@@ -47,6 +49,12 @@ class Task < ApplicationRecord
   end
 
   private
+
+  def set_default_position
+    return if position.present? && position.positive?
+
+    self.position = (todo.tasks.maximum(:position) || -1) + 1
+  end
 
   # Cuando el usuario cambia la columna de la tarea, ajustar status para que
   # refleje si llegó a la columna "done" o salió de ella.

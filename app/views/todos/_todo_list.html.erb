@@ -23,8 +23,12 @@
           </div>
 
           <%= turbo_frame_tag "#{dom_id(todo)}_tasks" do %>
-            <ul class="space-y-3">
-              <%= render 'todos/todo_item', tasks: todo.tasks.not_done, todo: todo %>
+            <ul class="space-y-1.5"
+                data-controller="task-sortable"
+                data-task-sortable-url-template-value="<%= update_position_project_todo_task_path(@project, todo, ':id') %>">
+              <%= render 'todos/todo_item', tasks: todo.tasks.not_done.ordered, todo: todo %>
+            </ul>
+            <ul class="space-y-1.5">
               <%= render 'todos/todo_item', tasks: todo.tasks.done.order(updated_at: :desc).limit(5), todo: todo %>
               <% if completed > 5 %>
                 <li class="pl-6">

@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_context, except: :my_task
-  before_action :set_task, only: %i[show edit update destroy add_comment search_members]
+  before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position]
 
   def index
     @tasks = @todo.tasks
@@ -58,6 +58,21 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
+  end
+
+  def update_position
+    new_position = params[:position].to_i
+
+    Task.transaction do
+      @task.update!(position: new_position)
+
+      @todo.tasks.not_done.where.not(id: @task.id).order(:position, :id).each_with_index do |t, i|
+        pos = i >= new_position ? i + 1 : i
+        t.update_column(:position, pos) if t.position != pos
+      end
+    end
+
+    head :no_content
   end
 
   # task assigned to current user

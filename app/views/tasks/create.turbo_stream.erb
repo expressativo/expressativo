@@ -1,15 +1,19 @@
 <!-- Actualiza la lista de tareas -->
 <%= turbo_stream.update "#{dom_id(@todo)}_tasks" do %>
-  <%= render 'todos/todo_item', tasks: @todo.tasks.not_done, todo: @todo %>
-  <%= render 'todos/todo_item', tasks: @todo.tasks.done.order(updated_at: :desc).limit(5), todo: @todo %>
-
-   <% if @todo.tasks.done.count > 5 %>
+  <ul class="space-y-1.5 mb-1"
+      data-controller="task-sortable"
+      data-task-sortable-url-template-value="<%= update_position_project_todo_task_path(@project, @todo, ':id') %>">
+    <%= render 'todos/todo_item', tasks: @todo.tasks.not_done.ordered, todo: @todo %>
+  </ul>
+  <ul class="space-y-1.5 mb-3">
+    <%= render 'todos/todo_item', tasks: @todo.tasks.done.order(updated_at: :desc).limit(5), todo: @todo %>
+    <% if @todo.tasks.done.count > 5 %>
       <li class="flex items-center mb-2">
-        <span class="bg-gray-500 rounded-full w-3 h-3 inline-block mr-2">
-        </span>
-        <%= link_to 'Ver más', completed_tasks_project_todo_path(@project, @todo), class:"text-gray-800 text-sm font-semibold underline cursor-pointer", data: { turbo_frame: "_top"} %>
+        <span class="bg-gray-500 rounded-full w-3 h-3 inline-block mr-2"></span>
+        <%= link_to 'Ver más', completed_tasks_project_todo_path(@project, @todo), class: "text-gray-800 text-sm font-semibold underline cursor-pointer", data: { turbo_frame: "_top" } %>
       </li>
     <% end %>
+  </ul>
 <% end %>
 <!-- Actualiza el contador de tareas -->
 <%= turbo_stream.update "#{dom_id(@todo)}_header" do %>
