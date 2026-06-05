@@ -16,10 +16,20 @@ class TasksController < ApplicationController
 
   def create
     @task = @todo.tasks.new(tasks_params.merge(created_by: current_user))
+    from_add_tasks = params[:from] == "add_tasks" && params[:board_id].present?
+
     respond_to do |format|
       if @task.save
-        format.turbo_stream
-        format.html { redirect_to project_todos_path(@project), notice: "Task has been created successfully." }
+        if from_add_tasks
+          board = @project.boards.find(params[:board_id])
+          format.html { redirect_to add_tasks_project_board_path(@project, board) }
+        else
+          format.turbo_stream
+          format.html { redirect_to project_todos_path(@project), notice: "Task has been created successfully." }
+        end
+      elsif from_add_tasks
+        board = @project.boards.find(params[:board_id])
+        format.html { redirect_to add_tasks_project_board_path(@project, board), alert: @task.errors.full_messages.to_sentence }
       else
         render :new
       end

@@ -1,115 +1,133 @@
-<div class="bg-white border border-gray-200 rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-4xl mx-auto" data-controller="bulk-task-selector">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold">
-      Agregar tareas a <%= @board.title %>
-    </h1>
-    <%= link_to "Volver al tablero", project_board_path(@project, @board), class: "button-outline" %>
+<%= render layout: 'projects/layout', locals: { project: @project, active: :boards } do %>
+  <div class="mb-3">
+    <%= link_to project_board_path(@project, @board), class: "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-purple-600 transition-colors" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+      Volver al tablero
+    <% end %>
   </div>
 
-  <!-- Action bar for bulk operations -->
-  <div data-bulk-task-selector-target="actionButtons" class="hidden sticky top-0 z-10 bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-    <div class="flex items-center justify-between">
-      <span class="text-sm font-medium text-blue-900">
-        <span data-bulk-task-selector-target="selectedCount">0</span> tarea(s) seleccionada(s)
-      </span>
-      <div class="flex gap-2">
-        <button
-            type="button"
-            <%# Siempre agrega la tarea a la columna que esta en primera posicion %>
-            data-column-id="<%= @board.columns.order(position: :asc).first.id %>"
-            data-url="<%= attach_multiple_tasks_project_boards_path(@project) %>"
-            data-action="click->bulk-task-selector#attachToColumn"
-            class="button-outline text-sm whitespace-nowrap">
-            Agregar a tablero
+  <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden" data-controller="bulk-task-selector">
+    <header class="px-6 py-4 border-b border-gray-200">
+      <div class="min-w-0">
+        <h2 class="text-lg font-semibold text-gray-900">Agregar tareas a <%= @board.title %></h2>
+        <p class="text-sm text-gray-500">Selecciona tareas existentes o crea nuevas para agregarlas al tablero.</p>
+      </div>
+    </header>
+
+    <div data-bulk-task-selector-target="actionButtons"
+         class="hidden sticky top-0 z-10 bg-purple-50 border-b border-purple-100 px-6 py-3">
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-sm font-medium text-purple-900">
+          <span data-bulk-task-selector-target="selectedCount">0</span> tarea(s) seleccionada(s)
+        </span>
+        <button type="button"
+                data-column-id="<%= @board.columns.order(position: :asc).first&.id %>"
+                data-url="<%= attach_multiple_tasks_project_boards_path(@project) %>"
+                data-action="click->bulk-task-selector#attachToColumn"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md shadow-sm transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Agregar al tablero
         </button>
       </div>
     </div>
-  </div>
 
-  <% if @todos.any? %>
-    <% @todos.each do |todo| %>
-      <div class="mb-6 border border-gray-300 rounded-lg p-4" data-todo-group="<%= todo.id %>">
-        <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
-          <%= todo.name %>
-        </h3>
+    <% if @todos.any? %>
+      <div class="p-6 space-y-4">
+        <% @todos.each do |todo| %>
+          <%= turbo_frame_tag "add_tasks_group_#{todo.id}" do %>
+            <article class="bg-white border border-gray-200 hover:border-purple-300 rounded-xl p-4 transition" data-todo-group="<%= todo.id %>">
+              <% available_tasks = todo.tasks.where(column_id: nil).not_done.list_ordered %>
+              <% available_count = available_tasks.count %>
 
-        <% available_tasks = todo.tasks.where(column_id: nil).not_done %>
-
-        <% if available_tasks.any? %>
-          <!-- Select all checkbox for this todo -->
-          <div class="mb-3 pb-2 border-b border-gray-200">
-            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-              <input
-                type="checkbox"
-                data-action="change->bulk-task-selector#toggleAll"
-                class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-              <span class="font-medium">Seleccionar todas las tareas de esta lista</span>
-            </label>
-          </div>
-
-          <div class="space-y-2">
-            <% available_tasks.each do |task| %>
-              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                <input
-                  type="checkbox"
-                  value="<%= task.id %>"
-                  data-bulk-task-selector-target="checkbox"
-                  data-action="change->bulk-task-selector#toggleTask"
-                  class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-
-                <div class="flex-1">
-                  <div class="flex items-center gap-2">
-                    <h4 class="font-medium text-gray-900">
-                      <%= task.title %>
-                    </h4>
-                    <% if task.completed? %>
-                      <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
-                        ✓
-                      </span>
-                    <% end %>
-                  </div>
-
-                  <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                    <% if task.due_date.present? %>
-                      <span class="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /></svg>
-                        <%= l(task.due_date, format: :short) %>
-                      </span>
-                    <% end %>
-                    <span class="flex items-center gap-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
-                      <%= task.created_by.email.split('@').first %>
-                    </span>
-                  </div>
+              <header class="flex items-center justify-between gap-3 mb-3">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+                  <h3 class="text-sm font-semibold text-gray-900 truncate"><%= todo.name %></h3>
                 </div>
+                <span class="text-xs font-medium text-gray-600 bg-gray-100 rounded-full px-2 py-0.5 flex-shrink-0">
+                  <%= available_count %> <%= available_count == 1 ? 'disponible' : 'disponibles' %>
+                </span>
+              </header>
 
-                <div class="flex gap-2">
-                  <!-- TODO: Add bulk action buttons 
-                  <% @board.columns.each do |column| %>
-                    <% unless column.title == 'Completado' %>
-                      <%= button_to column.title,
-                          attach_task_project_boards_path(@project, board_id: @board.id, task_id: task.id, column_id: column.id),
-                          method: :post,
-                          class: "button-outline text-sm whitespace-nowrap" %>
-                    <% end %>
+              <% if available_tasks.any? %>
+                <label class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 cursor-pointer">
+                  <input type="checkbox"
+                         data-action="change->bulk-task-selector#toggleAll"
+                         class="w-4 h-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                  <span class="text-xs font-medium text-gray-500">Seleccionar todas</span>
+                </label>
+
+                <ul class="space-y-1">
+                  <% available_tasks.each do |task| %>
+                    <li class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-50 transition group/task">
+                      <input type="checkbox"
+                             id="task_check_<%= task.id %>"
+                             value="<%= task.id %>"
+                             data-bulk-task-selector-target="checkbox"
+                             data-action="change->bulk-task-selector#toggleTask"
+                             class="w-4 h-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer">
+                      <label for="task_check_<%= task.id %>" class="flex-1 min-w-0 text-sm text-gray-700 cursor-pointer truncate">
+                        <%= task.title %>
+                      </label>
+                      <div class="flex items-center gap-2 flex-shrink-0 text-xs text-gray-400">
+                        <% if task.due_date.present? %>
+                          <span class="inline-flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <%= l(task.due_date, format: :short) %>
+                          </span>
+                        <% end %>
+                      </div>
+                    </li>
                   <% end %>
-                  -->
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-gray-500 text-sm">Todas las tareas de esta lista ya están en el tablero</p>
+                </ul>
+              <% else %>
+                <p class="text-xs text-gray-400 italic py-2">No hay tareas disponibles para agregar.</p>
+              <% end %>
+
+              <footer class="mt-3 pt-3 border-t border-gray-100">
+                <%= form_with url: project_todo_tasks_path(@project, todo),
+                              method: :post,
+                              data: { turbo_frame: "add_tasks_group_#{todo.id}" },
+                              class: "flex items-center gap-2" do |f| %>
+                  <%= hidden_field_tag :from, 'add_tasks' %>
+                  <%= hidden_field_tag :board_id, @board.id %>
+                  <%= f.fields_for :task, Task.new do |tf| %>
+                    <%= tf.text_field :title,
+                          placeholder: "Agregar tarea a #{todo.name}",
+                          required: true,
+                          class: "flex-1 min-w-0 text-sm bg-transparent border-0 border-b border-transparent focus:border-purple-300 focus:ring-0 focus:outline-none px-1 py-1 placeholder:text-gray-400" %>
+                  <% end %>
+                  <%= f.submit "Agregar",
+                        class: "inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 hover:border-purple-600 rounded-md transition cursor-pointer" %>
+                <% end %>
+              </footer>
+            </article>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-6 py-16 text-center">
+        <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-500">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">No hay listas de tareas</h3>
+        <p class="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
+          Crea una lista de tareas primero para poder agregar tareas al tablero.
+        </p>
+        <%= link_to project_todos_path(@project),
+              class: "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md shadow-sm transition" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Ir a listas de tareas
         <% end %>
       </div>
     <% end %>
-  <% else %>
-    <div class="text-center py-12 text-gray-500">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
-      <p class="text-lg mb-2">No hay listas de tareas</p>
-      <p class="text-sm mb-4">Crea listas de tareas primero para poder agregarlas al tablero</p>
-      <%= link_to "Ir a listas de tareas", project_todos_path(@project), class: "button" %>
-    </div>
-  <% end %>
-</div>
+  </section>
+<% end %>
