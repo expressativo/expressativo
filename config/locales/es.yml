@@ -1,4 +1,14 @@
 es:
+  activerecord:
+    models:
+      user:
+        one: Usuario
+        other: Usuarios
+  errors:
+    messages:
+      not_saved:
+        one: "no se pudo guardar %{resource} porque se encontró 1 error:"
+        other: "no se pudo guardar %{resource} porque se encontraron %{count} errores:"
   date:
     formats:
       default: "%d de %B de %Y"
