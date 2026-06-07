@@ -6,7 +6,7 @@ class FoldersController < ApplicationController
 
   def index
     folders = @project.folders.includes(:created_by).root_folders
-    documents = @project.documents.includes(:created_by).root_documents.not_archived
+    documents = @project.documents.includes(:created_by).root_documents.not_archived.visible_to(current_user)
 
     # Combine and sort by created_at (most recent first)
     @items = (folders.to_a + documents.to_a).sort_by(&:created_at).reverse
@@ -14,7 +14,7 @@ class FoldersController < ApplicationController
 
   def show
     subfolders = @folder.subfolders.includes(:created_by)
-    documents = @folder.documents.includes(:created_by).not_archived
+    documents = @folder.documents.includes(:created_by).not_archived.visible_to(current_user)
 
     # Combine and sort by created_at (most recent first)
     @items = (subfolders.to_a + documents.to_a).sort_by(&:created_at).reverse

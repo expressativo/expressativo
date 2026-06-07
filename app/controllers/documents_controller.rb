@@ -1,9 +1,10 @@
 class DocumentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_document, only: %i[ show edit update destroy download duplicate archive ]
-  before_action :set_project, only: %i[index new create]
+  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish ]
+  before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
-  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive]
+  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish]
+  before_action :authorize_status_change!, only: %i[archive unarchive publish]
 
   # GET /documents or /documents.json
   def index
@@ -99,9 +100,32 @@ class DocumentsController < ApplicationController
     @document.update(status: :archived)
     respond_to do |format|
       redirect_path = @document.folder ? project_folder_path(@project, @document.folder) : project_folders_path(@project)
-      format.html { redirect_to redirect_path, notice: "Document was successfully archived.", status: :see_other }
+      format.html { redirect_to redirect_path, notice: "Documento archivado.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  def unarchive
+    @document.update(status: :draft)
+    respond_to do |format|
+      format.html { redirect_to project_archived_documents_path(@project), notice: "Documento restaurado como borrador.", status: :see_other }
+      format.json { head :no_content }
+    end
+  end
+
+  def publish
+    @document.update(status: :published)
+    respond_to do |format|
+      format.html { redirect_to @document, notice: "Documento publicado.", status: :see_other }
+      format.json { head :no_content }
+    end
+  end
+
+  def archived
+    @documents = @project.documents
+                         .includes(:created_by, :folder)
+                         .archived_only
+                         .order(updated_at: :desc)
   end
 
   private
@@ -109,6 +133,7 @@ class DocumentsController < ApplicationController
     def set_document
       @document = Document.joins(project: :project_users)
                           .where(project_users: { user_id: current_user.id })
+                          .visible_to(current_user)
                           .find(params.expect(:id))
     end
 
@@ -127,5 +152,11 @@ class DocumentsController < ApplicationController
 
     def set_project_from_document
       @project = @document.project
+    end
+
+    def authorize_status_change!
+      return if @document.can_be_published_by?(current_user)
+
+      redirect_to @document, alert: "No tienes permisos para cambiar el estado de este documento.", status: :see_other
     end
 end

@@ -1,0 +1,55 @@
+<% content_for :title, "Documentos archivados" %>
+
+<%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
+  <section class="bg-white border border-gray-200 rounded-2xl p-5">
+    <header class="flex items-center justify-between gap-4 mb-5">
+      <div class="flex items-center gap-3 min-w-0">
+        <%= link_to project_folders_path(@project), class: "p-1.5 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors flex-shrink-0", title: "Volver a documentos", "aria-label": "Volver a documentos" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+        <div class="min-w-0">
+          <h1 class="text-xl font-bold text-gray-900 truncate">Documentos archivados</h1>
+          <p class="text-xs text-gray-500 mt-0.5">Documentos archivados del proyecto. Restáuralos como borrador para volver a publicarlos.</p>
+        </div>
+      </div>
+    </header>
+
+    <% if @documents.any? %>
+      <ul class="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden">
+        <% @documents.each do |document| %>
+          <li class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+            <%= document_kind_icon(document, css_class: "w-8 h-8 flex-shrink-0") %>
+            <div class="flex-1 min-w-0">
+              <%= link_to document.name, document_path(document), class: "text-sm font-semibold text-gray-900 truncate hover:text-purple-600 block" %>
+              <p class="text-xs text-gray-500 truncate">
+                <% if document.folder %>
+                  <%= document.folder.name %> ·
+                <% end %>
+                Archivado por <%= document.created_by&.full_name %> ·
+                <%= l(document.updated_at, format: :long) rescue document.updated_at.strftime("%d/%m/%Y") %>
+              </p>
+            </div>
+            <% if document.can_be_published_by?(current_user) %>
+              <%= button_to unarchive_document_path(document), method: :patch,
+                            class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                </svg>
+                Restaurar
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="text-center py-16">
+        <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+        </svg>
+        <p class="text-gray-500">No hay documentos archivados.</p>
+      </div>
+    <% end %>
+  </section>
+<% end %>

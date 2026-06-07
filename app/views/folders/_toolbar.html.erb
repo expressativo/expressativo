@@ -61,6 +61,13 @@
            class="w-full md:max-w-md pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
   </div>
 
+  <%= link_to archived_project_documents_path(@project), class: "inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors", title: "Ver documentos archivados" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+    </svg>
+    Archivados
+  <% end %>
+
   <div class="flex items-center gap-2" data-controller="drive-view" data-drive-view-storage-key-value="documents-view">
     <button type="button"
             data-drive-view-target="gridBtn"

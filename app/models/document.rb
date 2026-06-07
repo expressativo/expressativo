@@ -31,9 +31,29 @@ class Document < ApplicationRecord
   scope :in_folder, ->(folder) { where(folder_id: folder&.id) }
   scope :root_documents, -> { where(folder_id: nil) }
   scope :not_archived, -> { where.not(status: :archived) }
+  scope :archived_only, -> { where(status: :archived) }
   scope :for_project, ->(project) { where(project_id: project.id) }
+  scope :visible_to, ->(user) {
+    owner_project_ids = ProjectUser.where(user_id: user.id, role: "owner").select(:project_id)
+    where.not(status: :draft)
+      .or(where(created_by_id: user.id))
+      .or(where(project_id: owner_project_ids))
+  }
 
   # Instance methods
+  def visible_to?(user)
+    return false unless user
+    return true unless draft?
+
+    created_by_id == user.id || project.owner == user
+  end
+
+  def can_be_published_by?(user)
+    return false unless user
+
+    created_by_id == user.id || project.owner == user
+  end
+
   def path
     return [self] if folder.nil?
 

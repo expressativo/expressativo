@@ -16,7 +16,11 @@ Rails.application.routes.draw do
     resources :folders do
       resources :documents, only: %i[new create]
     end
-    resources :documents, only: %i[index new create]
+    resources :documents, only: %i[index new create] do
+      collection do
+        get :archived
+      end
+    end
     resources :todos do
       resources :tasks do
         member do
@@ -122,6 +126,8 @@ Rails.application.routes.draw do
       get :download
       post :duplicate
       patch :archive
+      patch :unarchive
+      patch :publish
     end
   end
 
