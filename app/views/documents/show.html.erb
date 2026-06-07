@@ -48,6 +48,41 @@
           <% end %>
         <% end %>
 
+        <% if @document.published? && can_change_status %>
+          <%= button_to unpublish_document_path(@document), method: :patch,
+                        data: { turbo_confirm: "¿Mover este documento a borrador?" },
+                        class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors",
+                        title: "Mover a borrador" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            Despublicar
+          <% end %>
+        <% end %>
+
+        <% if can_change_status %>
+          <% if @document.public? %>
+            <%= button_to unpublish_public_document_path(@document), method: :patch,
+                          data: { turbo_confirm: "¿Revocar el link público? Cualquiera que lo tenga dejará de poder ver el documento." },
+                          class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors",
+                          title: "Hacer privado" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              Hacer privado
+            <% end %>
+          <% else %>
+            <%= button_to publish_public_document_path(@document), method: :patch,
+                          class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 transition-colors",
+                          title: "Compartir con un link público de solo lectura" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
+              </svg>
+              Compartir público
+            <% end %>
+          <% end %>
+        <% end %>
+
         <%= link_to edit_document_path(@document), class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -94,6 +129,31 @@
         <% end %>
       </div>
     </header>
+
+    <% if @document.public? %>
+      <% public_url = public_document_url(@document.public_token) %>
+      <div class="px-6 py-3 bg-sky-50 border-b border-sky-100" data-controller="clipboard">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 text-sky-700 flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
+            </svg>
+            <span class="text-xs font-semibold uppercase tracking-wider">Link público</span>
+          </div>
+          <input type="text"
+                 value="<%= public_url %>"
+                 readonly
+                 data-clipboard-target="source"
+                 class="flex-1 min-w-0 px-3 py-1.5 text-sm bg-white border border-sky-200 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300">
+          <button type="button"
+                  data-action="click->clipboard#copy"
+                  data-clipboard-target="button"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700 transition-colors flex-shrink-0">
+            Copiar
+          </button>
+        </div>
+      </div>
+    <% end %>
 
     <div class="p-6">
       <% if kind == :rich_text %>

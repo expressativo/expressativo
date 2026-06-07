@@ -1,10 +1,10 @@
 class DocumentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish ]
+  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public ]
   before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
-  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish]
-  before_action :authorize_status_change!, only: %i[archive unarchive publish]
+  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public]
+  before_action :authorize_status_change!, only: %i[archive unarchive publish unpublish publish_public unpublish_public]
 
   # GET /documents or /documents.json
   def index
@@ -119,6 +119,24 @@ class DocumentsController < ApplicationController
       format.html { redirect_to @document, notice: "Documento publicado.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  def unpublish
+    @document.update(status: :draft)
+    respond_to do |format|
+      format.html { redirect_to @document, notice: "Documento movido a borrador.", status: :see_other }
+      format.json { head :no_content }
+    end
+  end
+
+  def publish_public
+    @document.publish_publicly!
+    redirect_to @document, notice: "Documento publicado públicamente. Cualquiera con el link puede verlo.", status: :see_other
+  end
+
+  def unpublish_public
+    @document.unpublish_publicly!
+    redirect_to @document, notice: "Documento marcado como privado. El link público fue revocado.", status: :see_other
   end
 
   def archived

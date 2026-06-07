@@ -54,6 +54,25 @@ class Document < ApplicationRecord
     created_by_id == user.id || project.owner == user
   end
 
+  def public?
+    public_token.present?
+  end
+
+  def publish_publicly!
+    return if public?
+
+    update!(
+      public_token: SecureRandom.urlsafe_base64(24),
+      published_publicly_at: Time.current
+    )
+  end
+
+  def unpublish_publicly!
+    return unless public?
+
+    update!(public_token: nil, published_publicly_at: nil)
+  end
+
   def path
     return [self] if folder.nil?
 

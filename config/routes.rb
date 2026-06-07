@@ -128,8 +128,14 @@ Rails.application.routes.draw do
       patch :archive
       patch :unarchive
       patch :publish
+      patch :unpublish
+      patch :publish_public
+      patch :unpublish_public
     end
   end
+
+  # Acceso público de solo lectura a documentos compartidos
+  get "/d/:public_token", to: "public_documents#show", as: :public_document
 
   # Notificaciones
   resources :notifications, only: [ :index, :show ] do

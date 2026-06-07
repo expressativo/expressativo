@@ -1,0 +1,93 @@
+<% content_for :title, "#{@document.name} — #{@project.title}" %>
+<% kind = document_kind(@document) %>
+
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+  <div class="max-w-4xl mx-auto">
+    <header class="flex items-center justify-between mb-6">
+      <%= link_to root_path, class: "flex items-center gap-2 text-gray-700 hover:text-gray-900" do %>
+        <%= image_tag "expressativo_logo.jpg", class: "w-8 h-8 rounded" %>
+        <span class="font-semibold">Tivo</span>
+      <% end %>
+      <% unless user_signed_in? %>
+        <%= link_to "Iniciar sesión", new_user_session_path,
+              class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+      <% end %>
+    </header>
+
+    <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+      <header class="flex items-start gap-3 px-6 py-5 border-b border-gray-100">
+        <%= document_kind_icon(@document, css_class: "w-12 h-12") %>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-bold text-gray-900 truncate"><%= @document.name %></h1>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-sky-100 text-sky-700">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+              </svg>
+              Solo lectura
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">
+            <%= document_kind_label(@document) %>
+            <% if @document.file.attached? %>
+              · <%= document_size(@document) %>
+            <% end %>
+            · Publicado <%= l(@document.published_publicly_at, format: :long) rescue @document.published_publicly_at&.strftime("%d/%m/%Y") %>
+          </p>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <% if kind == :rich_text %>
+          <div class="prose max-w-none">
+            <%= @document.body %>
+          </div>
+
+        <% elsif kind == :image %>
+          <div class="flex justify-center bg-gray-50 rounded-xl p-4">
+            <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
+          </div>
+
+        <% elsif kind == :pdf %>
+          <div class="rounded-xl overflow-hidden border border-gray-200">
+            <iframe src="<%= url_for(@document.file) %>" class="w-full h-[80vh]" frameborder="0"></iframe>
+          </div>
+
+        <% elsif kind == :video %>
+          <div class="flex justify-center bg-black rounded-xl overflow-hidden">
+            <video controls class="max-w-full max-h-[80vh]">
+              <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+              Tu navegador no soporta video HTML5.
+            </video>
+          </div>
+
+        <% elsif kind == :audio %>
+          <div class="flex justify-center py-8">
+            <audio controls class="w-full max-w-xl">
+              <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+              Tu navegador no soporta audio HTML5.
+            </audio>
+          </div>
+
+        <% elsif kind == :text %>
+          <pre class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-800 overflow-auto max-h-[70vh] whitespace-pre-wrap"><%= @document.file.download.force_encoding("UTF-8") rescue "(No se pudo leer el contenido)" %></pre>
+
+        <% else %>
+          <div class="text-center py-12 border-2 border-dashed border-gray-200 rounded-xl">
+            <%= document_kind_icon(@document, css_class: "w-20 h-20 mx-auto") %>
+            <p class="mt-3 font-semibold text-gray-700"><%= @document.file.filename %></p>
+            <p class="text-sm text-gray-500"><%= document_size(@document) %></p>
+            <% if @document.file.attached? %>
+              <%= link_to "Descargar archivo", url_for(@document.file),
+                    class: "inline-block mt-4 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <footer class="text-center mt-6 text-xs text-gray-400">
+      Compartido vía <%= link_to "Tivo", root_path, class: "underline hover:text-gray-600" %>
+    </footer>
+  </div>
+</div>

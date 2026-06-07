@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_05_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_07_000000) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -188,10 +188,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_05_000000) do
     t.bigint "created_by_id", null: false
     t.bigint "folder_id"
     t.string "document_type", default: "document", null: false
+    t.string "public_token"
+    t.datetime "published_publicly_at"
     t.index ["created_by_id"], name: "fk_rails_6dd87d46e1"
     t.index ["document_type"], name: "index_documents_on_document_type"
     t.index ["folder_id"], name: "index_documents_on_folder_id"
     t.index ["project_id"], name: "index_documents_on_project_id"
+    t.index ["public_token"], name: "index_documents_on_public_token", unique: true
     t.index ["status"], name: "index_documents_on_status"
   end
 
