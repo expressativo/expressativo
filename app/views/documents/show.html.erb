@@ -49,8 +49,9 @@
         <% end %>
 
         <% if @document.published? && can_change_status %>
+          <% confirm_message = @document.public? ? "¿Mover este documento a borrador? El link público también será revocado." : "¿Mover este documento a borrador?" %>
           <%= button_to unpublish_document_path(@document), method: :patch,
-                        data: { turbo_confirm: "¿Mover este documento a borrador?" },
+                        data: { turbo_confirm: confirm_message },
                         class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors",
                         title: "Mover a borrador" do %>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

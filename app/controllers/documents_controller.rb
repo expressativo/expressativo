@@ -122,9 +122,9 @@ class DocumentsController < ApplicationController
   end
 
   def unpublish
-    @document.update(status: :draft)
+    @document.update(status: :draft, public_token: nil, published_publicly_at: nil)
     respond_to do |format|
-      format.html { redirect_to @document, notice: "Documento movido a borrador.", status: :see_other }
+      format.html { redirect_to @document, notice: "Documento movido a borrador. El link público fue revocado.", status: :see_other }
       format.json { head :no_content }
     end
   end
