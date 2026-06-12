@@ -8,6 +8,7 @@ class BoardsController < ApplicationController
   end
 
   def show
+    @todos = @project.todos.order(:name)
     # Obtener todos los usuarios del proyecto para el filtro
     @project_users = @project.users.order(:first_name, :last_name)
 

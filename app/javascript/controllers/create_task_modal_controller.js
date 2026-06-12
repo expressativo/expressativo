@@ -4,21 +4,29 @@ export default class extends Controller {
   static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon"]
   static values = {
     projectId: String,
-    todos: Array
+    todos: Array,
+    columnId: { type: String, default: "" },
+    enableSelection: { type: Boolean, default: false }
   }
 
   connect() {
     this.selectedText = ""
-    this._handleMouseup = this.handleMouseup.bind(this)
-    document.addEventListener("mouseup", this._handleMouseup)
+    this.columnListElement = null
+
+    if (this.enableSelectionValue) {
+      this._handleMouseup = this.handleMouseup.bind(this)
+      document.addEventListener("mouseup", this._handleMouseup)
+    }
   }
 
   disconnect() {
-    document.removeEventListener("mouseup", this._handleMouseup)
+    if (this._handleMouseup) {
+      document.removeEventListener("mouseup", this._handleMouseup)
+    }
   }
 
   handleMouseup(event) {
-    if (this.menuTarget.contains(event.target)) return
+    if (this.hasMenuTarget && this.menuTarget.contains(event.target)) return
     if (this.modalTarget.contains(event.target)) return
 
     setTimeout(() => {
@@ -43,6 +51,8 @@ export default class extends Controller {
   }
 
   showMenu(selection) {
+    if (!this.hasMenuTarget) return
+
     const range = selection.getRangeAt(0)
     const rect = range.getBoundingClientRect()
     const menu = this.menuTarget
@@ -65,11 +75,27 @@ export default class extends Controller {
   }
 
   hideMenu() {
-    this.menuTarget.classList.add("hidden")
+    if (this.hasMenuTarget) this.menuTarget.classList.add("hidden")
   }
 
-  openCreateTaskModal() {
+  openFromSelection() {
+    this.openModal({ prefillTitle: this.selectedText })
+  }
+
+  openFromColumn(event) {
+    const columnWrapper = event.currentTarget.closest("[data-column-id]")
+    this.columnListElement = columnWrapper?.querySelector('[data-kanban-target="column"]') || null
+    this.columnCountElement = columnWrapper?.querySelector("[data-column-task-count]") || null
+
+    this.openModal({
+      columnId: event.params.columnId,
+      prefillTitle: ""
+    })
+  }
+
+  openModal({ columnId = "", prefillTitle = "" } = {}) {
     this.hideMenu()
+    this.columnIdValue = columnId
 
     const select = this.todoSelectTarget
     select.innerHTML = '<option value="">— Selecciona una lista —</option>'
@@ -80,10 +106,10 @@ export default class extends Controller {
       select.appendChild(option)
     })
 
-    this.taskTitleTarget.value = this.selectedText
+    this.taskTitleTarget.value = prefillTitle
     this.modalTarget.classList.remove("hidden")
     this.taskTitleTarget.focus()
-    this.taskTitleTarget.select()
+    if (prefillTitle) this.taskTitleTarget.select()
   }
 
   toggleNotes() {
@@ -102,6 +128,9 @@ export default class extends Controller {
     this.notesToggleIconTarget.innerHTML = '<path d="M12 5v14M5 12h14"/>'
     this.taskNotesTarget.value = ""
     this.selectedText = ""
+    this.columnIdValue = ""
+    this.columnListElement = null
+    this.columnCountElement = null
   }
 
   backdropClick(event) {
@@ -127,11 +156,16 @@ export default class extends Controller {
 
     const url = `/projects/${this.projectIdValue}/todos/${todoId}/tasks`
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content
+    const fromBoard = this.columnIdValue !== ""
 
     const formData = new FormData()
     formData.append("task[title]", title)
     const notes = this.taskNotesTarget.value.trim()
     if (notes) formData.append("task[notes]", notes)
+    if (fromBoard) {
+      formData.append("column_id", this.columnIdValue)
+      formData.append("from", "board")
+    }
 
     const submitBtn = event.submitter || event.target.querySelector('[type="submit"]')
     if (submitBtn) submitBtn.disabled = true
@@ -139,33 +173,54 @@ export default class extends Controller {
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "X-CSRF-Token": csrfToken },
+        headers: {
+          "X-CSRF-Token": csrfToken,
+          ...(fromBoard ? { Accept: "application/json" } : {})
+        },
         body: formData,
-        redirect: "follow"
+        redirect: fromBoard ? "manual" : "follow"
       })
 
-      if (response.ok) {
+      if (fromBoard) {
+        if (response.ok) {
+          const data = await response.json()
+          if (data.task_html && this.columnListElement) {
+            this.columnListElement.insertAdjacentHTML("beforeend", data.task_html)
+          }
+          if (this.columnCountElement && data.task_count != null) {
+            this.columnCountElement.textContent = data.task_count
+          }
+          this.closeModal()
+          this.showToast(`Tarea creada en "${data.todo_name}"`)
+        } else {
+          this.showToast("Error al crear la tarea", "error")
+        }
+      } else if (response.ok || response.type === "opaqueredirect") {
         const todoName = this.todoSelectTarget.options[this.todoSelectTarget.selectedIndex].text
         this.closeModal()
-        this.showFlash(`Tarea creada en "${todoName}"`)
+        this.showToast(`Tarea creada en "${todoName}"`)
       } else {
-        this.showFlash("Error al crear la tarea", "error")
+        this.showToast("Error al crear la tarea", "error")
       }
     } catch {
-      this.showFlash("Error al crear la tarea", "error")
+      this.showToast("Error al crear la tarea", "error")
     } finally {
       if (submitBtn) submitBtn.disabled = false
     }
   }
 
-  showFlash(message, type = "success") {
-    const flash = document.getElementById("flash-messages")
-    if (!flash) return
+  showToast(message, type = "success") {
+    const container = document.getElementById("toasts")
+    if (!container) return
 
     const color = type === "success"
       ? "bg-green-100 text-green-800 border-green-200"
       : "bg-red-100 text-red-800 border-red-200"
-    flash.innerHTML = `<div class="border ${color} px-4 py-2 rounded-lg mb-2 text-sm">${message}</div>`
-    setTimeout(() => { flash.innerHTML = "" }, 4000)
+
+    const toast = document.createElement("div")
+    toast.className = `border ${color} px-4 py-2 rounded-lg text-sm shadow-sm pointer-events-auto`
+    toast.textContent = message
+    container.appendChild(toast)
+    setTimeout(() => toast.remove(), 4000)
   }
 }
