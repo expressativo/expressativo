@@ -73,7 +73,8 @@
       class="bg-slate-50 p-3 overflow-x-auto"
       data-controller="create-task-modal"
       data-create-task-modal-project-id-value="<%= @project.id %>"
-      data-create-task-modal-todos-value="<%= @todos.map { |t| { id: t.id, name: t.name } }.to_json %>">
+      data-create-task-modal-todos-value="<%= @todos.map { |t| { id: t.id, name: t.name } }.to_json %>"
+      data-create-task-modal-templates-value="<%= @project.task_templates.map { |t| { id: t.id, name: t.name, title: t.title.to_s } }.to_json %>">
       <div
         data-controller="kanban board-columns"
         data-board-columns-target="container"

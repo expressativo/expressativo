@@ -1,10 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon"]
+  static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon", "templatePicker", "templateList", "templateId"]
   static values = {
     projectId: String,
     todos: Array,
+    templates: { type: Array, default: [] },
     columnId: { type: String, default: "" },
     enableSelection: { type: Boolean, default: false }
   }
@@ -107,9 +108,71 @@ export default class extends Controller {
     })
 
     this.taskTitleTarget.value = prefillTitle
+    this.clearTemplate()
+    this.renderTemplatePicker()
+
     this.modalTarget.classList.remove("hidden")
     this.taskTitleTarget.focus()
     if (prefillTitle) this.taskTitleTarget.select()
+  }
+
+  renderTemplatePicker() {
+    if (!this.hasTemplatePickerTarget || this.templatesValue.length === 0) return
+
+    const list = this.templateListTarget
+    list.innerHTML = ""
+
+    const blankBtn = this.buildTemplateButton("Tarea en blanco", null, true)
+    list.appendChild(blankBtn)
+
+    this.templatesValue.forEach(template => {
+      list.appendChild(this.buildTemplateButton(template.name, template))
+    })
+
+    this.templatePickerTarget.classList.remove("hidden")
+  }
+
+  buildTemplateButton(label, template, isBlank = false) {
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.dataset.action = "click->create-task-modal#selectTemplate"
+    btn.dataset.templateData = template ? JSON.stringify(template) : ""
+    btn.className = isBlank
+      ? "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 transition-colors"
+      : "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 transition-colors"
+
+    if (!isBlank) {
+      btn.innerHTML = `<svg class="w-3 h-3 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>${label}`
+    } else {
+      btn.textContent = label
+    }
+
+    return btn
+  }
+
+  selectTemplate(event) {
+    const raw = event.currentTarget.dataset.templateData
+    const template = raw ? JSON.parse(raw) : null
+
+    // Highlight selected button
+    this.templateListTarget.querySelectorAll("button").forEach(btn => {
+      btn.classList.remove("border-purple-400", "bg-purple-50", "text-purple-700")
+    })
+    event.currentTarget.classList.add("border-purple-400", "bg-purple-50", "text-purple-700")
+
+    if (template) {
+      if (template.title) this.taskTitleTarget.value = template.title
+      this.templateIdTarget.value = template.id
+    } else {
+      this.taskTitleTarget.value = ""
+      this.templateIdTarget.value = ""
+    }
+    this.taskTitleTarget.focus()
+  }
+
+  clearTemplate() {
+    if (this.hasTemplateIdTarget) this.templateIdTarget.value = ""
+    if (this.hasTemplatePickerTarget) this.templatePickerTarget.classList.add("hidden")
   }
 
   toggleNotes() {
@@ -131,6 +194,7 @@ export default class extends Controller {
     this.columnIdValue = ""
     this.columnListElement = null
     this.columnCountElement = null
+    this.clearTemplate()
   }
 
   backdropClick(event) {
@@ -166,6 +230,8 @@ export default class extends Controller {
       formData.append("column_id", this.columnIdValue)
       formData.append("from", "board")
     }
+    const templateId = this.hasTemplateIdTarget ? this.templateIdTarget.value : ""
+    if (templateId) formData.append("template_id", templateId)
 
     const submitBtn = event.submitter || event.target.querySelector('[type="submit"]')
     if (submitBtn) submitBtn.disabled = true
