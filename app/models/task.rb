@@ -30,6 +30,7 @@ class Task < ApplicationRecord
   before_save :sync_status_with_column
   before_save :sync_column_with_status
   after_update :sync_publication
+  after_update :notify_due_date_change
 
   def due_date_has_time?
     return false unless due_date.present?
@@ -189,5 +190,15 @@ class Task < ApplicationRecord
 
   def sync_publication
     publication&.update(title: title, publication_date: due_date, description: notes)
+  end
+
+  def notify_due_date_change
+    return unless saved_change_to_due_date?
+    return if task_assignments.empty?
+
+    task_assignments.includes(:user).each do |assignment|
+      next unless assignment.user&.email.present?
+      TaskAssignmentMailer.assignment_notification(assignment).deliver_later
+    end
   end
 end
