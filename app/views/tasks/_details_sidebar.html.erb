@@ -140,19 +140,32 @@
           else
             pill = { bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200" }
           end
+
+          due_dt = task.due_date
+          has_time = due_dt.hour != 0 || due_dt.min != 0
+          due_label = if has_time
+            l(due_dt.to_date, format: :long) + " · " + due_dt.strftime("%H:%M")
+          else
+            l(due_dt.to_date, format: :long)
+          end
         %>
         <div class="flex items-center gap-2 flex-wrap">
           <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border <%= pill[:border] %> <%= pill[:bg] %> <%= pill[:text] %> text-sm font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <%= l(task.due_date, format: :long) %>
+            <%= due_label %>
           </span>
 
           <%
-            gcal_start = task.due_date.to_date.strftime('%Y%m%d')
-            gcal_end   = (task.due_date.to_date + 1).strftime('%Y%m%d')
-            gcal_url   = "https://calendar.google.com/calendar/render?" + {
+            if has_time
+              gcal_start = due_dt.utc.strftime('%Y%m%dT%H%M%SZ')
+              gcal_end   = (due_dt.utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')
+            else
+              gcal_start = due_dt.to_date.strftime('%Y%m%d')
+              gcal_end   = (due_dt.to_date + 1).strftime('%Y%m%d')
+            end
+            gcal_url = "https://calendar.google.com/calendar/render?" + {
               action:  "TEMPLATE",
               text:    task.title,
               dates:   "#{gcal_start}/#{gcal_end}",

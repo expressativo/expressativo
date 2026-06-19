@@ -29,11 +29,26 @@ class Task < ApplicationRecord
   before_save :sync_column_with_status
   after_update :sync_publication
 
+  def due_date_has_time?
+    return false unless due_date.present?
+
+    due_date.hour != 0 || due_date.min != 0
+  end
+
   def to_ics(task_url:, host:)
     return nil unless due_date.present?
 
-    due = due_date.to_date
     notes_plain = ActionView::Base.full_sanitizer.sanitize(notes.to_s).strip
+
+    if due_date_has_time?
+      due_utc = due_date.utc
+      dtstart = "DTSTART:#{due_utc.strftime('%Y%m%dT%H%M%SZ')}"
+      dtend   = "DTEND:#{(due_utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')}"
+    else
+      due = due_date.to_date
+      dtstart = "DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}"
+      dtend   = "DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}"
+    end
 
     <<~ICS
       BEGIN:VCALENDAR
@@ -44,8 +59,8 @@ class Task < ApplicationRecord
       BEGIN:VEVENT
       UID:tivo-task-#{id}@#{host}
       DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
-      DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}
-      DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}
+      #{dtstart}
+      #{dtend}
       SUMMARY:#{title}
       DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}
       URL:#{task_url}

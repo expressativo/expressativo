@@ -34,8 +34,8 @@
     </div>
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vence el</label>
-        <%= form.date_field :due_date, class: "input" %>
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vence el <span class="font-normal normal-case text-gray-400">(hora opcional)</span></label>
+        <%= form.datetime_local_field :due_date, class: "input" %>
       </div>
       <div>
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Estado</label>
