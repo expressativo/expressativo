@@ -28,7 +28,8 @@ class ProjectInvitationsController < ApplicationController
       return
     end
 
-    @project_user = @project.project_users.new(user: current_user, role: "member")
+    role = params[:role].presence_in(%w[member viewer]) || "member"
+    @project_user = @project.project_users.new(user: current_user, role: role)
 
     if @project_user.save
       flash[:notice] = "Te has unido al proyecto exitosamente."
@@ -67,7 +68,8 @@ class ProjectInvitationsController < ApplicationController
       redirect_to project_members_path(@project) and return
     end
 
-    ProjectInvitationMailer.invite(project: @project, email: email, inviter: current_user).deliver_later
+    role = params[:role].presence_in(%w[member viewer]) || "member"
+    ProjectInvitationMailer.invite(project: @project, email: email, inviter: current_user, role: role).deliver_later
     flash[:notice] = "Invitación enviada a #{email}."
     redirect_to project_members_path(@project)
   end
