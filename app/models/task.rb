@@ -29,6 +29,31 @@ class Task < ApplicationRecord
   before_save :sync_column_with_status
   after_update :sync_publication
 
+  def to_ics(task_url:, host:)
+    return nil unless due_date.present?
+
+    due = due_date.to_date
+    notes_plain = ActionView::Base.full_sanitizer.sanitize(notes.to_s).strip
+
+    <<~ICS
+      BEGIN:VCALENDAR
+      VERSION:2.0
+      PRODID:-//Tivo//Tivo Tasks//EN
+      CALSCALE:GREGORIAN
+      METHOD:PUBLISH
+      BEGIN:VEVENT
+      UID:tivo-task-#{id}@#{host}
+      DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+      DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}
+      DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}
+      SUMMARY:#{title}
+      DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}
+      URL:#{task_url}
+      END:VEVENT
+      END:VCALENDAR
+    ICS
+  end
+
   def public?
     public_token.present?
   end

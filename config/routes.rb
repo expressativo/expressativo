@@ -29,6 +29,7 @@ Rails.application.routes.draw do
           patch :update_position
           patch :publish_public
           patch :unpublish_public
+          get :calendar
         end
         resources :assignments, controller: "task_assignments", only: [ :create, :destroy ] do
           collection do

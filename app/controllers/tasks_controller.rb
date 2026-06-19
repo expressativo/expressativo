@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_context, except: :my_task
-  before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position publish_public unpublish_public]
+  before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position publish_public unpublish_public calendar]
   before_action :require_non_viewer_for_task!, only: %i[edit update destroy update_position publish_public unpublish_public]
   before_action :require_assigned_task_for_viewer!, only: %i[show add_comment]
 
@@ -77,6 +77,16 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
+  end
+
+  def calendar
+    return redirect_to project_todo_task_path(@project, @todo, @task), alert: "Esta tarea no tiene fecha de vencimiento." unless @task.due_date.present?
+
+    ics = @task.to_ics(task_url: project_todo_task_url(@project, @todo, @task), host: request.host)
+    send_data ics,
+              type: "text/calendar; charset=utf-8",
+              disposition: "attachment",
+              filename: "tarea-#{@task.id}.ics"
   end
 
   def publish_public

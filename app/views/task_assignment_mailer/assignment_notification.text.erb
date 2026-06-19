@@ -8,9 +8,10 @@ Notas: <%= ActionController::Base.helpers.strip_tags(@task.notes.to_s).squish %>
 
 <% if @task.due_date.present? %>
 Fecha límite: <%= l(@task.due_date, format: :long) %>
+Agregar a Google Calendar: <%= @gcal_url %>
 <% end %>
 
-Ver tarea: <%= project_todo_task_url(@project, @task.todo, @task) %>
+Ver tarea: <%= @task_url %>
 
 ---
 Este es un correo automático de Expressativo. No respondas a este mensaje.
