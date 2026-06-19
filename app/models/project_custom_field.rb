@@ -16,6 +16,7 @@ class ProjectCustomField < ApplicationRecord
 
   def self.maps_embed_url(url)
     return nil if url.blank?
+    return nil if url.match?(%r{goo\.gl|maps\.app\.goo\.gl}) # short URLs can't be embedded
     return url if url.include?("maps/embed")
 
     if url.match?(%r{google\.com/maps})
