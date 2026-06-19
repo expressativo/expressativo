@@ -1,5 +1,5 @@
 class ProjectCustomField < ApplicationRecord
-  FIELD_TYPES = %w[text number date select].freeze
+  FIELD_TYPES = %w[text number date select link map].freeze
 
   belongs_to :project
   has_many :task_custom_field_values, dependent: :destroy
@@ -13,6 +13,19 @@ class ProjectCustomField < ApplicationRecord
   default_scope { order(:position, :id) }
 
   before_create :set_position
+
+  def self.maps_embed_url(url)
+    return nil if url.blank?
+    return url if url.include?("maps/embed")
+
+    if url.match?(%r{google\.com/maps})
+      url.sub("maps?", "maps/embed?").then do |u|
+        u.include?("output=embed") ? u : "#{u}&output=embed"
+      end
+    else
+      "https://maps.google.com/maps?q=#{CGI.escape(url)}&output=embed"
+    end
+  end
 
   def options_list
     return [] unless options.is_a?(Array)
