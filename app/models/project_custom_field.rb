@@ -14,9 +14,17 @@ class ProjectCustomField < ApplicationRecord
 
   before_create :set_position
 
-  def self.maps_embed_url(url)
-    return nil if url.blank?
-    return nil if url.match?(%r{goo\.gl|maps\.app\.goo\.gl}) # short URLs can't be embedded
+  def self.maps_embed_url(value)
+    return nil if value.blank?
+
+    # Extrae el src si pegaron el iframe completo
+    url = if value.include?("<iframe")
+      value.match(/src="([^"]+)"/)&.captures&.first || value
+    else
+      value
+    end
+
+    return nil if url.match?(%r{goo\.gl|maps\.app\.goo\.gl})
     return url if url.include?("maps/embed")
 
     if url.match?(%r{google\.com/maps})

@@ -181,11 +181,17 @@
                         <option value="<%= opt %>" <%= "selected" if current_value == opt %>><%= opt %></option>
                       <% end %>
                     </select>
-                  <% when "link", "map" %>
+                  <% when "link" %>
                     <input type="url"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
-                           placeholder="<%= field.field_type == "map" ? "https://maps.google.com/..." : "https://" %>"
+                           placeholder="https://"
+                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                  <% when "map" %>
+                    <input type="text"
+                           name="task_custom_field_value[value]"
+                           value="<%= current_value %>"
+                           placeholder='Pega el iframe de Google Maps o una URL'
                            class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
                   <% end %>
                   <button type="submit" class="flex-shrink-0 p-1 rounded text-indigo-600 hover:bg-indigo-50 transition-colors" title="Guardar">
