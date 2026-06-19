@@ -262,9 +262,12 @@
           </span>
 
           <%
+            cfv_map       = task.custom_field_values.includes(:project_custom_field).index_by { |v| v.project_custom_field.key }
+            duration_h    = cfv_map["duration"]&.value.to_f.positive? ? cfv_map["duration"].value.to_f : nil
+
             if has_time
               gcal_start = due_dt.utc.strftime('%Y%m%dT%H%M%SZ')
-              gcal_end   = (due_dt.utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')
+              gcal_end   = duration_h ? (due_dt.utc + duration_h.hours).strftime('%Y%m%dT%H%M%SZ') : (due_dt.utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')
             else
               gcal_start = due_dt.to_date.strftime('%Y%m%d')
               gcal_end   = (due_dt.to_date + 1).strftime('%Y%m%d')
@@ -273,7 +276,7 @@
               action:  "TEMPLATE",
               text:    task.title,
               dates:   "#{gcal_start}/#{gcal_end}",
-              details: "Tarea de Tivo: #{project_todo_task_url(@project, @todo, task)}"
+              details: "#{task.title}\n#{project_todo_task_url(@project, @todo, task)}"
             }.to_query
           %>
           <%= link_to gcal_url, target: "_blank", rel: "noopener",
