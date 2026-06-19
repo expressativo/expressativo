@@ -8,9 +8,18 @@
   </div>
 <% end %>
 <%= form_with model: [@project, @todo, @task] do |form| %>
+  <%= hidden_field_tag :template_id, @template&.id if @template %>
   <div class="mb-4 ">
     <%= form.text_field :title, class: "mt-2 input", placeholder: "Describe esta tarea" , autofocus: true %>
   </div>
+  <% if @template %>
+    <p class="text-xs text-purple-600 mb-3 flex items-center gap-1">
+      <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      Template: <%= @template.name %>
+    </p>
+  <% end %>
   <%= form.submit "Guardar", class: "button", id: "submit_task", data: {
     turbo_submits_with: "Guardando..."
   } %>

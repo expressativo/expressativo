@@ -13,7 +13,18 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = Task.new
+    if @project.task_templates.any? && params[:template_id].blank? && params[:blank].blank?
+      @templates = @project.task_templates.order(:name)
+      render :choose_template
+    else
+      @task = Task.new
+      if params[:template_id].present?
+        @template = @project.task_templates.find_by(id: params[:template_id])
+        if @template
+          @task.title = @template.title
+        end
+      end
+    end
   end
 
   def create
@@ -24,6 +35,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
+        apply_template_notes(@task)
         if from_board
           format.json { render_board_task_json(column) }
           format.html { redirect_to project_board_path(@project, column.board), notice: "Tarea creada correctamente." }
@@ -163,6 +175,16 @@ class TasksController < ApplicationController
     @task = @todo.tasks.includes(:assigned_users, :created_by, :publication, :custom_field_values, comments: :user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to project_todos_path(@project), alert: "La tarea que buscas no existe o fue eliminada."
+  end
+
+  def apply_template_notes(task)
+    return if params[:template_id].blank?
+
+    template = @project.task_templates.find_by(id: params[:template_id])
+    return unless template&.notes&.body&.present?
+
+    task.notes = template.notes.body.to_s
+    task.save
   end
 
   def tasks_params

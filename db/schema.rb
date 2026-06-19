@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_20_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_20_000003) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -375,6 +375,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_20_000002) do
     t.index ["task_id"], name: "index_task_custom_field_values_on_task_id"
   end
 
+  create_table "task_templates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "name", null: false
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_task_templates_on_project_id"
+  end
+
   create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.bigint "todo_id", null: false
@@ -472,6 +481,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_20_000002) do
   add_foreign_key "task_assignments", "users"
   add_foreign_key "task_custom_field_values", "project_custom_fields"
   add_foreign_key "task_custom_field_values", "tasks"
+  add_foreign_key "task_templates", "projects"
   add_foreign_key "tasks", "columns"
   add_foreign_key "tasks", "todos"
   add_foreign_key "tasks", "users", column: "created_by_id"

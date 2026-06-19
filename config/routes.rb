@@ -48,6 +48,7 @@ Rails.application.routes.draw do
     end
     resources :members, controller: "project_members", only: %i[index new create update destroy]
     resources :custom_fields, controller: "project_custom_fields", only: %i[index create destroy]
+    resources :task_templates
     resource :timeline, only: [ :show ], controller: "timelines"
 
     # Tableros Kanban
