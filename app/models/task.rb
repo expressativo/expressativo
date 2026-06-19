@@ -46,7 +46,12 @@ class Task < ApplicationRecord
                                     .index_by { |v| v.project_custom_field.key }
                                     .reject { |k, _| k.blank? }
 
-    location_value = cfv_by_key["location"]&.value.presence
+    location_raw   = cfv_by_key["location"]&.value.presence
+    location_value = if location_raw&.include?("<iframe")
+      location_raw.match(/src="([^"]+)"/)&.captures&.first
+    else
+      location_raw
+    end
     duration_hours = cfv_by_key["duration"]&.value.to_f.positive? ? cfv_by_key["duration"].value.to_f : nil
 
     if due_date_has_time?
