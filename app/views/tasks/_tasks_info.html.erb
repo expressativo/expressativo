@@ -13,6 +13,16 @@
     <% is_viewer = @project.viewer?(current_user) %>
     <div class="flex items-center gap-1">
       <% if task.public? %>
+        <div data-controller="clipboard" data-clipboard-url-value="<%= public_task_url(task.public_token) %>">
+          <button type="button"
+                  data-action="click->clipboard#copy"
+                  title="Copiar link público"
+                  class="p-1.5 rounded-lg text-sky-600 hover:text-sky-800 hover:bg-sky-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
+            </svg>
+          </button>
+        </div>
         <%= button_to unpublish_public_project_todo_task_path(@project, @todo, task), method: :patch,
                       data: { turbo_confirm: "¿Revocar el link público? Cualquiera que lo tenga dejará de poder ver la tarea." },
                       title: "Revocar link público",
@@ -49,31 +59,6 @@
       <% end %>
     </div>
   </div>
-
-  <% if task.public? %>
-    <% public_url = public_task_url(task.public_token) %>
-    <div class="mb-4 px-4 py-3 bg-sky-50 border border-sky-100 rounded-xl" data-controller="clipboard">
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 text-sky-700 flex-shrink-0">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
-          </svg>
-          <span class="text-xs font-semibold uppercase tracking-wider">Link público</span>
-        </div>
-        <input type="text"
-               value="<%= public_url %>"
-               readonly
-               data-clipboard-target="source"
-               class="flex-1 min-w-0 px-3 py-1.5 text-sm bg-white border border-sky-200 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300">
-        <button type="button"
-                data-action="click->clipboard#copy"
-                data-clipboard-target="button"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700 transition-colors flex-shrink-0">
-          Copiar
-        </button>
-      </div>
-    </div>
-  <% end %>
 
   <% if is_viewer %>
     <div class="flex items-center gap-3">
