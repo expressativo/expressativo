@@ -41,7 +41,7 @@ class Task < ApplicationRecord
   def to_ics(task_url:, host:)
     return nil unless due_date.present?
 
-    notes_plain = ActionView::Base.full_sanitizer.sanitize(notes.to_s).strip
+    description = "#{title}\\n#{task_url}"
 
     cfv_by_key = custom_field_values.includes(:project_custom_field)
                                     .index_by { |v| v.project_custom_field.key }
@@ -77,7 +77,7 @@ class Task < ApplicationRecord
       dtstart_line,
       dtend_line,
       "SUMMARY:#{title}",
-      "DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}",
+      "DESCRIPTION:#{description}",
       "URL:#{task_url}",
       (location_value ? "LOCATION:#{location_value}" : nil),
       "BEGIN:VALARM",

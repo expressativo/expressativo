@@ -9,11 +9,20 @@ class TaskCustomFieldValuesController < ApplicationController
 
     value = params.dig(:task_custom_field_value, :value).to_s.strip
 
+    previous_value = value_record.value
+
     if value.blank?
       value_record.destroy if value_record.persisted?
     else
       value_record.value = value
       value_record.save
+    end
+
+    if field.key == "location" && value != previous_value && @task.task_assignments.exists?
+      @task.task_assignments.includes(:user).each do |assignment|
+        next unless assignment.user&.email.present?
+        TaskAssignmentMailer.assignment_notification(assignment).deliver_later
+      end
     end
 
     redirect_to project_todo_task_path(@project, @todo, @task)
