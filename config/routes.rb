@@ -37,6 +37,7 @@ Rails.application.routes.draw do
           end
         end
         resources :comments, only: [ :edit, :update, :destroy ]
+        resources :custom_field_values, controller: "task_custom_field_values", only: [ :update ]
       end
       member do
         get :completed_tasks, to: "todos#completed_tasks"
@@ -46,6 +47,7 @@ Rails.application.routes.draw do
       resources :announcement_comments
     end
     resources :members, controller: "project_members", only: %i[index new create destroy]
+    resources :custom_fields, controller: "project_custom_fields", only: %i[index create destroy]
     resource :timeline, only: [ :show ], controller: "timelines"
 
     # Tableros Kanban

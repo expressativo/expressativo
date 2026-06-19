@@ -160,7 +160,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = @todo.tasks.includes(:assigned_users, :created_by, :publication, comments: :user).find(params[:id])
+    @task = @todo.tasks.includes(:assigned_users, :created_by, :publication, :custom_field_values, comments: :user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to project_todos_path(@project), alert: "La tarea que buscas no existe o fue eliminada."
   end

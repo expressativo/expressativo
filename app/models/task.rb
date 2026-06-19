@@ -11,6 +11,8 @@ class Task < ApplicationRecord
   has_one :publication, dependent: :destroy
   has_many :task_assignments, dependent: :destroy
   has_many :assigned_users, through: :task_assignments, source: :user
+  has_many :custom_field_values, class_name: "TaskCustomFieldValue", dependent: :destroy
+  has_many :custom_fields, through: :custom_field_values, source: :project_custom_field
 
   validates :title, presence: true
   validates :status, inclusion: { in: STATUSES }
@@ -32,26 +34,62 @@ class Task < ApplicationRecord
   def to_ics(task_url:, host:)
     return nil unless due_date.present?
 
-    due = due_date.to_date
     notes_plain = ActionView::Base.full_sanitizer.sanitize(notes.to_s).strip
 
-    <<~ICS
-      BEGIN:VCALENDAR
-      VERSION:2.0
-      PRODID:-//Tivo//Tivo Tasks//EN
-      CALSCALE:GREGORIAN
-      METHOD:PUBLISH
-      BEGIN:VEVENT
-      UID:tivo-task-#{id}@#{host}
-      DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
-      DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}
-      DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}
-      SUMMARY:#{title}
-      DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}
-      URL:#{task_url}
-      END:VEVENT
-      END:VCALENDAR
-    ICS
+    # Gather special custom field values
+    cfv_by_key = custom_field_values.includes(:project_custom_field)
+                                    .index_by { |v| v.project_custom_field.key }
+                                    .reject { |k, _| k.blank? }
+
+    location_value = cfv_by_key["location"]&.value.presence
+    duration_minutes = cfv_by_key["duration"]&.value.to_i.positive? ? cfv_by_key["duration"].value.to_i : nil
+
+    # Build DTSTART / DTEND lines depending on whether due_date has a time component
+    has_time = due_date.is_a?(Time) || due_date.is_a?(DateTime) ||
+               (due_date.respond_to?(:hour) && !(due_date.hour == 0 && due_date.min == 0 && due_date.sec == 0))
+
+    if has_time
+      dtstart_line = "DTSTART:#{due_date.utc.strftime('%Y%m%dT%H%M%SZ')}"
+      dtend_time   = duration_minutes ? due_date.utc + duration_minutes.minutes : due_date.utc + 1.hour
+      dtend_line   = "DTEND:#{dtend_time.strftime('%Y%m%dT%H%M%SZ')}"
+    else
+      due = due_date.to_date
+      dtstart_line = "DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}"
+      dtend_line   = "DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}"
+    end
+
+    location_line = location_value ? "LOCATION:#{location_value}" : nil
+
+    lines = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Tivo//Tivo Tasks//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:tivo-task-#{id}@#{host}",
+      "DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}",
+      dtstart_line,
+      dtend_line,
+      "SUMMARY:#{title}",
+      "DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}",
+      "URL:#{task_url}",
+      location_line,
+      "BEGIN:VALARM",
+      "TRIGGER:-P1D",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Recordatorio",
+      "END:VALARM",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT2H",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Recordatorio",
+      "END:VALARM",
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].compact.join("\n") + "\n"
+
+    lines
   end
 
   def public?
