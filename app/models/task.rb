@@ -47,11 +47,11 @@ class Task < ApplicationRecord
                                     .reject { |k, _| k.blank? }
 
     location_value = cfv_by_key["location"]&.value.presence
-    duration_minutes = cfv_by_key["duration"]&.value.to_i.positive? ? cfv_by_key["duration"].value.to_i : nil
+    duration_hours = cfv_by_key["duration"]&.value.to_f.positive? ? cfv_by_key["duration"].value.to_f : nil
 
     if due_date_has_time?
       dtstart_line = "DTSTART:#{due_date.utc.strftime('%Y%m%dT%H%M%SZ')}"
-      dtend_time   = duration_minutes ? due_date.utc + duration_minutes.minutes : due_date.utc + 1.hour
+      dtend_time   = duration_hours ? due_date.utc + duration_hours.hours : due_date.utc + 1.hour
       dtend_line   = "DTEND:#{dtend_time.strftime('%Y%m%dT%H%M%SZ')}"
     else
       due = due_date.to_date
