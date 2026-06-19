@@ -29,6 +29,25 @@ class Task < ApplicationRecord
   before_save :sync_column_with_status
   after_update :sync_publication
 
+  def public?
+    public_token.present?
+  end
+
+  def publish_publicly!
+    return if public?
+
+    update!(
+      public_token: SecureRandom.urlsafe_base64(6),
+      published_publicly_at: Time.current
+    )
+  end
+
+  def unpublish_publicly!
+    return unless public?
+
+    update!(public_token: nil, published_publicly_at: nil)
+  end
+
   def completed?
     status == "done"
   end

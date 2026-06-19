@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_context, except: :my_task
-  before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position]
+  before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position publish_public unpublish_public]
 
   def index
     @tasks = @todo.tasks
@@ -75,6 +75,16 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to project_todos_path(@project), notice: "Task has been deleted successfully."
+  end
+
+  def publish_public
+    @task.publish_publicly!
+    redirect_to project_todo_task_path(@project, @todo, @task), notice: "Link público generado."
+  end
+
+  def unpublish_public
+    @task.unpublish_publicly!
+    redirect_to project_todo_task_path(@project, @todo, @task), notice: "Link público revocado."
   end
 
   def update_position

@@ -27,6 +27,8 @@ Rails.application.routes.draw do
           post :add_comment
           get :search_members
           patch :update_position
+          patch :publish_public
+          patch :unpublish_public
         end
         resources :assignments, controller: "task_assignments", only: [ :create, :destroy ] do
           collection do
@@ -136,6 +138,9 @@ Rails.application.routes.draw do
 
   # Acceso público de solo lectura a documentos compartidos
   get "/d/:public_token", to: "public_documents#show", as: :public_document
+
+  # Acceso público de solo lectura a tareas compartidas
+  get "/t/:public_token", to: "public_tasks#show", as: :public_task
 
   # Notificaciones
   resources :notifications, only: [ :index, :show ] do
