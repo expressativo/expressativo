@@ -4,8 +4,8 @@ class ProjectCustomFieldsController < ApplicationController
   before_action -> { require_non_viewer!(@project) }
 
   def index
-    @custom_fields = @project.custom_fields
-    @custom_field = @project.custom_fields.new
+    @custom_fields = @project.custom_fields.order(:position).to_a
+    @custom_field = ProjectCustomField.new(project: @project)
   end
 
   def create
@@ -14,7 +14,7 @@ class ProjectCustomFieldsController < ApplicationController
     if @custom_field.save
       redirect_to project_custom_fields_path(@project), notice: "Campo personalizado creado."
     else
-      @custom_fields = @project.custom_fields
+      @custom_fields = @project.custom_fields.order(:position).to_a
       flash.now[:alert] = @custom_field.errors.full_messages.to_sentence
       render :index, status: :unprocessable_entity
     end
