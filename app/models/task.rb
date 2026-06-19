@@ -11,6 +11,8 @@ class Task < ApplicationRecord
   has_one :publication, dependent: :destroy
   has_many :task_assignments, dependent: :destroy
   has_many :assigned_users, through: :task_assignments, source: :user
+  has_many :custom_field_values, class_name: "TaskCustomFieldValue", dependent: :destroy
+  has_many :custom_fields, through: :custom_field_values, source: :project_custom_field
 
   validates :title, presence: true
   validates :status, inclusion: { in: STATUSES }
@@ -40,33 +42,51 @@ class Task < ApplicationRecord
 
     notes_plain = ActionView::Base.full_sanitizer.sanitize(notes.to_s).strip
 
+    cfv_by_key = custom_field_values.includes(:project_custom_field)
+                                    .index_by { |v| v.project_custom_field.key }
+                                    .reject { |k, _| k.blank? }
+
+    location_value = cfv_by_key["location"]&.value.presence
+    duration_minutes = cfv_by_key["duration"]&.value.to_i.positive? ? cfv_by_key["duration"].value.to_i : nil
+
     if due_date_has_time?
-      due_utc = due_date.utc
-      dtstart = "DTSTART:#{due_utc.strftime('%Y%m%dT%H%M%SZ')}"
-      dtend   = "DTEND:#{(due_utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')}"
+      dtstart_line = "DTSTART:#{due_date.utc.strftime('%Y%m%dT%H%M%SZ')}"
+      dtend_time   = duration_minutes ? due_date.utc + duration_minutes.minutes : due_date.utc + 1.hour
+      dtend_line   = "DTEND:#{dtend_time.strftime('%Y%m%dT%H%M%SZ')}"
     else
       due = due_date.to_date
-      dtstart = "DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}"
-      dtend   = "DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}"
+      dtstart_line = "DTSTART;VALUE=DATE:#{due.strftime('%Y%m%d')}"
+      dtend_line   = "DTEND;VALUE=DATE:#{(due + 1).strftime('%Y%m%d')}"
     end
 
-    <<~ICS
-      BEGIN:VCALENDAR
-      VERSION:2.0
-      PRODID:-//Tivo//Tivo Tasks//EN
-      CALSCALE:GREGORIAN
-      METHOD:PUBLISH
-      BEGIN:VEVENT
-      UID:tivo-task-#{id}@#{host}
-      DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
-      #{dtstart}
-      #{dtend}
-      SUMMARY:#{title}
-      DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}
-      URL:#{task_url}
-      END:VEVENT
-      END:VCALENDAR
-    ICS
+    [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Tivo//Tivo Tasks//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:tivo-task-#{id}@#{host}",
+      "DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}",
+      dtstart_line,
+      dtend_line,
+      "SUMMARY:#{title}",
+      "DESCRIPTION:#{notes_plain.presence || 'Sin descripción'}\\n#{task_url}",
+      "URL:#{task_url}",
+      (location_value ? "LOCATION:#{location_value}" : nil),
+      "BEGIN:VALARM",
+      "TRIGGER:-P1D",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Recordatorio",
+      "END:VALARM",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT2H",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Recordatorio",
+      "END:VALARM",
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].compact.join("\n") + "\n"
   end
 
   def public?
