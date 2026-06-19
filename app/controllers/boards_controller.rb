@@ -1,6 +1,7 @@
 class BoardsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
+  before_action -> { require_non_viewer!(@project) }
   before_action :set_board, only: [ :show, :edit, :update, :destroy, :add_tasks ]
 
   def index

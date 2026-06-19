@@ -4,6 +4,7 @@ class DocumentsController < ApplicationController
   before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
   before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public]
+  before_action -> { require_non_viewer!(@project) }
   before_action :authorize_status_change!, only: %i[archive unarchive publish unpublish publish_public unpublish_public]
 
   # GET /documents or /documents.json

@@ -4,14 +4,23 @@ class TodosController < ApplicationController
     before_action :set_todo, only: [ :edit, :update, :destroy, :completed_tasks, :show ]
 
     def index
-      @todos = @project.todos.includes(tasks: [ :assigned_users, :todo ])
+      @viewer_mode = @project.viewer?(current_user)
 
-      # Si se pasa un parámetro de vista, actualizar la preferencia del usuario
+      if @viewer_mode
+        @viewer_assigned_task_ids = current_user.task_assignments
+                                                .joins(:task)
+                                                .where(tasks: { todo_id: @project.todo_ids })
+                                                .pluck(:task_id).to_set
+        todo_ids = Task.where(id: @viewer_assigned_task_ids).distinct.pluck(:todo_id)
+        @todos = @project.todos.where(id: todo_ids).includes(tasks: [ :assigned_users, :todo ])
+      else
+        @todos = @project.todos.includes(tasks: [ :assigned_users, :todo ])
+      end
+
       if params[:view].present? && [ "list", "grid" ].include?(params[:view])
         current_user.update(todos_view_preference: params[:view])
       end
 
-      # Usar la preferencia guardada del usuario
       @view_type = current_user.todos_view_preference || "list"
     end
 

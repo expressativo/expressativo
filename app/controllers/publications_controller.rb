@@ -1,6 +1,7 @@
 class PublicationsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
+  before_action -> { require_non_viewer!(@project) }
   before_action :set_publication, only: [ :update, :destroy, :update_date ]
 
   def index

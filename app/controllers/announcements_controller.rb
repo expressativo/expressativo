@@ -1,6 +1,8 @@
 class AnnouncementsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
+  before_action -> { require_non_viewer!(@project) }
+
   def index
     @announcements = @project.announcements.order(created_at: :desc)
   end

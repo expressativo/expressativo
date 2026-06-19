@@ -2,6 +2,8 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_context, except: :my_task
   before_action :set_task, only: %i[show edit update destroy add_comment search_members update_position publish_public unpublish_public]
+  before_action :require_non_viewer_for_task!, only: %i[edit update destroy update_position publish_public unpublish_public]
+  before_action :require_assigned_task_for_viewer!, only: %i[show add_comment]
 
   def index
     @tasks = @todo.tasks
@@ -134,6 +136,17 @@ class TasksController < ApplicationController
     @todo = @project.todos.find(params[:todo_id])
   rescue ActiveRecord::RecordNotFound
     redirect_to projects_path, alert: "El recurso solicitado no existe o no tienes acceso."
+  end
+
+  def require_non_viewer_for_task!
+    require_non_viewer!(@project)
+  end
+
+  def require_assigned_task_for_viewer!
+    return unless @project.viewer?(current_user)
+    return if @task.assigned_users.include?(current_user)
+
+    redirect_to project_todos_path(@project), alert: "Solo puedes ver las tareas que tienes asignadas."
   end
 
   def set_task

@@ -1,6 +1,7 @@
 class TimelinesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
+  before_action -> { require_non_viewer!(@project) }
 
   def show
     @activities = @project.activities

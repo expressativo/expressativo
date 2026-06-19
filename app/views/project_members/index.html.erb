@@ -43,9 +43,16 @@
               <div class="flex items-center gap-3 min-w-0">
                 <%= user_avatar(project_user.user) %>
                 <div class="min-w-0">
-                  <h3 class="text-sm font-semibold text-gray-900 truncate">
-                    <%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ').presence || project_user.user.email %>
-                  </h3>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-gray-900 truncate">
+                      <%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ').presence || project_user.user.email %>
+                    </h3>
+                    <% if project_user.viewer? %>
+                      <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 rounded">
+                        Observador
+                      </span>
+                    <% end %>
+                  </div>
                   <p class="text-xs text-gray-500 truncate"><%= project_user.user.email %></p>
                 </div>
               </div>

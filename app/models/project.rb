@@ -26,6 +26,18 @@ class Project < ApplicationRecord
     users.where(project_users: { role: "member" })
   end
 
+  def viewers
+    users.where(project_users: { role: "viewer" })
+  end
+
+  def role_for(user)
+    project_users.find_by(user_id: user.id)&.role
+  end
+
+  def viewer?(user)
+    role_for(user) == "viewer"
+  end
+
   def regenerate_invitation_token!
     update(invitation_token: generate_unique_token)
   end

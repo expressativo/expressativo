@@ -1,6 +1,6 @@
 <div class="bg-white border border-gray-200 rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
   <h1 class="text-2xl font-semibold mb-6">
-    Invitar miembro a <%= @project.title %>
+    Agregar persona a <%= @project.title %>
   </h1>
 
   <%= form_with url: project_members_path(@project), method: :post, local: true do |form| %>
@@ -16,20 +16,31 @@
       </p>
     </div>
 
+    <div class="mb-6">
+      <label class="label mb-2">Rol</label>
+      <div class="space-y-3">
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-gray-200 hover:border-purple-300 cursor-pointer has-[:checked]:border-purple-500 has-[:checked]:bg-purple-50 transition-colors">
+          <input type="radio" name="role" value="member" checked class="mt-0.5 accent-purple-600">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">Miembro</div>
+            <div class="text-xs text-gray-500 mt-0.5">Acceso completo al proyecto: tareas, tableros, documentos, anuncios, chat.</div>
+          </div>
+        </label>
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-gray-200 hover:border-amber-300 cursor-pointer has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 transition-colors">
+          <input type="radio" name="role" value="viewer" class="mt-0.5 accent-amber-600">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">Observador</div>
+            <div class="text-xs text-gray-500 mt-0.5">Solo puede ver las tareas que tiene asignadas y dejar comentarios en ellas.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
     <div class="flex gap-2">
-      <%= form.submit "Enviar invitación",
+      <%= form.submit "Agregar",
           class: "button",
-          data: { turbo_submits_with: "Enviando..." } %>
+          data: { turbo_submits_with: "Agregando..." } %>
       <%= link_to "Cancelar", project_members_path(@project), class: "button-outline" %>
     </div>
   <% end %>
-
-  <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="font-semibold mb-2">Nota:</h3>
-    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1">
-      <li>El usuario debe estar registrado en Tivo</li>
-      <li>Los miembros podrán ver y participar en todos los aspectos del proyecto</li>
-      <li>Solo el propietario puede eliminar miembros</li>
-    </ul>
-  </div>
 </div>

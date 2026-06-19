@@ -1,9 +1,10 @@
 class ProjectMembersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
+  before_action -> { require_non_viewer!(@project) }
 
   def index
-    @members = @project.project_users.includes(:user).where(role: "member")
+    @members = @project.project_users.includes(:user).where(role: %w[member viewer])
     @owner = @project.owner
   end
 
@@ -24,10 +25,11 @@ class ProjectMembersController < ApplicationController
       redirect_to new_project_member_path(@project) and return
     end
 
-    @project_user = @project.project_users.new(user: user, role: "member")
+    role = params[:role].presence_in(%w[member viewer]) || "member"
+    @project_user = @project.project_users.new(user: user, role: role)
 
     if @project_user.save
-      flash[:notice] = "Miembro agregado exitosamente."
+      flash[:notice] = "#{role == 'viewer' ? 'Observador' : 'Miembro'} agregado exitosamente."
       redirect_to project_members_path(@project)
     else
       flash[:alert] = "Hubo un error al agregar el miembro."

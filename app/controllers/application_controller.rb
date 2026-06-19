@@ -24,4 +24,10 @@ class ApplicationController < ActionController::Base
     token = session.delete(:invitation_token)
     redirect_to project_invitation_path(token: token)
   end
+
+  def require_non_viewer!(project)
+    return unless project.viewer?(current_user)
+
+    redirect_to project_todos_path(project), alert: "No tienes acceso a esta sección."
+  end
 end
