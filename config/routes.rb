@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     resources :announcements do
       resources :announcement_comments
     end
-    resources :members, controller: "project_members", only: %i[index new create destroy]
+    resources :members, controller: "project_members", only: %i[index new create update destroy]
     resources :custom_fields, controller: "project_custom_fields", only: %i[index create destroy]
     resource :timeline, only: [ :show ], controller: "timelines"
 

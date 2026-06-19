@@ -43,28 +43,30 @@
               <div class="flex items-center gap-3 min-w-0">
                 <%= user_avatar(project_user.user) %>
                 <div class="min-w-0">
-                  <div class="flex items-center gap-2">
-                    <h3 class="text-sm font-semibold text-gray-900 truncate">
-                      <%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ').presence || project_user.user.email %>
-                    </h3>
-                    <% if project_user.viewer? %>
-                      <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 rounded">
-                        Observador
-                      </span>
-                    <% end %>
-                  </div>
+                  <h3 class="text-sm font-semibold text-gray-900 truncate">
+                    <%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ').presence || project_user.user.email %>
+                  </h3>
                   <p class="text-xs text-gray-500 truncate"><%= project_user.user.email %></p>
                 </div>
               </div>
-              <%= button_to project_member_path(@project, project_user),
-                            method: :delete,
-                            form: { data: { turbo_confirm: "¿Eliminar este miembro del proyecto?" } },
-                            class: "opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-red-600 hover:bg-red-50 transition cursor-pointer",
-                            title: "Quitar del proyecto" do %>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
-                </svg>
-              <% end %>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <%= form_with url: project_member_path(@project, project_user), method: :patch, class: "flex items-center gap-1.5" do |f| %>
+                  <%= f.select :role,
+                      [["Miembro", "member"], ["Observador", "viewer"]],
+                      { selected: project_user.role },
+                      class: "text-xs px-2 py-1 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer",
+                      onchange: "this.form.requestSubmit()" %>
+                <% end %>
+                <%= button_to project_member_path(@project, project_user),
+                              method: :delete,
+                              form: { data: { turbo_confirm: "¿Eliminar este miembro del proyecto?" } },
+                              class: "opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-red-600 hover:bg-red-50 transition cursor-pointer",
+                              title: "Quitar del proyecto" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
+                  </svg>
+                <% end %>
+              </div>
             </li>
           <% end %>
 

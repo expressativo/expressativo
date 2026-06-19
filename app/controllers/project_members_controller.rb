@@ -37,6 +37,25 @@ class ProjectMembersController < ApplicationController
     end
   end
 
+  def update
+    @project_user = @project.project_users.find(params[:id])
+
+    if @project_user.role == "owner"
+      flash[:alert] = "No puedes cambiar el rol del propietario."
+      redirect_to project_members_path(@project) and return
+    end
+
+    new_role = params[:project_user][:role].presence_in(%w[member viewer])
+
+    if new_role && @project_user.update(role: new_role)
+      flash[:notice] = "Rol actualizado correctamente."
+    else
+      flash[:alert] = "No se pudo actualizar el rol."
+    end
+
+    redirect_to project_members_path(@project)
+  end
+
   def destroy
     @project_user = @project.project_users.find(params[:id])
 
