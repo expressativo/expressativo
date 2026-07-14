@@ -18,7 +18,10 @@
     <% end %>
     <%= yield :head %>
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tivo">
+    <meta name="theme-color" content="#7c3aed">
     <link rel="icon" href="<%= asset_path 'expressativo_logo.jpg' %>" type="image/png">
     <link rel="icon" href="<%= asset_path 'expressativo_logo.jpg' %>" type="image/svg+xml">
     <link rel="apple-touch-icon" href="<%= asset_path 'expressativo_logo.jpg' %>">
@@ -31,7 +34,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css">
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-white" data-controller="lightbox reactions-launcher push-notifications">
+  <body class="bg-white" data-controller="pwa lightbox reactions-launcher push-notifications">
     <% if user_signed_in? %>
       <%= render 'layouts/navbar'%>
       <div data-controller="chat-notifier"
