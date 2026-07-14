@@ -40,12 +40,11 @@ class ColumnsController < ApplicationController
   end
 
   def destroy
-    if @column.done?
-      return render json: { success: false, errors: [ "La columna 'Done' no se puede eliminar" ] }, status: :unprocessable_entity
+    if @column.destroy
+      render json: { success: true }
+    else
+      render json: { success: false, errors: @column.errors.full_messages }, status: :unprocessable_entity
     end
-
-    @column.destroy
-    render json: { success: true }
   end
 
   def update_position

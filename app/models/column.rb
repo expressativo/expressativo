@@ -13,7 +13,7 @@ class Column < ApplicationRecord
   before_validation :assign_default_position, on: :create
   before_save :pin_done_to_last_position, if: -> { done? && board.present? }
   after_save :push_done_after_other_columns, unless: :done?
-  before_destroy :prevent_done_destruction
+  before_destroy :prevent_destruction
 
   def todo?
     kind == "todo"
@@ -71,9 +71,15 @@ class Column < ApplicationRecord
     errors.add(:kind, "ya existe una columna 'done' en este tablero") if duplicate
   end
 
-  def prevent_done_destruction
+  def prevent_destruction
     if done?
       errors.add(:base, "No se puede eliminar la columna 'Done' del tablero")
+      throw(:abort)
+    elsif board && board.columns.count <= 3
+      errors.add(:base, "El tablero debe tener al menos 3 columnas")
+      throw(:abort)
+    elsif tasks.exists?
+      errors.add(:base, "No se puede eliminar una columna que tiene tareas")
       throw(:abort)
     end
   end

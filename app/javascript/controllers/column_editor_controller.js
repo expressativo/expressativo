@@ -145,6 +145,39 @@ export default class extends Controller {
     this.newColumnTitleTarget.value = "";
   }
 
+  // Eliminar columna
+  deleteColumn(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!confirm("¿Seguro que deseas eliminar esta columna?")) {
+      return;
+    }
+
+    const url = this.updateUrlValue;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": csrfToken,
+        "Accept": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.reload();
+      } else {
+        alert(data.errors ? data.errors.join(", ") : "Error al eliminar la columna");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error al eliminar la columna");
+    });
+  }
+
   // Mostrar formulario de nueva columna
   showForm() {
     this.formTarget.classList.remove("hidden");
