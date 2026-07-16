@@ -9,7 +9,7 @@ class BoardsController < ApplicationController
   end
 
   def show
-    @todos = @project.todos.order(:name)
+    @todos = @project.todos.active.order(:name)
     # Obtener todos los usuarios del proyecto para el filtro
     @project_users = @project.users.order(:first_name, :last_name)
 
@@ -75,7 +75,7 @@ class BoardsController < ApplicationController
   end
 
   def add_tasks
-    @todos = @project.todos.includes(:tasks).map do |todo|
+    @todos = @project.todos.active.includes(:tasks).map do |todo|
       # Filter out done tasks from each todo
       available_tasks = todo.tasks.not_done
       todo.define_singleton_method(:tasks) { available_tasks }

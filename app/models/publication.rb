@@ -21,7 +21,7 @@ class Publication < ApplicationRecord
     return if task.present? || created_by.blank?
 
     # Buscar o crear la todo list "Publicaciones"
-    todo = project.todos.find_or_create_by(name: "Publicaciones")
+    todo = project.todos.active.find_or_create_by(name: "Publicaciones")
 
     # Crear la tarea
     new_task = todo.tasks.create(

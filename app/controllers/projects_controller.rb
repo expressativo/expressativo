@@ -34,7 +34,7 @@ class ProjectsController < ApplicationController
 
     project_tasks = Task.joins(:todo).where(todos: { project_id: @project.id })
 
-    @todos_count       = @project.todos.count
+    @todos_count       = @project.todos.active.count
     @tasks_total       = project_tasks.count
     @tasks_completed   = project_tasks.where(status: "done").count
     @tasks_pending     = @tasks_total - @tasks_completed

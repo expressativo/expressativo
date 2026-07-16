@@ -28,7 +28,7 @@
       <% projects.each do |project| %>
         <% owner = project.owner %>
         <% members_count = project.users.size %>
-        <% todos_count = project.todos.size %>
+        <% todos_count = project.todos.active.size %>
         <% boards_count = project.boards.size %>
         <li data-project-filter-target="item"
             data-project-name="<%= [project.title, project.description.to_s].join(' ').downcase %>"

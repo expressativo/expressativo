@@ -12,9 +12,9 @@ class TodosController < ApplicationController
                                                 .where(tasks: { todo_id: @project.todo_ids })
                                                 .pluck(:task_id).to_set
         todo_ids = Task.where(id: @viewer_assigned_task_ids).distinct.pluck(:todo_id)
-        @todos = @project.todos.where(id: todo_ids).includes(tasks: [ :assigned_users, :todo ])
+        @todos = @project.todos.active.where(id: todo_ids).includes(tasks: [ :assigned_users, :todo ])
       else
-        @todos = @project.todos.includes(tasks: [ :assigned_users, :todo ])
+        @todos = @project.todos.active.includes(tasks: [ :assigned_users, :todo ])
       end
 
       if params[:view].present? && [ "list", "grid" ].include?(params[:view])
@@ -54,10 +54,10 @@ class TodosController < ApplicationController
 
     def destroy
       if @todo.tasks.pending.any?
-        redirect_to edit_project_todo_path(@project, @todo), alert: "No se puede eliminar el Todo porque tiene tareas pendientes."
+        redirect_to edit_project_todo_path(@project, @todo), alert: "No se puede archivar el Todo porque tiene tareas pendientes."
       else
-        @todo.destroy
-        redirect_to project_todos_path(@project), notice: "Todo eliminado correctamente."
+        @todo.update(archived: true)
+        redirect_to project_todos_path(@project), notice: "Todo archivado correctamente."
       end
     end
 
