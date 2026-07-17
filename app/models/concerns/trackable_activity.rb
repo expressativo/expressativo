@@ -56,6 +56,7 @@ module TrackableActivity
   def get_project
     return project if respond_to?(:project)
     return todo.project if respond_to?(:todo) && todo.present?
+    return commentable.project if respond_to?(:commentable) && commentable.respond_to?(:project) && commentable.present?
     return task.todo.project if respond_to?(:task) && task.present?
     return announcement.project if respond_to?(:announcement) && announcement.present?
     nil

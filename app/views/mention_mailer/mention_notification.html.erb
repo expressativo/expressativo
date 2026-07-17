@@ -21,8 +21,8 @@
 
                 <p style="margin: 0 0 12px;">
                   <strong><%= @mentioned_by.full_name.presence || @mentioned_by.email %></strong>
-                  te mencionó en un comentario de la tarea
-                  <strong>"<%= @task.title %>"</strong>.
+                  te mencionó en un comentario del <%= commentable_label(@commentable) %>
+                  <strong>"<%= commentable_title(@commentable) %>"</strong>.
                 </p>
 
                 <div style="background-color: #ffffff; padding: 16px; border-left: 4px solid #4F46E5; margin: 16px 0; color: #1f2937;">
@@ -30,8 +30,8 @@
                 </div>
 
                 <%= render "shared/mail_button",
-                    url: project_todo_task_url(@project, @task.todo, @task),
-                    label: "Ver tarea completa" %>
+                    url: commentable_url(@commentable),
+                    label: commentable_button_label(@commentable) %>
 
                 <p style="text-align: center; color: #6b7280; font-size: 12px; margin: 24px 0 0;">
                   Este es un correo automático de Expressativo.<br>

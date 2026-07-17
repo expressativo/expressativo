@@ -10,7 +10,10 @@ class CommentMention < ApplicationRecord
 
   def dispatch_notification
     return unless user&.email.present?
-    return unless comment&.task&.todo&.project.present?
+    return unless comment&.commentable.present?
+
+    commentable = comment.commentable
+    project = commentable.respond_to?(:project) ? commentable.project : commentable.todo.project
 
     NotificationDispatcher.call(
       user: user,
@@ -18,8 +21,9 @@ class CommentMention < ApplicationRecord
       notification_type: "mention",
       metadata: {
         comment_id: comment.id,
-        task_id: comment.task.id,
-        task_title: comment.task.title,
+        commentable_type: commentable.class.name,
+        commentable_id: commentable.id,
+        commentable_title: commentable_title(commentable),
         mentioned_by: comment.user.full_name.presence || comment.user.email,
         comment_preview: comment.content.to_plain_text.truncate(100)
       },
@@ -27,5 +31,9 @@ class CommentMention < ApplicationRecord
       mailer_method: :mention_notification,
       mailer_args: [user, comment]
     )
+  end
+
+  def commentable_title(commentable)
+    commentable.respond_to?(:title) ? commentable.title : commentable.name
   end
 end

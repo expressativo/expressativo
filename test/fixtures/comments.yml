@@ -2,10 +2,10 @@
 
 one:
   content: MyText
-  task: one
+  commentable: one (Task)
   user: one
 
 two:
   content: MyText
-  task: two
+  commentable: two (Task)
   user: two

@@ -7,6 +7,7 @@ class Document < ApplicationRecord
   belongs_to :created_by, class_name: "User"
   has_one_attached :file
   has_rich_text :body
+  has_many :comments, as: :commentable, dependent: :destroy
 
   # Enums
   enum :status, {

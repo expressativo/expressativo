@@ -137,7 +137,10 @@ Rails.application.routes.draw do
       patch :unpublish
       patch :publish_public
       patch :unpublish_public
+      post :add_comment
+      get :search_members
     end
+    resources :comments, only: %i[edit update destroy]
   end
 
   # Acceso público de solo lectura a documentos compartidos

@@ -1,5 +1,5 @@
 <%= turbo_stream.replace dom_id(@comment) do %>
-  <%= render 'comments/comment', comment: @comment, project: @project, todo: @todo, task: @task %>
+  <%= render partial: "comments/comment", locals: { comment: @comment, commentable: @commentable } %>
 <% end %>
 
 <%= turbo_stream.append "toasts" do %>

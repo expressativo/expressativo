@@ -44,10 +44,10 @@
         </div>
 
         <div class="mb-4">
-          <%= render 'tasks/comments/form' %>
+          <%= render partial: "comments/new_form", locals: { commentable: @task } %>
         </div>
 
-        <%= render 'tasks/comments/list' %>
+        <%= render partial: "comments/list", locals: { commentable: @task, comments: @task.comments.includes(:user).order(created_at: :desc) } %>
 
         <%= render "shared/create_task_modal",
               modal_title: "Crear tarea desde selección",

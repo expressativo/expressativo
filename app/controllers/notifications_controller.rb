@@ -22,19 +22,29 @@ class NotificationsController < ApplicationController
   end
 
   def show
-    @notification = current_user.notifications.includes(notifiable: { task: { todo: :project } }).find(params[:id])
+    @notification = current_user.notifications.find(params[:id])
     @notification.mark_as_read!
 
     # Redirigir según el tipo de notificación
     case @notification.notifiable_type
     when "Comment"
       comment = @notification.notifiable
-      redirect_to project_todo_task_path(
-        comment.task.todo.project,
-        comment.task.todo,
-        comment.task,
-        anchor: "comment_#{comment.id}"
-      )
+      commentable = comment.commentable
+      redirect_path =
+        case commentable
+        when Task
+          project_todo_task_path(
+            commentable.todo.project,
+            commentable.todo,
+            commentable,
+            anchor: "comment_#{comment.id}"
+          )
+        when Document
+          document_path(commentable, anchor: "comments")
+        else
+          notifications_path
+        end
+      redirect_to redirect_path
     when "Message"
       message = @notification.notifiable
       msgable = message.messageable

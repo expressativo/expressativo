@@ -19,7 +19,7 @@
           </svg>
           <span class="font-semibold text-gray-900"><%= meta['mentioned_by'] %></span>
           <span class="text-gray-600">te mencionó en</span>
-          <span class="font-medium text-gray-900"><%= meta['task_title'] %></span>
+          <span class="font-medium text-gray-900"><%= meta['commentable_title'] || meta['task_title'] %></span>
         </div>
         <% if meta['comment_preview'].present? %>
           <p class="text-sm text-gray-600 ml-7 truncate">"<%= meta['comment_preview'] %>"</p>

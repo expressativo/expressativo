@@ -71,6 +71,7 @@ class PushNotificationService
   def notification_body
     @notification.metadata["preview"] ||
       @notification.metadata["comment_preview"] ||
+      @notification.metadata["commentable_title"] ||
       @notification.metadata["task_title"] ||
       "Tienes una nueva notificación en Tivo"
   end
@@ -81,8 +82,15 @@ class PushNotificationService
 
     case @notification.notification_type
     when "mention"
-      task = notifiable.task
-      Rails.application.routes.url_helpers.project_todo_task_path(task.todo.project, task.todo, task)
+      commentable = notifiable.commentable
+      case commentable
+      when Task
+        Rails.application.routes.url_helpers.project_todo_task_path(commentable.todo.project, commentable.todo, commentable)
+      when Document
+        Rails.application.routes.url_helpers.document_path(commentable)
+      else
+        "/notifications"
+      end
     when "chat_mention"
       msgable = notifiable.messageable
       project = notifiable.project

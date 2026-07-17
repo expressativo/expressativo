@@ -1,3 +1,5 @@
+<%# Comment card (display). Requires locals: comment, commentable %>
+<% commentable ||= @commentable %>
 <%= turbo_frame_tag dom_id(comment) do %>
   <div id="comment_<%= comment.id %>" class="bg-white p-4 border-b border-gray-300">
     <div class="flex justify-between items-start">
@@ -16,7 +18,7 @@
         </div>
         <% if comment.user == current_user %>
           <div class="flex items-center gap-1">
-            <%= link_to edit_project_todo_task_comment_path(@project, @todo, @task, comment), 
+            <%= link_to comment_edit_path(comment, commentable: commentable),
                 class: "p-1 text-gray-600 hover:text-indigo-600 transition-colors",
                 title: "Editar",
                 data: { turbo_frame: dom_id(comment) } do %>
@@ -24,11 +26,11 @@
                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
               </svg>
             <% end %>
-            <%= button_to project_todo_task_comment_path(@project, @todo, @task, comment),
+            <%= button_to comment_delete_path(comment, commentable: commentable),
                 method: :delete,
                 class: "p-1 text-gray-600 hover:text-red-600 transition-colors",
                 title: "Eliminar",
-                data: { 
+                data: {
                   turbo_confirm: "¿Estás seguro de que deseas eliminar este comentario?"
                 } do %>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

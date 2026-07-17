@@ -1,9 +1,9 @@
 class DocumentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public ]
+  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members ]
   before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
-  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public]
+  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members]
   before_action -> { require_non_viewer!(@project) }
   before_action :authorize_status_change!, only: %i[archive unarchive publish unpublish publish_public unpublish_public]
 
@@ -15,6 +15,7 @@ class DocumentsController < ApplicationController
 
   # GET /documents/1 or /documents/1.json
   def show
+    @comments = @document.comments.includes(:user).order(created_at: :desc)
   end
 
   # GET /documents/new
@@ -147,6 +148,27 @@ class DocumentsController < ApplicationController
                          .order(updated_at: :desc)
   end
 
+  def add_comment
+    @comment = @document.comments.new(comment_params)
+    @comment.user = current_user
+    if @comment.save
+      redirect_to document_path(@document, anchor: "comments"), notice: "Comentario agregado correctamente."
+    else
+      redirect_to document_path(@document, anchor: "comments"), alert: "No se pudo agregar el comentario."
+    end
+  end
+
+  def search_members
+    query = params[:filter].to_s.downcase
+
+    users = @project.users.where(
+      "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(email) LIKE ?",
+      "%#{query}%", "%#{query}%", "%#{query}%"
+    ).limit(8)
+
+    render partial: "tasks/mention_prompt_items", locals: { users: users }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_document
@@ -167,6 +189,10 @@ class DocumentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def document_params
       params.require(:document).permit(:name, :body, :file, :document_type)
+    end
+
+    def comment_params
+      params.require(:comment).permit(:content)
     end
 
     def set_project_from_document

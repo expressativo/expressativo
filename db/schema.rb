@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_15_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_17_000001) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -146,11 +146,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_15_000000) do
 
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
-    t.bigint "task_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["task_id"], name: "index_comments_on_task_id"
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
@@ -449,7 +450,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_15_000000) do
   add_foreign_key "columns", "boards"
   add_foreign_key "comment_mentions", "comments"
   add_foreign_key "comment_mentions", "users"
-  add_foreign_key "comments", "tasks"
   add_foreign_key "comments", "users"
   add_foreign_key "conversation_participants", "conversations"
   add_foreign_key "conversation_participants", "users"

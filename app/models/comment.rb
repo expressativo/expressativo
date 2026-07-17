@@ -1,7 +1,7 @@
 class Comment < ApplicationRecord
   include TrackableActivity
 
-  belongs_to :task
+  belongs_to :commentable, polymorphic: true
   belongs_to :user
   has_many :comment_mentions, dependent: :destroy
   has_many :mentioned_users, through: :comment_mentions, source: :user
@@ -15,13 +15,13 @@ class Comment < ApplicationRecord
   private
 
   def get_project
-    task.todo.project
+    commentable.respond_to?(:project) ? commentable.project : commentable.todo.project
   end
 
   def process_mentions
     return unless content.present?
 
-    project = task.todo.project
+    project = get_project
     plain_content = content.to_plain_text
 
     mentioned_users = Chat::MentionParser.call(plain_content, project: project)

@@ -7,7 +7,7 @@ class Task < ApplicationRecord
   belongs_to :created_by, class_name: "User"
   belongs_to :column, optional: true
   has_rich_text :notes
-  has_many :comments, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   has_one :publication, dependent: :destroy
   has_many :task_assignments, dependent: :destroy
   has_many :assigned_users, through: :task_assignments, source: :user
