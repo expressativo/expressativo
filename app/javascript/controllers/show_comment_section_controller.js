@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   connect() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.editorReconnected = false;
     document.addEventListener("keydown", this.handleKeyDown);
   }
 
@@ -40,7 +41,20 @@ export default class extends Controller {
     // Si el formulario se está mostrando, enfocar el editor
     if (!form.classList.contains("hidden")) {
       const editor = form.querySelector("lexxy-editor");
-      if (editor) editor.focus();
+      if (!editor) return;
+
+      if (!this.editorReconnected) {
+        // El editor se inicializó estando oculto (display:none), lo que deja la
+        // selección interna de Lexical en un estado inconsistente: al escribir,
+        // el texto queda abajo y aparecen líneas vacías arriba. Forzar el reconnect
+        // del editor ya visible lo re-inicializa correctamente. El prompt de
+        // menciones se re-engancha solo al escribir "@" (mention_form_controller).
+        editor.removeAttribute("connected");
+        this.editorReconnected = true;
+        requestAnimationFrame(() => requestAnimationFrame(() => editor.focus()));
+      } else {
+        editor.focus();
+      }
     }
   }
 }
