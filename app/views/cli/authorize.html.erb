@@ -63,12 +63,13 @@
               code_challenge_method: @code_challenge_method
             },
             class: "w-full button justify-center",
-            data: { turbo_submits_with: "Autorizando…" } %>
+            data: { turbo: false, turbo_submits_with: "Autorizando…" } %>
 
       <%= button_to "Cancelar",
             cli_deny_path,
             method: :post,
-            class: "w-full button-outline justify-center mt-2" %>
+            class: "w-full button-outline justify-center mt-2",
+            data: { turbo: false } %>
 
       <p class="text-xs text-gray-400 text-center mt-5">
         Si no reconocés esta solicitud, cerrá esta pestaña.
