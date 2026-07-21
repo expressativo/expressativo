@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_17_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_20_000001) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -121,6 +121,34 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_17_000001) do
     t.index ["project_id", "name"], name: "index_channels_on_project_id_and_name", unique: true
     t.index ["project_id", "slug"], name: "index_channels_on_project_id_and_slug", unique: true
     t.index ["project_id"], name: "index_channels_on_project_id"
+  end
+
+  create_table "cli_access_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token_digest", null: false
+    t.string "name", null: false
+    t.string "scopes", default: "read write", null: false
+    t.datetime "last_used_at"
+    t.datetime "expires_at"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token_digest"], name: "index_cli_access_tokens_on_token_digest", unique: true
+    t.index ["user_id"], name: "index_cli_access_tokens_on_user_id"
+  end
+
+  create_table "cli_authorization_codes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "code_digest", null: false
+    t.string "redirect_uri", null: false
+    t.string "code_challenge"
+    t.string "code_challenge_method"
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code_digest"], name: "index_cli_authorization_codes_on_code_digest", unique: true
+    t.index ["expires_at"], name: "index_cli_authorization_codes_on_expires_at"
+    t.index ["user_id"], name: "index_cli_authorization_codes_on_user_id"
   end
 
   create_table "columns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -447,6 +475,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_17_000001) do
   add_foreign_key "channel_memberships", "users"
   add_foreign_key "channels", "projects"
   add_foreign_key "channels", "users", column: "created_by_id"
+  add_foreign_key "cli_access_tokens", "users"
+  add_foreign_key "cli_authorization_codes", "users"
   add_foreign_key "columns", "boards"
   add_foreign_key "comment_mentions", "comments"
   add_foreign_key "comment_mentions", "users"

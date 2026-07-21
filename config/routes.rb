@@ -4,6 +4,31 @@ Rails.application.routes.draw do
   # Perfil de usuario
   resource :profile, only: [ :show, :edit, :update ]
 
+  # === CLI OAuth-like flow ===
+  get  "cli/authorize", to: "cli#authorize", as: :cli_authorize
+  post "cli/grant",     to: "cli#grant",     as: :cli_grant
+  post "cli/deny",      to: "cli#deny",      as: :cli_deny
+
+  # === API v1 (para la CLI y futuros clientes) ===
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      # Intercambio de código de autorización por access token (sin auth previa)
+      resource :cli_token, only: [ :create ], controller: "cli_token"
+
+      resource :me, only: [ :show ], controller: "me"
+
+      resources :projects, only: [ :index, :show ] do
+        resources :todos, only: [ :index ]
+      end
+
+      resources :todos, only: [] do
+        resources :tasks, only: [ :index, :create ]
+      end
+
+      resources :tasks, only: [ :show, :update, :destroy ]
+    end
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
