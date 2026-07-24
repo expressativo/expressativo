@@ -1,9 +1,9 @@
 class DocumentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_document, only: %i[ show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members ]
+  before_action :set_document, only: %i[ show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members ]
   before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
-  before_action :set_project_from_document, only: %i[show edit update destroy download duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members]
+  before_action :set_project_from_document, only: %i[show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members]
   before_action -> { require_non_viewer!(@project) }
   before_action :authorize_status_change!, only: %i[archive unarchive publish unpublish publish_public unpublish_public]
 
@@ -78,6 +78,24 @@ class DocumentsController < ApplicationController
     else
       redirect_to @document, alert: "No file attached to this document."
     end
+  end
+
+  def export_pdf
+    kind = helpers.document_kind(@document)
+
+    if kind == :pdf
+      send_data @document.file.download, filename: "#{@document.name.parameterize}.pdf", type: "application/pdf", disposition: "attachment"
+      return
+    end
+
+    unless kind == :rich_text
+      redirect_to @document, alert: "Este tipo de documento no se puede exportar a PDF." and return
+    end
+
+    html = render_to_string(template: "documents/pdf", layout: "pdf", formats: [ :html ])
+    html = html.gsub(/(src|href)="\/(?!\/)/, "\\1=\"#{request.base_url}/")
+    pdf_data = DocumentPdfExporter.call(html)
+    send_data pdf_data, filename: "#{@document.name.parameterize}.pdf", type: "application/pdf", disposition: "attachment"
   end
 
   def duplicate

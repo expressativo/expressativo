@@ -160,6 +160,7 @@ Rails.application.routes.draw do
   resources :documents, only: %i[show edit update destroy] do
     member do
       get :download
+      get :export_pdf
       post :duplicate
       patch :archive
       patch :unarchive
