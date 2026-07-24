@@ -61,6 +61,11 @@ Rails.application.routes.draw do
             get :search
           end
         end
+        resources :task_documents, only: [ :create, :destroy ] do
+          collection do
+            get :search
+          end
+        end
         resources :comments, only: [ :edit, :update, :destroy ]
         resources :custom_field_values, controller: "task_custom_field_values", only: [ :update ]
       end
@@ -166,6 +171,11 @@ Rails.application.routes.draw do
       get :search_members
     end
     resources :comments, only: %i[edit update destroy]
+    resources :document_tasks, only: [ :create, :destroy ] do
+      collection do
+        get :search
+      end
+    end
   end
 
   # Acceso público de solo lectura a documentos compartidos

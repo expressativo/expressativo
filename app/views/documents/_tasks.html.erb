@@ -1,0 +1,63 @@
+<div
+  data-controller="document-task"
+  data-document-task-search-url-value="<%= search_document_document_tasks_path(document) %>"
+  data-document-task-link-url-value="<%= document_document_tasks_path(document) %>"
+  data-document-task-unlink-base-url-value="<%= document_document_tasks_path(document) %>"
+  class="space-y-3"
+>
+  <!-- Lista de tareas enlazadas -->
+  <div data-document-task-target="linkedList" class="space-y-2">
+    <% document.tasks.each do |task| %>
+      <div class="flex items-center justify-between gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg" data-task-id="<%= task.id %>">
+        <%= link_to project_todo_task_path(document.project, task.todo, task), class: "flex items-center gap-2 min-w-0 text-sm text-gray-800 hover:text-purple-600 truncate" do %>
+          <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+          <span class="truncate"><%= task.title %></span>
+        <% end %>
+
+        <%= link_to document_document_task_path(document, task.id),
+                  method: :delete,
+                  data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "¿Desenlazar esta tarea de este documento?"
+                  },
+                  class: "flex-shrink-0 text-red-600 hover:text-red-800" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Buscador de tareas -->
+  <div class="relative">
+    <div class="relative">
+      <input
+        type="text"
+        data-document-task-target="input"
+        data-action="input->document-task#search blur->document-task#hideResults"
+        placeholder="Buscar tareas del proyecto..."
+        class="input"
+      />
+      <svg class="absolute right-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+    </div>
+
+    <% if document.tasks.empty? %>
+      <span data-document-task-target="emptyState" class="text-xs text-gray-500 italic">
+        No hay tareas enlazadas a este documento
+      </span>
+    <% end %>
+
+    <!-- Resultados de búsqueda -->
+    <div
+      data-document-task-target="results"
+      class="hidden absolute top-12 z-100 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+    >
+      <!-- Los resultados se insertan aquí dinámicamente -->
+    </div>
+  </div>
+</div>

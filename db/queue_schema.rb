@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_20_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_24_161144) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -404,6 +404,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_000001) do
     t.index ["task_id"], name: "index_task_custom_field_values_on_task_id"
   end
 
+  create_table "task_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "document_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_task_documents_on_document_id"
+    t.index ["task_id", "document_id"], name: "index_task_documents_on_task_id_and_document_id", unique: true
+    t.index ["task_id"], name: "index_task_documents_on_task_id"
+  end
+
   create_table "task_templates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.string "name", null: false
@@ -512,6 +522,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_000001) do
   add_foreign_key "task_assignments", "users"
   add_foreign_key "task_custom_field_values", "project_custom_fields"
   add_foreign_key "task_custom_field_values", "tasks"
+  add_foreign_key "task_documents", "documents"
+  add_foreign_key "task_documents", "tasks"
   add_foreign_key "task_templates", "projects"
   add_foreign_key "tasks", "columns"
   add_foreign_key "tasks", "todos"

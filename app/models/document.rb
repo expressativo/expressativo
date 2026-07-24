@@ -8,6 +8,8 @@ class Document < ApplicationRecord
   has_one_attached :file
   has_rich_text :body
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :task_documents, dependent: :destroy
+  has_many :tasks, through: :task_documents
 
   # Enums
   enum :status, {

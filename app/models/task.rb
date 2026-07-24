@@ -11,6 +11,8 @@ class Task < ApplicationRecord
   has_one :publication, dependent: :destroy
   has_many :task_assignments, dependent: :destroy
   has_many :assigned_users, through: :task_assignments, source: :user
+  has_many :task_documents, dependent: :destroy
+  has_many :documents, through: :task_documents
   has_many :custom_field_values, class_name: "TaskCustomFieldValue", dependent: :destroy
   has_many :custom_fields, through: :custom_field_values, source: :project_custom_field
 
