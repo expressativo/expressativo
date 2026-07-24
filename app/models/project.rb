@@ -7,7 +7,6 @@ class Project < ApplicationRecord
   has_many :folders, dependent: :destroy
   has_many :activities, dependent: :destroy
   has_many :boards, dependent: :destroy
-  has_many :publications, dependent: :destroy
   has_many :channels, dependent: :destroy
   has_many :conversations, dependent: :destroy
   has_many :custom_fields, class_name: "ProjectCustomField", dependent: :destroy
@@ -38,6 +37,10 @@ class Project < ApplicationRecord
 
   def viewer?(user)
     role_for(user) == "viewer"
+  end
+
+  def owner?(user)
+    role_for(user) == "owner"
   end
 
   def regenerate_invitation_token!

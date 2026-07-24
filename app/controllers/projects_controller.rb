@@ -1,5 +1,8 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_project_for_owner_action, only: %i[destroy archive unarchive]
+  before_action :authorize_owner!, only: %i[destroy archive unarchive]
+
   def new
     @project = Project.new
   end
@@ -29,7 +32,7 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.for_user(current_user)
-                      .includes(boards: [], publications: :task, project_users: :user)
+                      .includes(boards: [], project_users: :user)
                       .find(params[:id])
 
     project_tasks = Task.joins(:todo).where(todos: { project_id: @project.id })
@@ -72,19 +75,16 @@ class ProjectsController < ApplicationController
     end
   end
   def destroy
-    @project = Project.for_user(current_user).find(params[:id])
     @project.destroy
     redirect_to projects_path, notice: "Project was successfully destroyed."
   end
 
   def archive
-    @project = Project.for_user(current_user).find(params[:id])
     @project.update(archived: true)
     redirect_to projects_path, notice: "Proyecto archivado correctamente."
   end
 
   def unarchive
-    @project = Project.for_user(current_user).find(params[:id])
     @project.update(archived: false)
     redirect_to projects_path, notice: "Proyecto desarchivado correctamente."
   end
@@ -92,5 +92,15 @@ class ProjectsController < ApplicationController
   private
   def project_params
     params.require(:project).permit(:title, :description, :has_calendar, :has_chat)
+  end
+
+  def set_project_for_owner_action
+    @project = Project.for_user(current_user).find(params[:id])
+  end
+
+  def authorize_owner!
+    return if @project.owner?(current_user)
+
+    redirect_to projects_path, alert: "Solo el owner del proyecto puede realizar esta acción."
   end
 end

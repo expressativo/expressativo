@@ -24,12 +24,14 @@
               <%= project.users.count %> miembro<%= project.users.count != 1 ? 's' : '' %>
             </div>
             
-            <%= button_to "Desarchivar", unarchive_project_path(project),
-                method: :patch,
-                class: "px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors",
-                data: { 
-                  turbo_confirm: "¿Deseas desarchivar este proyecto?" 
-                } %>
+            <% if project.owner?(current_user) %>
+              <%= button_to "Desarchivar", unarchive_project_path(project),
+                  method: :patch,
+                  class: "px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors",
+                  data: {
+                    turbo_confirm: "¿Deseas desarchivar este proyecto?"
+                  } %>
+            <% end %>
           </div>
         </div>
       <% end %>
