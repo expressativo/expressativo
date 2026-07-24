@@ -5,15 +5,6 @@ import html2canvas from "html2canvas";
 // Connects to data-controller="calendar"
 export default class extends Controller {
   static targets = [
-    "modal",
-    "modalTitle",
-    "form",
-    "publicationId",
-    "publicationDate",
-    "titleInput",
-    "descriptionInput",
-    "dateInput",
-    "deleteButton",
     "day",
     "calendar"
   ];
@@ -33,34 +24,34 @@ export default class extends Controller {
 
   initializeSortable() {
     this.sortableInstances = [];
-    
+
     // Inicializar Sortable en cada día del calendario
     this.dayTargets.forEach(dayElement => {
-      const publicationsContainer = dayElement.querySelector('[data-publications-container]');
-      
-      if (publicationsContainer) {
-        const sortable = new Sortable(publicationsContainer, {
-          group: 'publications',
+      const tasksContainer = dayElement.querySelector('[data-publications-container]');
+
+      if (tasksContainer) {
+        const sortable = new Sortable(tasksContainer, {
+          group: 'calendar-tasks',
           animation: 150,
           ghostClass: 'sortable-ghost',
           dragClass: 'sortable-drag',
           handle: '.publication-item',
           onEnd: this.handleDrop.bind(this)
         });
-        
+
         this.sortableInstances.push(sortable);
       }
     });
   }
 
   async handleDrop(event) {
-    const publicationElement = event.item;
-    const publicationId = publicationElement.dataset.publicationId;
+    const taskElement = event.item;
+    const taskId = taskElement.dataset.taskId;
     const newDayElement = event.to.closest('[data-calendar-target="day"]');
     const newDate = newDayElement.dataset.date;
-    
+
     try {
-      const response = await fetch(`/projects/${this.projectId}/publications/${publicationId}/update_date`, {
+      const response = await fetch(`/projects/${this.projectId}/calendar/tasks/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -68,9 +59,9 @@ export default class extends Controller {
         },
         body: JSON.stringify({ new_date: newDate })
       });
-      
+
       const result = await response.json();
-      
+
       if (!result.success) {
         alert('Error: ' + result.errors.join(', '));
         // Recargar para revertir el cambio visual
@@ -78,146 +69,8 @@ export default class extends Controller {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Ocurrió un error al mover la publicación');
+      alert('Ocurrió un error al mover la tarea');
       window.location.reload();
-    }
-  }
-
-  openModal(event) {
-    // Buscar el elemento day más cercano para obtener la fecha
-    const dayElement = event.currentTarget.closest('[data-calendar-target="day"]');
-    const date = dayElement ? dayElement.dataset.date : null;
-    
-    if (!date) return;
-    
-    // Resetear el formulario
-    this.resetForm();
-    
-    // Configurar para nueva publicación
-    this.isEditing = false;
-    this.modalTitleTarget.textContent = "Nueva Publicación";
-    this.publicationDateTarget.value = date;
-    this.dateInputTarget.value = date;
-    this.deleteButtonTarget.classList.add("hidden");
-    
-    // Mostrar modal
-    this.modalTarget.classList.remove("hidden");
-  }
-
-  editPublication(event) {
-    const element = event.currentTarget;
-    const publicationId = element.dataset.publicationId;
-    const title = element.dataset.publicationTitle;
-    const description = element.dataset.publicationDescription;
-    const date = element.dataset.publicationDate;
-    const hasTask = element.dataset.publicationHasTask === "true";
-    const taskId = element.dataset.publicationTaskId;
-    
-    // Si tiene tarea, redirigir al detalle de la tarea
-    if (hasTask && taskId) {
-      window.location.href = element.dataset.taskUrl;
-      return;
-    }
-    
-    // Configurar para edición
-    this.isEditing = true;
-    this.modalTitleTarget.textContent = "Editar Publicación";
-    this.publicationIdTarget.value = publicationId;
-    this.publicationDateTarget.value = date;
-    this.titleInputTarget.value = title;
-    this.descriptionInputTarget.value = description;
-    this.dateInputTarget.value = date;
-    
-    // Mostrar botones de edición
-    this.deleteButtonTarget.classList.remove("hidden");
-    
-    // Mostrar modal
-    this.modalTarget.classList.remove("hidden");
-  }
-
-  closeModal() {
-    this.modalTarget.classList.add("hidden");
-    this.resetForm();
-  }
-
-  resetForm() {
-    this.formTarget.reset();
-    this.publicationIdTarget.value = "";
-    this.isEditing = false;
-  }
-
-  async submitForm(event) {
-    event.preventDefault();
-    
-    const formData = new FormData(this.formTarget);
-    const data = {
-      publication: {
-        title: formData.get("title"),
-        description: formData.get("description"),
-        publication_date: formData.get("publication_date_display")
-      }
-    };
-    
-    try {
-      let url, method;
-      
-      if (this.isEditing) {
-        const publicationId = this.publicationIdTarget.value;
-        url = `/projects/${this.projectId}/publications/${publicationId}`;
-        method = "PATCH";
-      } else {
-        url = `/projects/${this.projectId}/publications`;
-        method = "POST";
-      }
-      
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": this.getCSRFToken()
-        },
-        body: JSON.stringify(data)
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        // Recargar la página para mostrar los cambios
-        window.location.reload();
-      } else {
-        alert("Error: " + result.errors.join(", "));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Ocurrió un error al guardar la publicación");
-    }
-  }
-
-  async deletePublication() {
-    if (!confirm("¿Estás seguro de eliminar esta publicación?")) {
-      return;
-    }
-    
-    const publicationId = this.publicationIdTarget.value;
-    
-    try {
-      const response = await fetch(`/projects/${this.projectId}/publications/${publicationId}`, {
-        method: "DELETE",
-        headers: {
-          "X-CSRF-Token": this.getCSRFToken()
-        }
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        window.location.reload();
-      } else {
-        alert("Error al eliminar la publicación");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Ocurrió un error al eliminar la publicación");
     }
   }
 
@@ -400,27 +253,30 @@ export default class extends Controller {
             
             // Publicaciones
             calendarClone.querySelectorAll('.publication-item').forEach(pub => {
+              const taskCompleted = pub.dataset.publicationTaskCompleted === 'true';
+
               pub.style.cssText = `
-                background-color: #eff6ff;
-                border-left: 2px solid #3b82f6;
+                background-color: ${taskCompleted ? '#f0fdf4' : '#eff6ff'};
+                border-left: 2px solid ${taskCompleted ? '#22c55e' : '#3b82f6'};
                 padding: 0.25rem 0.5rem;
                 font-size: 0.75rem;
                 border-radius: 0.25rem;
                 margin-bottom: 4px;
               `;
-              
+
               // Título de publicación
               const title = pub.querySelector('.publication-item-title');
               if (title) {
                 title.style.cssText = `
                   font-weight: 500;
-                  color: #111827;
+                  color: ${taskCompleted ? '#6b7280' : '#111827'};
+                  text-decoration: ${taskCompleted ? 'line-through' : 'none'};
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
                 `;
               }
-              
+
               // Indicador de tarea
               const taskIndicator = pub.querySelector('.publication-task-indicator');
               if (taskIndicator) {
@@ -428,7 +284,8 @@ export default class extends Controller {
                   display: flex;
                   align-items: center;
                   gap: 0.25rem;
-                  color: #16a34a;
+                  color: ${taskCompleted ? '#15803d' : '#16a34a'};
+                  font-weight: ${taskCompleted ? '600' : '400'};
                   margin-top: 0.25rem;
                   font-size: 0.75rem;
                 `;

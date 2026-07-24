@@ -5,8 +5,8 @@
       back_url = :back
       back_label = "Volver al tablero"
     when 'calendar'
-      publication_date = @task.publication&.publication_date || Date.today
-      back_url = project_publications_path(@project, year: publication_date.year, month: publication_date.month)
+      calendar_date = @task.due_date&.to_date || Date.today
+      back_url = project_calendar_path(@project, year: calendar_date.year, month: calendar_date.month)
       back_label = "Volver al calendario"
     else
       back_url = project_todo_path(@project, @todo)

@@ -8,7 +8,6 @@ class Task < ApplicationRecord
   belongs_to :column, optional: true
   has_rich_text :notes
   has_many :comments, as: :commentable, dependent: :destroy
-  has_one :publication, dependent: :destroy
   has_many :task_assignments, dependent: :destroy
   has_many :assigned_users, through: :task_assignments, source: :user
   has_many :task_documents, dependent: :destroy
@@ -31,7 +30,6 @@ class Task < ApplicationRecord
   before_create :set_default_list_position
   before_save :sync_status_with_column
   before_save :sync_column_with_status
-  after_update :sync_publication
   after_update :notify_due_date_change
 
   def due_date_has_time?
@@ -188,10 +186,6 @@ class Task < ApplicationRecord
       self.column = previous
       self.position = previous.tasks.count
     end
-  end
-
-  def sync_publication
-    publication&.update(title: title, publication_date: due_date, description: notes)
   end
 
   def notify_due_date_change

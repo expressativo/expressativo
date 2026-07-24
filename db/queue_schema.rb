@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_24_161144) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_24_180000) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -327,20 +327,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_24_161144) do
     t.index ["invitation_token"], name: "index_projects_on_invitation_token", unique: true
   end
 
-  create_table "publications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.date "publication_date"
-    t.bigint "project_id", null: false
-    t.bigint "task_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "created_by_id"
-    t.index ["created_by_id"], name: "index_publications_on_created_by_id"
-    t.index ["project_id"], name: "index_publications_on_project_id"
-    t.index ["task_id"], name: "index_publications_on_task_id"
-  end
-
   create_table "push_subscriptions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "endpoint", null: false
@@ -512,9 +498,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_24_161144) do
   add_foreign_key "project_custom_fields", "projects"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
-  add_foreign_key "publications", "projects"
-  add_foreign_key "publications", "tasks"
-  add_foreign_key "publications", "users", column: "created_by_id"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "quick_notes", "users"
   add_foreign_key "sessions", "users"

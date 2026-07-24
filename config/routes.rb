@@ -97,11 +97,9 @@ Rails.application.routes.draw do
       end
     end
 
-    # Calendario de Publicaciones
-    resources :publications do
-      member do
-        patch :update_date
-      end
+    # Calendario (tareas con fecha de vencimiento)
+    resource :calendar, only: [ :show ], controller: "calendar" do
+      patch "tasks/:task_id", action: :update_task_date, as: :update_task_date
     end
 
     # Chat: canales del proyecto

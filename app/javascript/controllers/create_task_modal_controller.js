@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon", "templatePicker", "templateList", "templateId"]
+  static targets = ["menu", "modal", "taskTitle", "todoSelect", "taskNotes", "notesField", "notesToggleIcon", "templatePicker", "templateList", "templateId", "dueDateField", "dueDateInput"]
   static values = {
     projectId: String,
     todos: Array,
@@ -94,7 +94,11 @@ export default class extends Controller {
     })
   }
 
-  openModal({ columnId = "", prefillTitle = "" } = {}) {
+  openFromDay(event) {
+    this.openModal({ dueDate: event.params.dueDate })
+  }
+
+  openModal({ columnId = "", prefillTitle = "", dueDate = "" } = {}) {
     this.hideMenu()
     this.columnIdValue = columnId
 
@@ -110,6 +114,16 @@ export default class extends Controller {
     this.taskTitleTarget.value = prefillTitle
     this.clearTemplate()
     this.renderTemplatePicker()
+
+    if (this.hasDueDateFieldTarget) {
+      if (dueDate) {
+        this.dueDateFieldTarget.hidden = false
+        this.dueDateInputTarget.value = dueDate
+      } else {
+        this.dueDateFieldTarget.hidden = true
+        this.dueDateInputTarget.value = ""
+      }
+    }
 
     this.modalTarget.classList.remove("hidden")
     this.taskTitleTarget.focus()
@@ -195,6 +209,10 @@ export default class extends Controller {
     this.columnListElement = null
     this.columnCountElement = null
     this.clearTemplate()
+    if (this.hasDueDateFieldTarget) {
+      this.dueDateFieldTarget.hidden = true
+      this.dueDateInputTarget.value = ""
+    }
   }
 
   backdropClick(event) {
@@ -221,11 +239,15 @@ export default class extends Controller {
     const url = `/projects/${this.projectIdValue}/todos/${todoId}/tasks`
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content
     const fromBoard = this.columnIdValue !== ""
+    const fromCalendar = this.hasDueDateFieldTarget && !this.dueDateFieldTarget.hidden
 
     const formData = new FormData()
     formData.append("task[title]", title)
     const notes = this.taskNotesTarget.value.trim()
     if (notes) formData.append("task[notes]", notes)
+    if (this.hasDueDateInputTarget && this.dueDateInputTarget.value) {
+      formData.append("task[due_date]", this.dueDateInputTarget.value)
+    }
     if (fromBoard) {
       formData.append("column_id", this.columnIdValue)
       formData.append("from", "board")
@@ -262,6 +284,10 @@ export default class extends Controller {
           this.showToast("Error al crear la tarea", "error")
         }
       } else if (response.ok || response.type === "opaqueredirect") {
+        if (fromCalendar) {
+          window.location.reload()
+          return
+        }
         const todoName = this.todoSelectTarget.options[this.todoSelectTarget.selectedIndex].text
         this.closeModal()
         this.showToast(`Tarea creada en "${todoName}"`)

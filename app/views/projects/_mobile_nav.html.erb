@@ -6,7 +6,7 @@
     { id: :todos,      label: "To-dos",     href: project_todos_path(project) },
     { id: :documents,  label: "Documentos", href: project_documents_path(project) }
   ]
-  items << { id: :publications, label: "Calendario", href: project_publications_path(project) } if project.has_calendar
+  items << { id: :calendar, label: "Calendario", href: project_calendar_path(project) } if project.has_calendar
   items << { id: :announcements, label: "Anuncios",  href: project_announcements_path(project) }
   items << { id: :chat,          label: "Chat",      href: project_channels_path(project) }
   items << { id: :members,       label: "Miembros",  href: project_members_path(project) }
