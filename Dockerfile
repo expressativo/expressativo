@@ -10,8 +10,10 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 # Install base packages needed for both build and runtime
+# chromium: needed by Ferrum to render PDFs (headless Chrome via CDP)
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
+      chromium \
       curl \
       default-mysql-client \
       libvips42 \
