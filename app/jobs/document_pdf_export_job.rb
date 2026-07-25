@@ -5,20 +5,13 @@ class DocumentPdfExportJob < ApplicationJob
   # por ActionCable cuando está listo (o si falla).
   #
   # @param document_id [Integer]
-  # @param user_id [Integer]      usuario que pidió la exportación (destinatario del broadcast)
-  # @param base_url [String]      URL base de la app para resolver assets relativos
-  def perform(document_id, user_id, base_url)
+  # @param user_id [Integer]  usuario que pidió la exportación (destinatario del broadcast)
+  def perform(document_id, user_id)
     document = Document.find_by(id: document_id)
     user = User.find_by(id: user_id)
     return if document.nil? || user.nil?
 
-    html = ApplicationController.render(
-      template: "documents/pdf",
-      layout: "pdf",
-      assigns: { document: document }
-    )
-    html = html.gsub(/(src|href)="\/(?!\/)/, "\\1=\"#{base_url}/")
-    pdf_data = DocumentPdfExporter.call(html)
+    pdf_data = DocumentPdfExporter.call(document)
 
     filename = "#{document.name.parameterize}.pdf"
     document.pdf_export.purge if document.pdf_export.attached?

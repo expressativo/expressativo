@@ -95,7 +95,7 @@ class DocumentsController < ApplicationController
 
     # Rich text: encolar generación en background y responder 202.
     # El job notifica al frontend por ActionCable cuando termina.
-    DocumentPdfExportJob.perform_later(@document.id, current_user.id, request.base_url)
+    DocumentPdfExportJob.perform_later(@document.id, current_user.id)
     head :accepted
   end
 

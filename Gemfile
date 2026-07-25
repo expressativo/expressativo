@@ -43,8 +43,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
-# Exportar documentos a PDF usando Chrome headless (ya presente en el sistema)
-gem "ferrum", "~> 0.15"
+# Exportar documentos (rich_text) a PDF en Ruby puro, sin Chrome headless.
+gem "prawn", "~> 2.5"
+gem "prawn-table", "~> 0.2.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
