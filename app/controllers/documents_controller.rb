@@ -83,6 +83,7 @@ class DocumentsController < ApplicationController
   def export_pdf
     kind = helpers.document_kind(@document)
 
+    # PDF original: descarga directa (GET, navegación normal).
     if kind == :pdf
       send_data @document.file.download, filename: "#{@document.name.parameterize}.pdf", type: "application/pdf", disposition: "attachment"
       return
@@ -92,10 +93,10 @@ class DocumentsController < ApplicationController
       redirect_to @document, alert: "Este tipo de documento no se puede exportar a PDF." and return
     end
 
-    html = render_to_string(template: "documents/pdf", layout: "pdf", formats: [ :html ])
-    html = html.gsub(/(src|href)="\/(?!\/)/, "\\1=\"#{request.base_url}/")
-    pdf_data = DocumentPdfExporter.call(html)
-    send_data pdf_data, filename: "#{@document.name.parameterize}.pdf", type: "application/pdf", disposition: "attachment"
+    # Rich text: encolar generación en background y responder 202.
+    # El job notifica al frontend por ActionCable cuando termina.
+    DocumentPdfExportJob.perform_later(@document.id, current_user.id, request.base_url)
+    head :accepted
   end
 
   def duplicate

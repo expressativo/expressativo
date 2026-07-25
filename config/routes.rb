@@ -159,6 +159,7 @@ Rails.application.routes.draw do
     member do
       get :download
       get :export_pdf
+      post :export_pdf
       post :duplicate
       patch :archive
       patch :unarchive

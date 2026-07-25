@@ -6,6 +6,7 @@ class Document < ApplicationRecord
   belongs_to :folder, optional: true
   belongs_to :created_by, class_name: "User"
   has_one_attached :file
+  has_one_attached :pdf_export
   has_rich_text :body
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :task_documents, dependent: :destroy
