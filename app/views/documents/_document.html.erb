@@ -1,10 +1,14 @@
 <%
   kind = document_kind(document)
   thumb = document_thumbnail_tag(document, size: [ 600, 400 ], class: "w-full h-full object-cover")
+  # Misma variante de imagen, solo con clases distintas para el preview grande
+  thumb_large = document_thumbnail_tag(document, size: [ 600, 400 ], class: "w-full h-auto object-contain max-h-[60vh]")
   ext = document_file_extension(document)
+  rich_text_preview = kind == :rich_text && document.body.present?
 %>
 <article id="<%= dom_id document %>"
          class="drive-document group relative flex flex-col bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-purple-400 hover:shadow-md transition"
+         data-controller="document-preview"
          data-drive-filter-target="item"
          data-name="<%= document.name.to_s.downcase %>">
 
@@ -12,9 +16,12 @@
     <div class="relative aspect-[4/3] bg-gray-50 flex items-center justify-center overflow-hidden border-b border-gray-100">
       <% if thumb %>
         <%= thumb %>
-      <% elsif kind == :rich_text && document.body.present? %>
-        <div class="absolute inset-0 p-3 text-[10px] leading-snug text-gray-500 overflow-hidden">
-          <%= strip_tags(document.body.to_s).truncate(420) %>
+      <% elsif rich_text_preview %>
+        <%# Miniatura con formato: el body renderizado se escala como una página en pequeño %>
+        <div class="absolute inset-0 overflow-hidden bg-white">
+          <div class="w-[285%] origin-top-left scale-[0.35] p-5 pointer-events-none select-none">
+            <%= document.body %>
+          </div>
         </div>
         <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white to-transparent"></div>
       <% else %>
@@ -78,4 +85,27 @@
                     class: "block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50" %>
     </div>
   </div>
+
+  <%# Preview grande al hacer hover: el controller lo mueve a document.body y lo posiciona junto a la tarjeta %>
+  <% if rich_text_preview || thumb %>
+    <div data-document-preview-target="popover"
+         class="hidden opacity-0 scale-95 transition-all duration-150 fixed z-50 w-[26rem] bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden pointer-events-none">
+      <div class="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/60">
+        <%= document_kind_icon(document, css_class: "w-7 h-7") %>
+        <span class="text-sm font-semibold text-gray-900 truncate"><%= document.name %></span>
+      </div>
+      <% if rich_text_preview %>
+        <div class="relative max-h-[60vh] overflow-hidden">
+          <div class="p-5 text-sm text-gray-700">
+            <%= document.body %>
+          </div>
+          <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
+        </div>
+      <% else %>
+        <div class="bg-gray-50 flex items-center justify-center max-h-[60vh] overflow-hidden">
+          <%= thumb_large %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </article>

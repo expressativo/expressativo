@@ -11,7 +11,7 @@
     <div class="min-w-0 flex-1">
       <div class="text-sm font-semibold text-gray-900 truncate"><%= folder.name %></div>
       <div class="text-xs text-gray-500">
-        <%= pluralize(folder.subfolders.count, "carpeta") %> · <%= pluralize(folder.documents.count, "documento") %>
+        <%= pluralize(folder.subfolders.count + folder.documents.count, "elementos") %>
       </div>
     </div>
   <% end %>
