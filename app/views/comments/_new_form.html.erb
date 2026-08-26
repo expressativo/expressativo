@@ -1,6 +1,6 @@
 <%# New comment form with mention support via lexxy-prompt. Requires locals: commentable %>
 <% commentable ||= @commentable %>
-<div class="border border-2 border-gray-200 rounded-lg p-4" data-controller="show-comment-section">
+<div class="border border-2 border-ink rounded-lg p-4" data-controller="show-comment-section">
   <%= form_for :comment, url: comment_create_path(commentable), class: "hidden", method: :post do |f| %>
     <div class="comment" data-controller="mention-form">
       <div class="input-wrapper">

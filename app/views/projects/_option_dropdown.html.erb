@@ -4,25 +4,25 @@
 <button
  data-dropdown-target="button"
  data-action="click->dropdown#toggle"
- class="cursor-pointer p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+ class="cursor-pointer p-1.5 rounded-md border-2 border-transparent hover:border-ink hover:bg-accent text-ink/60 hover:text-ink"
 >
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
 </button>
 
 <!-- Dropdown menu -->
-<div  data-dropdown-target="menu" class="hidden absolute right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-lg border border-gray-200 w-44">
-    <ul class="py-2 text-sm text-gray-700">
+<div  data-dropdown-target="menu" class="dropdown-menu hidden absolute right-0 z-10 divide-y divide-ink/10 w-44">
+    <ul class="py-2">
         <li>
-          <%= link_to "Editar", edit_project_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
+          <%= link_to "Editar", edit_project_path(project), class: "dropdown-menu-item" %>
         </li>
       <li>
-        <%= link_to "Miembros", project_members_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        <%= link_to "Miembros", project_members_path(project), class: "dropdown-menu-item" %>
       </li>
       <li>
-        <%= link_to "Campos personalizados", project_custom_fields_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        <%= link_to "Campos personalizados", project_custom_fields_path(project), class: "dropdown-menu-item" %>
       </li>
       <li>
-        <%= link_to "Templates de tarea", project_task_templates_path(project), class: "block px-4 py-2 hover:bg-gray-100" %>
+        <%= link_to "Templates de tarea", project_task_templates_path(project), class: "dropdown-menu-item" %>
       </li>
       <% if project.owner?(current_user) %>
         <li>
@@ -32,7 +32,7 @@
             data: { turbo_confirm: "¿Estás seguro de que deseas archivar este proyecto?" },
             class: "w-full"
           },
-          class: "block px-4 py-2 hover:bg-gray-100 text-left w-full" %>
+          class: "dropdown-menu-item" %>
         </li>
         <li>
           <%= button_to "Eliminar", project_path(project),
@@ -41,7 +41,7 @@
             data: { turbo_confirm: "¿Estás seguro de que deseas eliminar este proyecto?" },
             class: "w-full"
           },
-          class: "block px-4 py-2 hover:bg-gray-100 text-left w-full text-red-600" %>
+          class: "dropdown-menu-item text-danger hover:bg-danger-light" %>
         </li>
       <% end %>
     </ul>

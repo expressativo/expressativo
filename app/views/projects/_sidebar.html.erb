@@ -31,10 +31,11 @@
 <aside
   data-controller="project-sidebar"
   data-project-sidebar-storage-key-value="project_sidebar_collapsed"
-  class="bg-white border border-gray-200 rounded-2xl flex-shrink-0 self-start sticky top-4 transition-[width] duration-200 ease-out w-60 data-[collapsed=true]:w-16">
+  class="bg-surface border-2 border-ink rounded-xl flex-shrink-0 self-start sticky top-4 transition-[width] duration-200 ease-out w-60 data-[collapsed=true]:w-16"
+>
 
   <div class="px-3 pt-3 pb-1 flex items-center justify-between gap-2 min-w-0">
-    <%= link_to projects_path, class: "inline-flex items-center gap-1 text-xs text-gray-500 hover:text-purple-600 transition-colors min-w-0" do %>
+    <%= link_to projects_path, class: "inline-flex items-center gap-1 text-xs font-bold text-ink/60 hover:text-brand transition-colors min-w-0" do %>
       <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
       </svg>
@@ -43,7 +44,7 @@
     <button
       type="button"
       data-action="click->project-sidebar#toggle"
-      class="p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors flex-shrink-0"
+      class="p-1 rounded-md text-ink/50 hover:text-ink hover:bg-accent transition-colors flex-shrink-0"
       title="Contraer/expandir">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-project-sidebar-target="toggleIcon">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
@@ -51,14 +52,14 @@
     </button>
   </div>
 
-  <div class="px-3 pb-4 pt-2 border-b border-gray-100 flex items-center gap-2 min-w-0">
-    <%= link_to project_path(project), class: "w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0", title: project.title do %>
+  <div class="px-3 pb-4 pt-2 border-b-2 border-ink/10 flex items-center gap-2 min-w-0">
+    <%= link_to project_path(project), class: "w-9 h-9 rounded-lg bg-brand border-2 border-ink flex items-center justify-center text-white text-sm font-display font-bold flex-shrink-0", title: project.title do %>
       <%= project.title.to_s.first(2).upcase %>
     <% end %>
     <div class="min-w-0 flex-1" data-project-sidebar-target="label">
-      <%= link_to project.title, project_path(project), class: "block text-sm font-semibold text-gray-900 truncate hover:text-purple-600 transition-colors", title: project.title %>
+      <%= link_to project.title, project_path(project), class: "block text-sm font-display font-bold text-ink truncate hover:text-brand transition-colors", title: project.title %>
       <% if project.archived %>
-        <span class="text-[10px] font-medium px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded">Archivado</span>
+        <span class="text-[10px] font-bold px-1.5 py-0.5 bg-warning text-ink rounded border border-ink">Archivado</span>
       <% end %>
     </div>
   </div>
@@ -68,8 +69,8 @@
       <% is_active = item[:id] == active %>
       <%= link_to item[:href],
             title: item[:label],
-            class: "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors #{is_active ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
-        <svg class="w-5 h-5 flex-shrink-0 <%= 'text-purple-600' if is_active %>" fill="none" stroke="currentColor" viewBox="0 0 24 24"><%= item[:icon].html_safe %></svg>
+            class: "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-bold transition-colors border-2 #{is_active ? 'bg-brand-light text-brand-dark border-ink' : 'text-ink/70 border-transparent hover:bg-accent/30 hover:text-ink hover:border-ink'}" do %>
+        <svg class="w-5 h-5 flex-shrink-0 <%= 'text-brand-dark' if is_active %>" fill="none" stroke="currentColor" viewBox="0 0 24 24"><%= item[:icon].html_safe %></svg>
         <span class="truncate" data-project-sidebar-target="label"><%= item[:label] %></span>
       <% end %>
     <% end %>

@@ -5,10 +5,10 @@
   <div class="max-w-md w-full">
     <!-- Logo/Header -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">
-        <span class="text-blue-600">Ti</span>vo
+      <h1 class="text-3xl font-bold text-ink mb-2">
+        <span class="text-info">Ti</span>vo
       </h1>
-      <p class="text-gray-600">Crea tu cuenta gratuita</p>
+      <p class="text-ink/70">Crea tu cuenta gratuita</p>
     </div>
 
     <!-- Registration Card -->
@@ -26,7 +26,7 @@
         <div class="field">
           <%= f.label :password, class: 'label' %>
           <% if @minimum_password_length %>
-            <em class="text-xs text-gray-500">(<%= @minimum_password_length %> caracteres mínimo)</em>
+            <em class="text-xs text-ink/50">(<%= @minimum_password_length %> caracteres mínimo)</em>
           <% end %>
           <%= f.password_field :password, autocomplete: "new-password", class:"input", placeholder: "Crea una contraseña segura" %>
         </div>
@@ -49,17 +49,17 @@
 
     <!-- Footer Info -->
     <div class="text-center mt-6">
-      <p class="text-sm text-gray-500">
+      <p class="text-sm text-ink/50">
         ¿Ya tienes cuenta? 
-        <%= link_to "Inicia sesión", new_session_path(resource_name), class: "text-blue-600 hover:text-blue-700 font-medium" %>
+        <%= link_to "Inicia sesión", new_session_path(resource_name), class: "text-info hover:text-info font-medium" %>
       </p>
     </div>
 
     <!-- Benefits -->
     <div class="mt-8 text-center">
-      <div class="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
-        <h3 class="font-semibold text-gray-900 mb-2">Comienza gratis</h3>
-        <ul class="text-sm text-gray-600 space-y-1">
+      <div class="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-ink">
+        <h3 class="font-semibold text-ink mb-2">Comienza gratis</h3>
+        <ul class="text-sm text-ink/70 space-y-1">
           <li>✓ Sin tarjeta de crédito</li>
           <li>✓ Configuración en 2 minutos</li>
           <li>✓ Acceso a todas las funciones</li>

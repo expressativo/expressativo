@@ -6,7 +6,7 @@
         <%= f.text_area :content,
               placeholder: "Nueva nota...",
               rows: 2,
-              class: "w-full text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent transition",
+              class: "textarea",
               data: { quick_note_form_target: "input", action: "keydown->quick-note-form#handleKey" } %>
         <!-- Selector de color y botón submit -->
         <div data-quick-note-form-target="controls" class="hidden mt-2 flex items-center justify-between">
@@ -17,7 +17,7 @@
                       checked: i == 0,
                       class: "sr-only" %>
                 <span class="block w-4 h-4 rounded-full border-2 transition-all
-                  <%= i == 0 ? 'border-gray-500 scale-110' : 'border-transparent hover:border-gray-300' %>
+                  <%= i == 0 ? 'border-ink scale-110' : 'border-transparent hover:border-ink/40' %>
                   <%= { 'yellow' => 'bg-amber-400', 'pink' => 'bg-pink-400', 'blue' => 'bg-blue-400', 'green' => 'bg-green-400' }[c] %>"
                      data-action="click->quick-note-form#selectColor"
                      data-color="<%= c %>">
@@ -25,8 +25,7 @@
               </label>
             <% end %>
           </div>
-          <%= f.submit "Agregar",
-                class: "text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-1 rounded-lg cursor-pointer font-medium transition-colors" %>
+          <%= f.submit "Agregar", class: "button text-xs px-3 py-1" %>
         </div>
       </div>
     </div>

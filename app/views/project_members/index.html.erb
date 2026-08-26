@@ -3,50 +3,50 @@
 <%= render layout: 'projects/layout', locals: { project: @project, active: :members } do %>
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <div class="lg:col-span-2 space-y-4">
-      <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-        <header class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-100">
+      <section class="bg-surface border-2 border-ink rounded-xl overflow-hidden">
+        <header class="flex items-center justify-between gap-4 px-6 py-4 border-b-2 border-ink/10">
           <div class="flex items-center gap-2 min-w-0">
-            <span class="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="w-9 h-9 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
             </span>
-            <h2 class="text-lg font-semibold text-gray-900 truncate">Equipo del proyecto</h2>
-            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+            <h2 class="text-lg font-semibold text-ink truncate">Equipo del proyecto</h2>
+            <span class="text-xs font-medium text-ink/50 bg-accent/30 px-2 py-0.5 rounded-full">
               <%= (@owner ? 1 : 0) + @members.size %>
             </span>
           </div>
         </header>
 
-        <ul class="divide-y divide-gray-100">
+        <ul class="divide-y-2 divide-ink/10">
           <% if @owner %>
             <li class="flex items-center justify-between gap-4 px-6 py-4">
               <div class="flex items-center gap-3 min-w-0">
                 <%= user_avatar(@owner) %>
                 <div class="min-w-0">
                   <div class="flex items-center gap-2">
-                    <h3 class="text-sm font-semibold text-gray-900 truncate">
+                    <h3 class="text-sm font-semibold text-ink truncate">
                       <%= [@owner.first_name, @owner.last_name].compact.join(' ').presence || @owner.email %>
                     </h3>
-                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-purple-100 text-purple-700 rounded">
+                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-brand-light text-brand-dark rounded">
                       Propietario
                     </span>
                   </div>
-                  <p class="text-xs text-gray-500 truncate"><%= @owner.email %></p>
+                  <p class="text-xs text-ink/50 truncate"><%= @owner.email %></p>
                 </div>
               </div>
             </li>
           <% end %>
 
           <% @members.each do |project_user| %>
-            <li class="flex items-center justify-between gap-4 px-6 py-4 group hover:bg-gray-50 transition-colors">
+            <li class="flex items-center justify-between gap-4 px-6 py-4 group hover:bg-accent/20 transition-colors">
               <div class="flex items-center gap-3 min-w-0">
                 <%= user_avatar(project_user.user) %>
                 <div class="min-w-0">
-                  <h3 class="text-sm font-semibold text-gray-900 truncate">
+                  <h3 class="text-sm font-semibold text-ink truncate">
                     <%= [project_user.user.first_name, project_user.user.last_name].compact.join(' ').presence || project_user.user.email %>
                   </h3>
-                  <p class="text-xs text-gray-500 truncate"><%= project_user.user.email %></p>
+                  <p class="text-xs text-ink/50 truncate"><%= project_user.user.email %></p>
                 </div>
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
@@ -54,13 +54,13 @@
                   <%= f.select :role,
                       [["Miembro", "member"], ["Observador", "viewer"]],
                       { selected: project_user.role },
-                      class: "text-xs px-2 py-1 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer",
+                      class: "input text-xs px-2 py-1 cursor-pointer",
                       onchange: "this.form.requestSubmit()" %>
                 <% end %>
                 <%= button_to project_member_path(@project, project_user),
                               method: :delete,
                               form: { data: { turbo_confirm: "¿Eliminar este miembro del proyecto?" } },
-                              class: "opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-red-600 hover:bg-red-50 transition cursor-pointer",
+                              class: "opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-danger hover:bg-danger-light transition cursor-pointer",
                               title: "Quitar del proyecto" do %>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
@@ -71,7 +71,7 @@
           <% end %>
 
           <% if @members.empty? && @owner.nil? %>
-            <li class="text-center py-12 text-gray-500">
+            <li class="text-center py-12 text-ink/50">
               <p>No hay miembros en este proyecto todavía.</p>
             </li>
           <% end %>
@@ -80,16 +80,16 @@
     </div>
 
     <div class="space-y-4">
-      <section class="bg-white border border-gray-200 rounded-2xl p-5" data-controller="clipboard">
+      <section class="bg-surface border-2 border-ink rounded-xl p-5" data-controller="clipboard">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="w-8 h-8 rounded-lg bg-info-light flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
             </svg>
           </span>
-          <h3 class="text-base font-semibold text-gray-900">Link de invitación</h3>
+          <h3 class="text-base font-semibold text-ink">Link de invitación</h3>
         </div>
-        <p class="text-xs text-gray-500 mb-3">
+        <p class="text-xs text-ink/50 mb-3">
           Compártelo para que cualquier persona pueda unirse al proyecto.
         </p>
 
@@ -98,12 +98,12 @@
                  readonly
                  value="<%= project_invitation_url(token: @project.invitation_token) %>"
                  data-clipboard-target="source"
-                 class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                 class="input text-xs" />
 
           <div class="flex gap-2">
             <button data-clipboard-target="button"
                     data-action="click->clipboard#copy"
-                    class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors cursor-pointer">
+                    class="button flex-1 text-sm px-3 py-1.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
               </svg>
@@ -113,7 +113,7 @@
               <%= button_to regenerate_invitation_project_path(@project),
                             method: :post,
                             form: { data: { turbo_confirm: "¿Regenerar el link? El anterior dejará de funcionar." } },
-                            class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer",
+                            class: "button-outline text-sm px-3 py-1.5",
                             title: "Regenerar link" do %>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -123,21 +123,21 @@
           </div>
         </div>
 
-        <p class="text-[11px] text-gray-400 mt-3">
+        <p class="text-[11px] text-ink/40 mt-3">
           Cualquier persona con este link podrá unirse al proyecto.
         </p>
       </section>
 
-      <section class="bg-white border border-gray-200 rounded-2xl p-5">
+      <section class="bg-surface border-2 border-ink rounded-xl p-5">
         <div class="flex items-center gap-2 mb-3">
-          <span class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
           </span>
-          <h3 class="text-base font-semibold text-gray-900">Invitar por email</h3>
+          <h3 class="text-base font-semibold text-ink">Invitar por email</h3>
         </div>
-        <p class="text-xs text-gray-500 mb-3">
+        <p class="text-xs text-ink/50 mb-3">
           Envía la invitación directamente al correo de la persona.
         </p>
 
@@ -146,28 +146,27 @@
               required: true,
               placeholder: "nombre@empresa.com",
               autocomplete: "off",
-              class: "w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" %>
+              class: "input" %>
           <div class="space-y-1.5">
-            <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 hover:border-purple-300 cursor-pointer has-[:checked]:border-purple-500 has-[:checked]:bg-purple-50 transition-colors">
-              <input type="radio" name="role" value="member" checked class="accent-purple-600">
+            <label class="flex items-center gap-2 p-2 rounded-lg border-2 border-ink cursor-pointer has-[:checked]:bg-brand-light transition-colors">
+              <input type="radio" name="role" value="member" checked class="accent-brand">
               <div>
-                <div class="text-xs font-semibold text-gray-900">Miembro</div>
-                <div class="text-[11px] text-gray-500">Acceso completo al proyecto</div>
+                <div class="text-xs font-bold text-ink">Miembro</div>
+                <div class="text-[11px] text-ink/50">Acceso completo al proyecto</div>
               </div>
             </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 hover:border-amber-300 cursor-pointer has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 transition-colors">
-              <input type="radio" name="role" value="viewer" class="accent-amber-600">
+            <label class="flex items-center gap-2 p-2 rounded-lg border-2 border-ink cursor-pointer has-[:checked]:bg-warning/40 transition-colors">
+              <input type="radio" name="role" value="viewer" class="accent-warning">
               <div>
-                <div class="text-xs font-semibold text-gray-900">Observador</div>
-                <div class="text-[11px] text-gray-500">Solo ve sus tareas asignadas</div>
+                <div class="text-xs font-bold text-ink">Observador</div>
+                <div class="text-[11px] text-ink/50">Solo ve sus tareas asignadas</div>
               </div>
             </label>
           </div>
-          <%= f.submit "Enviar invitación",
-              class: "w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors cursor-pointer" %>
+          <%= f.submit "Enviar invitación", class: "button w-full" %>
         <% end %>
 
-        <p class="text-[11px] text-gray-400 mt-3">
+        <p class="text-[11px] text-ink/40 mt-3">
           Recibirá un correo con el link de invitación.
         </p>
       </section>

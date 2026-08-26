@@ -2,22 +2,22 @@
 
 <div class="max-w-4xl mx-auto">
   <!-- Header con avatar grande -->
-  <div class="rounded-t-2xl h-24"></div>
-  
-  <div class="bg-white shadow-xl rounded-b-2xl px-8 pb-8 -mt-16 relative pt-4">
+  <div class="rounded-t-xl h-24 bg-brand border-2 border-b-0 border-ink"></div>
+
+  <div class="bg-surface border-2 border-ink rounded-b-xl shadow-brutal-lg px-8 pb-8 -mt-16 relative pt-4">
     <!-- Avatar -->
     <div class="flex justify-center">
       <div class="relative">
-        <%= user_avatar(@user, class: "w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover", size: 32) %>
+        <%= user_avatar(@user, class: "w-32 h-32 rounded-full border-4 border-ink object-cover", size: 32) %>
       </div>
     </div>
 
     <!-- Nombre y botón editar -->
     <div class="text-center mt-4">
-      <h1 class="text-3xl font-bold text-gray-900">
+      <h1 class="text-3xl font-bold text-ink">
         <%= @user.full_name %>
       </h1>
-      <p class="text-gray-600 mt-1"><%= @user.email %></p>
+      <p class="text-ink/70 mt-1"><%= @user.email %></p>
       
       <%= link_to edit_profile_path, class: "inline-flex items-center gap-2 mt-4 button" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -30,40 +30,40 @@
     <!-- Información del perfil -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Nombre -->
-      <div class="bg-gray-50 rounded-lg p-4">
-        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Nombre</label>
-        <p class="mt-2 text-lg text-gray-900"><%= @user.first_name || "No especificado" %></p>
+      <div class="bg-paper border-2 border-ink rounded-lg p-4">
+        <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Nombre</label>
+        <p class="mt-2 text-lg text-ink"><%= @user.first_name || "No especificado" %></p>
       </div>
 
       <!-- Apellido -->
-      <div class="bg-gray-50 rounded-lg p-4">
-        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Apellido</label>
-        <p class="mt-2 text-lg text-gray-900"><%= @user.last_name || "No especificado" %></p>
+      <div class="bg-paper border-2 border-ink rounded-lg p-4">
+        <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Apellido</label>
+        <p class="mt-2 text-lg text-ink"><%= @user.last_name || "No especificado" %></p>
       </div>
 
       <!-- Email -->
-      <div class="bg-gray-50 rounded-lg p-4 md:col-span-2">
-        <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Correo Electrónico</label>
-        <p class="mt-2 text-lg text-gray-900"><%= @user.email %></p>
+      <div class="bg-paper border-2 border-ink rounded-lg p-4 md:col-span-2">
+        <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Correo Electrónico</label>
+        <p class="mt-2 text-lg text-ink"><%= @user.email %></p>
       </div>
 
       <!-- Estadísticas -->
-      <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4">
-        <label class="text-sm font-semibold text-purple-600 uppercase tracking-wide">Proyectos Activos</label>
-        <p class="mt-2 text-3xl font-bold text-purple-700"><%= @user.projects.active.count %></p>
+      <div class="bg-brand-light border-2 border-ink rounded-lg p-4">
+        <label class="text-sm font-semibold text-brand uppercase tracking-wide">Proyectos Activos</label>
+        <p class="mt-2 text-3xl font-bold text-brand-dark"><%= @user.projects.active.count %></p>
       </div>
 
-      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4">
-        <label class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Miembro desde</label>
-        <p class="mt-2 text-lg font-semibold text-indigo-700"><%= l(@user.created_at, format: :long) %></p>
+      <div class="bg-accent/30 border-2 border-ink rounded-lg p-4">
+        <label class="text-sm font-semibold text-ink uppercase tracking-wide">Miembro desde</label>
+        <p class="mt-2 text-lg font-semibold text-ink"><%= l(@user.created_at, format: :long) %></p>
       </div>
-      
+
       <!-- Proyectos Archivados -->
-      <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 md:col-span-2">
+      <div class="bg-paper border-2 border-ink rounded-lg p-4 md:col-span-2">
         <div class="flex items-center justify-between">
           <div>
-            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Proyectos Archivados</label>
-            <p class="mt-2 text-3xl font-bold text-gray-700"><%= @user.projects.archived.count %></p>
+            <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Proyectos Archivados</label>
+            <p class="mt-2 text-3xl font-bold text-ink/80"><%= @user.projects.archived.count %></p>
           </div>
           <% if @user.projects.archived.any? %>
             <%= link_to "Ver archivados", archived_projects_path, class: "button-outline" %>

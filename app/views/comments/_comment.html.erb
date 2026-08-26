@@ -1,25 +1,25 @@
 <%# Comment card (display). Requires locals: comment, commentable %>
 <% commentable ||= @commentable %>
 <%= turbo_frame_tag dom_id(comment) do %>
-  <div id="comment_<%= comment.id %>" class="bg-white p-4 border-b border-gray-300">
+  <div id="comment_<%= comment.id %>" class="bg-white p-4 border-b border-ink">
     <div class="flex justify-between items-start">
       <div class="flex items-center gap-2">
         <%= user_avatar(comment.user) %>
         <% if comment.user.full_name %>
-          <p class="text-sm text-gray-600"><%= comment.user.full_name %></p>
+          <p class="text-sm text-ink/70"><%= comment.user.full_name %></p>
         <% else %>
-          <p class="text-sm text-gray-600"><%= comment.user.email %></p>
+          <p class="text-sm text-ink/70"><%= comment.user.email %></p>
         <% end %>
       </div>
       <div class="flex items-center gap-3">
         <div class="flex flex-col items-end">
-          <p class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %> atrás</p>
-          <p class="text-xs text-gray-500"><%= comment.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+          <p class="text-xs text-ink/50"><%= time_ago_in_words(comment.created_at) %> atrás</p>
+          <p class="text-xs text-ink/50"><%= comment.created_at.strftime('%d/%m/%Y %H:%M') %></p>
         </div>
         <% if comment.user == current_user %>
           <div class="flex items-center gap-1">
             <%= link_to comment_edit_path(comment, commentable: commentable),
-                class: "p-1 text-gray-600 hover:text-indigo-600 transition-colors",
+                class: "p-1 text-ink/70 hover:text-brand transition-colors",
                 title: "Editar",
                 data: { turbo_frame: dom_id(comment) } do %>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -28,7 +28,7 @@
             <% end %>
             <%= button_to comment_delete_path(comment, commentable: commentable),
                 method: :delete,
-                class: "p-1 text-gray-600 hover:text-red-600 transition-colors",
+                class: "p-1 text-ink/70 hover:text-danger transition-colors",
                 title: "Eliminar",
                 data: {
                   turbo_confirm: "¿Estás seguro de que deseas eliminar este comentario?"
@@ -46,7 +46,7 @@
         <% end %>
       </div>
     </div>
-    <div class="mt-2 text-gray-900 prose max-w-none">
+    <div class="mt-2 text-ink prose max-w-none">
       <%= comment.content %>
     </div>
   </div>

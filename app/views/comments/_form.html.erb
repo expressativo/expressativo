@@ -1,13 +1,13 @@
 <%# Edit form for an existing comment. Requires locals: comment, commentable %>
 <% commentable ||= @commentable %>
 <%= turbo_frame_tag dom_id(comment) do %>
-  <div class="bg-white p-4 border-gray-200 rounded-lg border-2">
+  <div class="bg-white p-4 border-ink rounded-lg border-2">
     <%= form_with model: comment,
                   url: comment_update_path(comment, commentable: commentable),
                   method: :patch do |f| %>
 
       <div class="mb-4">
-        <%= f.label :content, "Editar comentario (usa @ para mencionar)", class: "label text-sm font-medium text-gray-700" %>
+        <%= f.label :content, "Editar comentario (usa @ para mencionar)", class: "label text-sm font-medium text-ink/80" %>
         <%= f.rich_text_area :content, placeholder: "Escribe tu comentario... Usa @ para mencionar", class: "mt-2" %>
       </div>
 

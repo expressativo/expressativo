@@ -3,21 +3,21 @@
   current_column = task.column
   current_board = current_column&.board
   status_color = if task.completed?
-    { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500", border: "border-emerald-200" }
+    { bg: "bg-success-light", text: "text-success", dot: "bg-success", border: "border-ink" }
   elsif current_column.present?
-    { bg: "bg-blue-50", text: "text-blue-700", dot: "bg-blue-500", border: "border-blue-200" }
+    { bg: "bg-info-light", text: "text-info", dot: "bg-info", border: "border-ink" }
   else
-    { bg: "bg-gray-50", text: "text-gray-600", dot: "bg-gray-400", border: "border-gray-200" }
+    { bg: "bg-paper", text: "text-ink/70", dot: "bg-ink/30", border: "border-ink" }
   end
 %>
 
-<section class="bg-white border border-gray-200 rounded-2xl p-6">
-  <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Detalles</h3>
+<section class="bg-surface border-2 border-ink rounded-xl p-6 shadow-brutal">
+  <h3 class="label mb-4">Detalles</h3>
 
   <div class="space-y-5">
     <%# Estado %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Estado</div>
+      <div class="text-xs text-ink/50 mb-2">Estado</div>
       <% if boards.any? %>
         <%= form_with model: [@project, @todo, task], class: "block" do |form| %>
           <%= hidden_field_tag :from, "show" %>
@@ -27,7 +27,7 @@
                 type="button"
                 data-action="click->task-status#toggleDropdown"
                 data-task-status-target="button"
-                class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-lg border <%= status_color[:border] %> <%= status_color[:bg] %> hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors">
+                class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm font-bold rounded-lg border-2 <%= status_color[:border] %> <%= status_color[:bg] %> hover:opacity-90 focus:outline-none transition-colors">
                 <span class="inline-flex items-center gap-2 min-w-0">
                   <span class="w-2 h-2 rounded-full <%= status_color[:dot] %>"></span>
                   <span class="font-medium <%= status_color[:text] %> truncate" data-task-status-target="selectedText">
@@ -38,10 +38,10 @@
                     <% end %>
                   </span>
                   <% if current_board.present? %>
-                    <span class="text-xs text-gray-400 truncate">· <%= current_board.title %></span>
+                    <span class="text-xs text-ink/40 truncate">· <%= current_board.title %></span>
                   <% end %>
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-ink/50 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                   <path d="M6 9l6 6l6 -6" />
                 </svg>
@@ -49,10 +49,10 @@
 
               <div
                 data-task-status-target="dropdown"
-                class="hidden absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-72 overflow-auto">
+                class="dropdown-menu hidden absolute z-50 w-full mt-1 max-h-72 overflow-auto">
                 <% boards.each do |board| %>
-                  <div class="p-2 border-b border-gray-100 last:border-b-0">
-                    <div class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider px-2 py-1">
+                  <div class="p-2 border-b border-ink/10 last:border-b-0">
+                    <div class="text-[10px] font-semibold text-ink/50 uppercase tracking-wider px-2 py-1">
                       <%= board.title %>
                     </div>
                     <% board.columns.each do |column| %>
@@ -62,10 +62,10 @@
                         data-column-id="<%= column.id %>"
                         data-column-title="<%= column.title %>"
                         data-board-title="<%= board.title %>"
-                        class="w-full text-left px-3 py-2 hover:bg-purple-50 rounded text-sm <%= 'bg-purple-100 font-medium text-purple-700' if task.column&.id == column.id %>">
+                        class="w-full text-left px-3 py-2 hover:bg-brand-light rounded text-sm <%= 'bg-brand-light font-medium text-brand-dark' if task.column&.id == column.id %>">
                         <%= column.title %>
                         <% if task.column&.id == column.id %>
-                          <span class="text-xs text-purple-600 ml-1">✓</span>
+                          <span class="text-xs text-brand ml-1">✓</span>
                         <% end %>
                       </button>
                     <% end %>
@@ -73,11 +73,11 @@
                 <% end %>
 
                 <% if task.column.present? %>
-                  <div class="p-2 border-t border-gray-200">
+                  <div class="p-2 border-t border-ink">
                     <button
                       type="button"
                       data-action="click->task-status#clearStatus"
-                      class="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded text-sm flex items-center gap-2">
+                      class="w-full text-left px-3 py-2 text-danger hover:bg-danger-light rounded text-sm flex items-center gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                         <path d="M18 6l-12 12" />
@@ -95,8 +95,8 @@
         <% end %>
       <% else %>
         <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-500">
-            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-paper border-2 border-ink text-sm font-semibold text-ink/50">
+            <span class="w-2 h-2 rounded-full bg-ink/30"></span>
             Sin tableros
           </span>
         </div>
@@ -108,7 +108,7 @@
     <% if project_custom_fields.any? %>
       <% task_cfv_map = task.custom_field_values.index_by(&:project_custom_field_id) %>
       <div class="pt-1">
-        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Campos personalizados</div>
+        <div class="text-xs font-semibold text-ink/50 uppercase tracking-wider mb-3">Campos personalizados</div>
         <div class="space-y-3">
           <% project_custom_fields.each do |field| %>
             <%
@@ -117,11 +117,11 @@
               value_id = value_record&.id || 0
             %>
             <div>
-              <div class="text-xs text-gray-500 mb-1"><%= field.name %></div>
+              <div class="text-xs text-ink/50 mb-1"><%= field.name %></div>
               <%# Render de solo lectura para link y map %>
               <% if field.field_type == "link" && current_value.present? %>
                 <%= link_to current_value, current_value, target: "_blank", rel: "noopener",
-                      class: "inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 underline underline-offset-2 truncate max-w-full" do %>
+                      class: "inline-flex items-center gap-1 text-sm text-brand hover:text-brand-dark underline underline-offset-2 truncate max-w-full" do %>
                   <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                   </svg>
@@ -130,7 +130,7 @@
               <% elsif field.field_type == "map" && current_value.present? %>
                 <% embed_url = ProjectCustomField.maps_embed_url(current_value) %>
                 <% if embed_url %>
-                  <div class="rounded-xl overflow-hidden border border-gray-200">
+                  <div class="rounded-xl overflow-hidden border border-ink">
                     <iframe src="<%= embed_url %>"
                             width="100%"
                             height="200"
@@ -141,14 +141,14 @@
                   </div>
                 <% end %>
                 <%= link_to current_value, target: "_blank", rel: "noopener",
-                      class: "inline-flex items-center gap-1.5 #{ embed_url ? 'mt-1 text-xs text-gray-500 hover:text-gray-700' : 'px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-xl w-full justify-center' }" do %>
+                      class: "inline-flex items-center gap-1.5 #{ embed_url ? 'mt-1 text-xs text-ink/50 hover:text-ink' : 'button w-full justify-center' }" do %>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
                   Abrir en Google Maps
                 <% end %>
               <% elsif @project.viewer?(current_user) %>
-                <span class="text-sm text-gray-800"><%= current_value.presence || "—" %></span>
+                <span class="text-sm text-ink/80"><%= current_value.presence || "—" %></span>
               <% end %>
               <% unless @project.viewer?(current_user) %>
                 <%= form_with url: project_todo_task_custom_field_value_path(@project, @todo, task, value_id),
@@ -161,21 +161,21 @@
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="—"
-                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                           class="input flex-1 min-w-0 py-1" />
                   <% when "number" %>
                     <input type="number"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="—"
-                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                           class="input flex-1 min-w-0 py-1" />
                   <% when "date" %>
                     <input type="date"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
-                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                           class="input flex-1 min-w-0 py-1" />
                   <% when "select" %>
                     <select name="task_custom_field_value[value]"
-                            class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            class="input flex-1 min-w-0 py-1">
                       <option value="">— Sin valor —</option>
                       <% field.options_list.each do |opt| %>
                         <option value="<%= opt %>" <%= "selected" if current_value == opt %>><%= opt %></option>
@@ -186,15 +186,15 @@
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="https://"
-                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                           class="input flex-1 min-w-0 py-1" />
                   <% when "map" %>
                     <input type="text"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder='Pega el iframe de Google Maps o una URL'
-                           class="flex-1 min-w-0 px-2 py-1 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                           class="input flex-1 min-w-0 py-1" />
                   <% end %>
-                  <button type="submit" class="flex-shrink-0 p-1 rounded text-indigo-600 hover:bg-indigo-50 transition-colors" title="Guardar">
+                  <button type="submit" class="flex-shrink-0 p-1 rounded text-brand hover:bg-brand-light transition-colors" title="Guardar">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -209,46 +209,46 @@
 
     <%# Responsables %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Responsables</div>
+      <div class="text-xs text-ink/50 mb-2">Responsables</div>
       <%= render 'tasks/assignees', task: task %>
     </div>
 
     <%# Documentos enlazados %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Documentos</div>
+      <div class="text-xs text-ink/50 mb-2">Documentos</div>
       <%= render 'tasks/documents', task: task %>
     </div>
 
     <%# Reporter %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Reportado por</div>
+      <div class="text-xs text-ink/50 mb-2">Reportado por</div>
       <div class="flex items-center gap-2">
         <% if task.created_by.present? %>
           <%= user_avatar(task.created_by, class: "w-7 h-7 rounded-full object-cover") %>
-          <span class="text-sm text-gray-800 truncate">
+          <span class="text-sm text-ink/80 truncate">
             <%= task.created_by.full_name.presence || task.created_by.email %>
           </span>
         <% else %>
-          <span class="text-sm text-gray-400 italic">Sin usuario</span>
+          <span class="text-sm text-ink/40 italic">Sin usuario</span>
         <% end %>
       </div>
     </div>
 
     <%# Fecha de vencimiento %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Vence el</div>
+      <div class="text-xs text-ink/50 mb-2">Vence el</div>
       <% if task.due_date.present? %>
         <%
           today = Date.current
           days = (task.due_date.to_date - today).to_i
           if task.completed?
-            pill = { bg: "bg-gray-50", text: "text-gray-600", border: "border-gray-200" }
+            pill = { bg: "bg-paper", text: "text-ink/70", border: "border-ink" }
           elsif days < 0
-            pill = { bg: "bg-red-50", text: "text-red-700", border: "border-red-200" }
+            pill = { bg: "bg-danger-light", text: "text-danger", border: "border-danger/40" }
           elsif days <= 3
-            pill = { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" }
+            pill = { bg: "bg-warning-light", text: "text-warning", border: "border-warning/40" }
           else
-            pill = { bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200" }
+            pill = { bg: "bg-paper", text: "text-ink/70", border: "border-ink" }
           end
 
           due_dt = task.due_date
@@ -287,7 +287,7 @@
           %>
           <%= link_to gcal_url, target: "_blank", rel: "noopener",
                 title: "Agregar a Google Calendar",
-                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors" do %>
+                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-info bg-info-light border-2 border-ink rounded-lg hover:bg-info-light/70 transition-colors" do %>
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
             </svg>
@@ -296,7 +296,7 @@
 
           <%= link_to calendar_project_todo_task_path(@project, @todo, task),
                 title: "Descargar .ics para cualquier calendario",
-                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors" do %>
+                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-ink/70 bg-paper border-2 border-ink rounded-lg hover:bg-accent/40 transition-colors" do %>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
             </svg>
@@ -304,31 +304,31 @@
           <% end %>
         </div>
       <% else %>
-        <span class="text-sm text-gray-400 italic">Sin fecha</span>
+        <span class="text-sm text-ink/40 italic">Sin fecha</span>
       <% end %>
     </div>
 
     <%# Lista (Todo) %>
     <div>
-      <div class="text-xs text-gray-500 mb-2">Lista</div>
-      <%= link_to project_todo_path(@project, @todo), class: "inline-flex items-center gap-1.5 text-sm text-gray-700 hover:text-purple-600 transition-colors" do %>
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="text-xs text-ink/50 mb-2">Lista</div>
+      <%= link_to project_todo_path(@project, @todo), class: "inline-flex items-center gap-1.5 text-sm font-semibold text-ink/80 hover:text-brand transition-colors" do %>
+        <svg class="w-4 h-4 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
         </svg>
         <span class="truncate"><%= @todo.name %></span>
       <% end %>
     </div>
 
-    <div class="pt-4 border-t border-gray-100 space-y-1.5">
-      <div class="flex items-center justify-between text-xs text-gray-500">
+    <div class="pt-4 border-t border-ink/10 space-y-1.5">
+      <div class="flex items-center justify-between text-xs text-ink/50">
         <span>Creada</span>
         <span><%= l(task.created_at.to_date, format: :long) rescue task.created_at.strftime("%d/%m/%Y") %></span>
       </div>
-      <div class="flex items-center justify-between text-xs text-gray-500">
+      <div class="flex items-center justify-between text-xs text-ink/50">
         <span>Actualizada</span>
         <span><%= time_ago_in_words(task.updated_at) %> atrás</span>
       </div>
-      <div class="flex items-center justify-between text-xs text-gray-400">
+      <div class="flex items-center justify-between text-xs text-ink/40">
         <span>ID</span>
         <span class="font-mono">TASK-<%= task.id %></span>
       </div>

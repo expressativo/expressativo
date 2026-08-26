@@ -1,17 +1,74 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+/* =========================================================
+   Neo-brutalism design tokens
+   Paper background, thick ink borders, hard offset shadows,
+   one loud violet + a yellow spark for emphasis.
+   ========================================================= */
+@theme {
+    --color-ink: #14110f;
+    --color-paper: #faf3e7;
+    --color-surface: #ffffff;
+
+    --color-brand: #6d4cff;
+    --color-brand-dark: #4b2fe0;
+    --color-brand-light: #ece5ff;
+
+    --color-accent: #ffde59;
+    --color-accent-pink: #ff5c8a;
+
+    --color-success: #17b978;
+    --color-success-light: #e3faf0;
+    --color-danger: #ff3b30;
+    --color-danger-light: #ffe9e7;
+    --color-warning: #ffb020;
+    --color-warning-light: #fff4e0;
+    --color-info: #2f8fff;
+    --color-info-light: #e7f2ff;
+
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+    /* Hard offset "sticker" shadows — the signature of the system.
+       Available as utilities too: shadow-brutal-sm / shadow-brutal / shadow-brutal-lg */
+    --shadow-brutal-sm: 3px 3px 0 0 var(--color-ink);
+    --shadow-brutal: 4px 4px 0 0 var(--color-ink);
+    --shadow-brutal-lg: 6px 6px 0 0 var(--color-ink);
+}
+
+@layer base {
+    body {
+        @apply font-sans bg-paper text-ink;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-display font-bold tracking-tight;
+    }
+}
 
 @layer components {
     /* ===== Inputs ===== */
     .input {
-        @apply w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition;
+        @apply w-full px-3 py-2 text-sm font-medium bg-surface text-ink border-2 border-ink rounded-lg transition focus:outline-none;
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+    .input:focus {
+        box-shadow: 3px 3px 0 0 var(--color-brand);
+        border-color: var(--color-brand);
     }
 
     .textarea {
-        @apply w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md focus:border-transparent transition;
+        @apply w-full px-3 py-2 text-sm font-medium bg-surface text-ink border-2 border-ink rounded-lg transition focus:outline-none;
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+    .textarea:focus {
+        box-shadow: 3px 3px 0 0 var(--color-brand);
+        border-color: var(--color-brand);
     }
 
     .label {
-        @apply block text-gray-700 text-sm font-medium;
+        @apply block text-ink text-xs font-display font-bold uppercase tracking-wider;
     }
 
     .input-wrapper {
@@ -31,45 +88,72 @@
     }
 
     .error {
-        @apply text-red-600 text-sm font-medium;
+        @apply text-danger text-sm font-bold;
     }
 
     .error-message {
-        @apply text-red-600 text-sm font-medium;
+        @apply text-danger text-sm font-bold;
     }
 
     .errors {
-        @apply bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-700;
+        @apply bg-danger-light border-2 border-danger rounded-lg p-3 text-sm text-danger font-semibold;
     }
 
     /* ===== Buttons ===== */
     .button {
-        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-display font-bold text-white bg-brand rounded-lg border-2 border-ink transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:translate-x-0 active:translate-y-0;
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+    .button:hover:not(:disabled) {
+        @apply bg-brand-dark -translate-x-0.5 -translate-y-0.5;
+        box-shadow: 5px 5px 0 0 var(--color-ink);
+    }
+    .button:active:not(:disabled) {
+        @apply translate-x-0 translate-y-0;
+        box-shadow: 1px 1px 0 0 var(--color-ink);
     }
 
     .button-outline {
-        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-display font-bold text-ink bg-surface border-2 border-ink rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+    .button-outline:hover:not(:disabled) {
+        @apply bg-accent -translate-x-0.5 -translate-y-0.5;
+        box-shadow: 5px 5px 0 0 var(--color-ink);
+    }
+    .button-outline:active:not(:disabled) {
+        @apply translate-x-0 translate-y-0;
+        box-shadow: 1px 1px 0 0 var(--color-ink);
     }
 
     .button-danger {
-        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer;
+        @apply inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-display font-bold text-white bg-danger rounded-lg border-2 border-ink transition cursor-pointer;
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+    .button-danger:hover {
+        @apply -translate-x-0.5 -translate-y-0.5;
+        box-shadow: 5px 5px 0 0 var(--color-ink);
+    }
+    .button-danger:active {
+        @apply translate-x-0 translate-y-0;
+        box-shadow: 1px 1px 0 0 var(--color-ink);
     }
 
     .button-ghost {
-        @apply inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition cursor-pointer;
+        @apply inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-ink hover:bg-ink/5 rounded-md transition cursor-pointer;
     }
 
     .icon-button {
-        @apply inline-flex items-center justify-center gap-1.5 p-1.5 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition cursor-pointer;
+        @apply inline-flex items-center justify-center gap-1.5 p-1.5 rounded-md text-ink/60 border-2 border-transparent hover:text-ink hover:border-ink hover:bg-accent transition cursor-pointer;
     }
 
     /* ===== Cards ===== */
     .card {
-        @apply bg-white border border-gray-200 rounded-2xl;
+        @apply bg-surface border-2 border-ink rounded-xl shadow-brutal;
     }
 
     .card-header {
-        @apply px-6 py-4 border-b border-gray-200;
+        @apply px-6 py-4 border-b-2 border-ink font-display font-bold;
     }
 
     .card-body {
@@ -77,16 +161,44 @@
     }
 
     .card_title {
-        @apply text-lg font-semibold text-gray-900 mb-2;
+        @apply text-lg font-display font-bold text-ink mb-2;
+    }
+
+    /* Clickable card (task cards, document cards, list rows, notifications):
+       lifts on hover instead of just darkening. */
+    .card-interactive {
+        @apply bg-surface border-2 border-ink rounded-xl transition-all duration-150 cursor-pointer shadow-brutal-sm;
+    }
+    .card-interactive:hover {
+        @apply -translate-x-0.5 -translate-y-0.5 shadow-brutal;
+    }
+
+    /* Floating menu popped open by a dropdown/context-menu controller. */
+    .dropdown-menu {
+        @apply bg-surface border-2 border-ink rounded-lg shadow-brutal overflow-hidden;
+    }
+
+    .dropdown-menu-item {
+        @apply block w-full text-left px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/40 transition-colors cursor-pointer;
+    }
+
+    /* Small uppercase tag (status, kind, role) */
+    .badge {
+        @apply inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border border-ink bg-surface text-ink;
+    }
+
+    /* Small filled status dot (used before a title to show list/column state) */
+    .status-dot {
+        @apply w-2.5 h-2.5 rounded-full flex-shrink-0 bg-success;
     }
 
     /* ===== Typography ===== */
     .title {
-        @apply text-2xl font-bold text-gray-900;
+        @apply text-2xl font-display font-bold text-ink;
     }
 
     .link.small {
-        @apply text-sm font-medium text-purple-600 hover:text-purple-700;
+        @apply text-sm font-bold text-brand hover:text-brand-dark underline decoration-2 underline-offset-2;
     }
 
     /* ===== Layout ===== */
@@ -99,16 +211,16 @@
     }
 
     .main_header {
-        @apply bg-white border border-gray-200 rounded-2xl px-6 py-4 mb-4;
+        @apply bg-surface border-2 border-ink rounded-xl px-6 py-4 mb-4 shadow-brutal;
     }
 
     .main_content {
-        @apply bg-white border border-gray-200 rounded-2xl px-6 py-6;
+        @apply bg-surface border-2 border-ink rounded-xl px-6 py-6 shadow-brutal;
     }
 
     /* ===== Documents ===== */
     .document_input {
-        @apply w-full p-4 text-2xl font-semibold bg-white border-none focus:outline-none focus:ring-0;
+        @apply w-full p-4 text-2xl font-display font-semibold bg-surface border-none focus:outline-none focus:ring-0;
     }
 
     /* ===== Rich-text image download overlay ===== */
@@ -130,7 +242,7 @@
     }
 
     .image-download-btn:hover {
-        background-color: rgba(59, 130, 246, 0.9);
+        background-color: var(--color-brand);
         transform: scale(1.05);
     }
 
@@ -141,7 +253,7 @@
     /* ===== Drive view (folders/documents) ===== */
     .drive-document.drive-as-list,
     .drive-folder.drive-as-list {
-        @apply flex flex-row items-center gap-3 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50;
+        @apply flex flex-row items-center gap-3 px-3 py-2 rounded-lg border-2 border-ink hover:bg-accent/30;
     }
 
     .drive-document.drive-as-list > a {
@@ -172,11 +284,11 @@
     }
 
     .chat-body a {
-        @apply text-indigo-700 hover:underline;
+        @apply text-brand hover:underline font-semibold;
     }
 
     .chat-body strong {
-        @apply font-semibold text-gray-900;
+        @apply font-semibold text-ink;
     }
 
     .chat-body em {
@@ -205,11 +317,11 @@
     }
 
     .chat-body blockquote {
-        @apply border-l-4 border-gray-300 pl-3 my-1 text-gray-600 italic;
+        @apply border-l-4 border-ink pl-3 my-1 text-gray-600 italic;
     }
 
     .chat-body code {
-        @apply font-mono text-[0.85em] bg-rose-50 text-rose-700 border border-rose-100 rounded px-1 py-0.5;
+        @apply font-mono text-[0.85em] bg-accent/30 text-ink border border-ink/20 rounded px-1 py-0.5;
     }
 
     .chat-body pre code {

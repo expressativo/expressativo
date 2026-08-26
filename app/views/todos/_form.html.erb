@@ -1,6 +1,6 @@
 <%= form_with model: [project, todo], local: true, class: "p-6" do |form| %>
   <% if todo.errors.any? %>
-    <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-5 text-sm text-red-700">
+    <div class="bg-danger-light border border-danger/40 rounded-md p-4 mb-5 text-sm text-danger">
       <p class="font-medium mb-1">
         Hay <%= pluralize(todo.errors.count, "error") %> que corregir:
       </p>
@@ -13,19 +13,19 @@
   <% end %>
 
   <div class="mb-4 space-y-1.5">
-    <%= form.label :name, "Título", class: "block text-gray-700 text-sm font-medium" %>
+    <%= form.label :name, "Título", class: "block text-ink/80 text-sm font-medium" %>
     <%= form.text_field :name,
-          class: "w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition",
+          class: "input",
           placeholder: "Ej. Backlog, Sprint actual, Ideas…",
           autofocus: true %>
-    <p class="text-gray-500 text-xs">Un nombre corto que describa el contenido de la lista.</p>
+    <p class="text-ink/50 text-xs">Un nombre corto que describa el contenido de la lista.</p>
   </div>
 
-  <div class="flex items-center justify-end gap-2 pt-5 mt-2 border-t border-gray-100">
+  <div class="flex items-center justify-end gap-2 pt-5 mt-2 border-t-2 border-ink/10">
     <%= link_to "Cancelar", project_todos_path(project),
-          class: "inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-md transition" %>
+          class: "inline-flex items-center px-4 py-2 button-outline" %>
     <%= form.submit todo.persisted? ? "Guardar cambios" : "Crear lista",
-          class: "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md shadow-sm transition cursor-pointer",
+          class: "button",
           data: { turbo_submits_with: "Guardando..." } %>
   </div>
 <% end %>
