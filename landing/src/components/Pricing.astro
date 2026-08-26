@@ -1,0 +1,105 @@
+---
+const plans = [
+  {
+    name: "Free",
+    price: "$0",
+    period: "forever",
+    tagline: "Try Tivo with your first project, no card required.",
+    features: [
+      "1 active project",
+      "Kanban board & tasks",
+      "Team chat & documents",
+      "Announcements",
+    ],
+    cta: "Start for free",
+    href: "#get-started",
+    highlight: false,
+    color: "bg-surface",
+  },
+  {
+    name: "Freelance",
+    price: "$20",
+    period: "/month",
+    tagline: "For freelancers and small teams juggling a few clients.",
+    features: [
+      "Up to 3 active projects",
+      "Up to 20 users",
+      "Everything in Free",
+      "Priority email support",
+    ],
+    cta: "Get Freelance",
+    href: "#get-started",
+    highlight: true,
+    color: "bg-brand-light",
+  },
+  {
+    name: "Business",
+    price: "$50",
+    period: "/month",
+    tagline: "For growing teams running several projects at once.",
+    features: [
+      "Up to 25 active projects",
+      "Unlimited users",
+      "Everything in Freelance",
+      "Priority email support",
+    ],
+    cta: "Get Business",
+    href: "#get-started",
+    highlight: false,
+    color: "bg-surface",
+  },
+];
+---
+
+<section id="pricing" class="border-b-2 border-ink bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28">
+    <div class="max-w-2xl">
+      <span class="chip bg-accent">Simple pricing</span>
+      <h2 class="mt-4 text-3xl sm:text-4xl">Start free, upgrade when you need more</h2>
+      <p class="mt-4 text-lg text-ink/70">
+        No hidden fees, no per-feature paywalls — just a plan that grows with
+        your projects and your team.
+      </p>
+    </div>
+
+    <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl">
+      {
+        plans.map((plan) => (
+          <div
+            class={`card-brutal p-8 flex flex-col ${plan.color} ${plan.highlight ? "relative lg:-translate-y-2" : ""}`}
+          >
+            {plan.highlight && (
+              <span class="chip bg-accent absolute -top-3.5 left-8">Most popular</span>
+            )}
+
+            <h3 class="text-xl">{plan.name}</h3>
+            <p class="mt-1 text-sm text-ink/60">{plan.tagline}</p>
+
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-display font-extrabold text-4xl">{plan.price}</span>
+              <span class="text-sm font-semibold text-ink/50">{plan.period}</span>
+            </div>
+
+            <ul class="mt-6 space-y-3 flex-1">
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <span class="mt-0.5 w-4 h-4 shrink-0 rounded border-2 border-ink bg-success grid place-items-center text-white text-[10px] font-bold">
+                    &#10003;
+                  </span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={plan.href}
+              class={plan.highlight ? "btn-brutal mt-8 w-full" : "btn-brutal-outline mt-8 w-full"}
+            >
+              {plan.cta}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

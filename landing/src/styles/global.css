@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+/* =========================================================
+   Neo-brutalism design tokens — matches the Tivo product UI
+   Paper background, thick ink borders, hard offset shadows,
+   one loud violet + a yellow spark for emphasis.
+   ========================================================= */
+@theme {
+    --color-ink: #14110f;
+    --color-paper: #faf3e7;
+    --color-surface: #ffffff;
+
+    --color-brand: #6d4cff;
+    --color-brand-dark: #4b2fe0;
+    --color-brand-light: #ece5ff;
+
+    --color-accent: #ffde59;
+    --color-accent-pink: #ff5c8a;
+
+    --color-success: #17b978;
+    --color-success-light: #e3faf0;
+    --color-danger: #ff3b30;
+    --color-info: #2f8fff;
+    --color-info-light: #e7f2ff;
+
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+    body {
+        @apply font-sans bg-paper text-ink;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-display font-bold tracking-tight;
+    }
+}
+
+@layer components {
+    .shadow-brutal {
+        box-shadow: 4px 4px 0 0 var(--color-ink);
+    }
+
+    .shadow-brutal-lg {
+        box-shadow: 8px 8px 0 0 var(--color-ink);
+    }
+
+    .shadow-brutal-sm {
+        box-shadow: 3px 3px 0 0 var(--color-ink);
+    }
+
+    .card-brutal {
+        @apply bg-surface border-2 border-ink rounded-xl;
+        box-shadow: 4px 4px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-display font-bold text-white bg-brand rounded-lg border-2 border-ink transition-transform cursor-pointer;
+        box-shadow: 4px 4px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal:hover {
+        @apply bg-brand-dark -translate-x-0.5 -translate-y-0.5;
+        box-shadow: 6px 6px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal:active {
+        @apply translate-x-0 translate-y-0;
+        box-shadow: 1px 1px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal-outline {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-display font-bold text-ink bg-surface rounded-lg border-2 border-ink transition-transform cursor-pointer;
+        box-shadow: 4px 4px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal-outline:hover {
+        @apply bg-accent -translate-x-0.5 -translate-y-0.5;
+        box-shadow: 6px 6px 0 0 var(--color-ink);
+    }
+
+    .btn-brutal-outline:active {
+        @apply translate-x-0 translate-y-0;
+        box-shadow: 1px 1px 0 0 var(--color-ink);
+    }
+
+    .chip {
+        @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-display font-bold uppercase tracking-wider border-2 border-ink rounded-full;
+    }
+}

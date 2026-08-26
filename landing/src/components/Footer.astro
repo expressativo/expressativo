@@ -1,0 +1,25 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-paper">
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4"
+  >
+    <a href="#top" class="flex items-center gap-2.5">
+      <img
+        src="/images/logo.jpg"
+        alt="Tivo logo"
+        class="w-7 h-7 rounded-md border-2 border-ink"
+      />
+      <span class="font-display font-extrabold">Tivo</span>
+    </a>
+    <p class="text-sm text-ink/50 text-center">
+      &copy; {year} Tivo. All rights reserved.
+    </p>
+    <div class="flex items-center gap-5 text-sm font-display font-bold">
+      <a href="#features" class="hover:text-brand transition-colors">Features</a>
+      <a href="#pricing" class="hover:text-brand transition-colors">Pricing</a>
+    </div>
+  </div>
+</footer>

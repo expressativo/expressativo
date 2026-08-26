@@ -1,0 +1,76 @@
+---
+const features = [
+  {
+    title: "Projects & Tasks",
+    desc: "Organize work into projects, todos, and tasks with clear status tracking from start to finish.",
+    color: "bg-brand-light",
+  },
+  {
+    title: "Kanban Board",
+    desc: "Drag-and-drop columns — pending, in progress, done — synced live with task status.",
+    color: "bg-accent/40",
+  },
+  {
+    title: "Team Chat",
+    desc: "Channels and direct messages with mentions, emoji reactions, and markdown support.",
+    color: "bg-accent-pink/25",
+  },
+  {
+    title: "Documents",
+    desc: "A rich text editor with folder organization and file attachments for every project.",
+    color: "bg-info-light",
+  },
+  {
+    title: "Announcements",
+    desc: "Project-wide posts with threaded comments, so nothing important gets lost in chat.",
+    color: "bg-success-light",
+  },
+  {
+    title: "Notifications",
+    desc: "Real-time web push notifications keep everyone in sync without checking five tabs.",
+    color: "bg-brand-light",
+  },
+  {
+    title: "Activity Feed",
+    desc: "A full audit trail of every change across a project — always know who did what, when.",
+    color: "bg-accent/40",
+  },
+  {
+    title: "Quick Notes",
+    desc: "Personal sticky notes per user for the stray thought that doesn't need its own task.",
+    color: "bg-accent-pink/25",
+  },
+  {
+    title: "Google OAuth",
+    desc: "Sign in with Google in addition to email and password — onboarding in one click.",
+    color: "bg-info-light",
+  },
+];
+---
+
+<section id="features" class="border-b-2 border-ink bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28">
+    <div class="max-w-2xl">
+      <span class="chip bg-accent">Everything, in one place</span>
+      <h2 class="mt-4 text-3xl sm:text-4xl">
+        One workspace instead of five browser tabs
+      </h2>
+      <p class="mt-4 text-lg text-ink/70">
+        Tivo covers the whole lifecycle of a project — planning, execution,
+        communication, and documentation — without forcing your team to
+        stitch together separate tools.
+      </p>
+    </div>
+
+    <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {
+        features.map((f) => (
+          <div class={`card-brutal p-6 ${f.color}`}>
+            <h3 class="text-lg">{f.title}</h3>
+            <p class="mt-2 text-sm text-ink/70 leading-relaxed">{f.desc}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
