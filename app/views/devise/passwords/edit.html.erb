@@ -2,10 +2,10 @@
   <div class="max-w-md w-full">
     <!-- Logo/Header -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">
-        <span class="text-blue-600">Ti</span>vo
+      <h1 class="text-3xl font-bold text-ink mb-2">
+        <span class="text-info">Ti</span>vo
       </h1>
-      <p class="text-gray-600">Restablecer contraseña</p>
+      <p class="text-ink/70">Restablecer contraseña</p>
     </div>
 
     <!-- Password Reset Card -->
@@ -19,7 +19,7 @@
         <div class="field">
           <%= f.label :password, "Nueva contraseña", class: "label" %>
           <% if @minimum_password_length %>
-            <em class="text-xs text-gray-500">(<%= @minimum_password_length %> caracteres mínimo)</em>
+            <em class="text-xs text-ink/50">(<%= @minimum_password_length %> caracteres mínimo)</em>
           <% end %>
           <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "input", placeholder: "Crea una nueva contraseña" %>
         </div>
@@ -42,7 +42,7 @@
 
     <!-- Footer Info -->
     <div class="text-center mt-6">
-      <%= link_to "← Volver al inicio", root_path, class: "text-blue-600 hover:text-blue-700 font-medium text-sm" %>
+      <%= link_to "← Volver al inicio", root_path, class: "text-info hover:text-info font-medium text-sm" %>
     </div>
   </div>
 </section>

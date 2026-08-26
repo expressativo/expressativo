@@ -1,18 +1,18 @@
-<section class="bg-white border border-gray-200 rounded-2xl p-6">
-  <div class="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100">
-    <div class="flex items-center gap-2 text-xs text-gray-500 font-mono">
-      <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<section class="bg-surface border-2 border-ink rounded-xl p-6">
+  <div class="flex items-center justify-between gap-3 mb-4 pb-3 border-b-2 border-ink/10">
+    <div class="flex items-center gap-2 text-xs text-ink/50 font-mono">
+      <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
       </svg>
-      <span class="text-gray-400">TASK-<%= task.id %></span>
-      <span class="text-gray-300">·</span>
+      <span class="text-ink/40">TASK-<%= task.id %></span>
+      <span class="text-ink/30">·</span>
       <%= link_to @todo.name, project_todo_path(@project, @todo),
-            class: "text-gray-500 hover:text-purple-600 transition-colors truncate max-w-[200px]" %>
+            class: "text-ink/50 hover:text-brand transition-colors truncate max-w-[200px]" %>
       <div data-controller="clipboard" data-clipboard-url-value="<%= project_todo_task_url(@project, @todo, task) %>">
         <button type="button"
                 data-action="click->clipboard#copy"
                 title="Copiar link de la tarea"
-                class="p-1 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-colors">
+                class="p-1 rounded-lg text-ink/40 hover:text-brand hover:bg-brand-light transition-colors">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 4h8a2 2 0 012 2v8a2 2 0 01-2 2h-8a2 2 0 01-2-2v-8a2 2 0 012-2z"/>
           </svg>
@@ -44,7 +44,7 @@
       <% else %>
         <%= button_to publish_public_project_todo_task_path(@project, @todo, task), method: :patch,
                       title: "Compartir con link público",
-                      class: "p-1.5 rounded-lg text-gray-500 hover:text-sky-600 hover:bg-sky-50 transition-colors" do %>
+                      class: "p-1.5 rounded-lg text-ink/50 hover:text-sky-600 hover:bg-sky-50 transition-colors" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
           </svg>
@@ -54,12 +54,12 @@
         <%= link_to edit_project_todo_task_path(@project, @todo, task),
                     data: { turbo_frame: "#{dom_id(task)}_show" },
                     title: "Editar",
-                    class: "p-1.5 rounded-lg text-gray-500 hover:text-purple-600 hover:bg-purple-50 transition-colors" do %>
+                    class: "p-1.5 rounded-lg text-ink/50 hover:text-brand hover:bg-brand-light transition-colors" do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
         <% end %>
         <%= link_to project_todo_task_path(@project, @todo, task),
                     title: "Eliminar",
-                    class: "p-1.5 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors",
+                    class: "p-1.5 rounded-lg text-ink/50 hover:text-danger hover:bg-danger-light transition-colors",
                     data: {
                       turbo_method: :delete,
                       turbo_frame: "_top",
@@ -73,14 +73,14 @@
 
   <% if is_viewer %>
     <div class="flex items-center gap-3">
-      <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-300 bg-white' %>">
+      <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-success border-emerald-500 text-white' : 'border-ink bg-white' %>">
         <% if task.completed? %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
           </svg>
         <% end %>
       </span>
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight <%= 'line-through text-gray-400' if task.completed? %>">
+      <h1 class="text-2xl md:text-3xl font-bold text-ink leading-tight <%= 'line-through text-ink/40' if task.completed? %>">
         <%= task.title %>
       </h1>
     </div>
@@ -89,14 +89,14 @@
                 data: { turbo_frame: "#{dom_id(task)}_show" },
                 class: "block group" do %>
       <div class="flex items-center gap-3">
-        <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-300 group-hover:border-purple-500 bg-white' %> transition-colors">
+        <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-success border-emerald-500 text-white' : 'border-ink group-hover:border-brand bg-white' %> transition-colors">
           <% if task.completed? %>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
             </svg>
           <% end %>
         </span>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight group-hover:text-purple-700 transition-colors <%= 'line-through text-gray-400 group-hover:text-gray-500' if task.completed? %>">
+        <h1 class="text-2xl md:text-3xl font-bold text-ink leading-tight group-hover:text-brand-dark transition-colors <%= 'line-through text-ink/40 group-hover:text-ink/50' if task.completed? %>">
           <%= task.title %>
         </h1>
       </div>
@@ -104,27 +104,27 @@
   <% end %>
 
   <div class="mt-6">
-    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Descripción</h2>
+    <h2 class="text-xs font-semibold text-ink/50 uppercase tracking-wider mb-2">Descripción</h2>
     <% if is_viewer %>
       <div class="rounded-lg -mx-2 px-2 py-2">
         <% if task.notes.present? %>
-          <div class="prose prose-sm max-w-none text-gray-800">
+          <div class="prose prose-sm max-w-none text-ink/80">
             <%= task.notes %>
           </div>
         <% else %>
-          <p class="text-sm text-gray-400 italic">Sin descripción.</p>
+          <p class="text-sm text-ink/40 italic">Sin descripción.</p>
         <% end %>
       </div>
     <% else %>
       <%= link_to edit_project_todo_task_path(@project, @todo, task),
                   data: { turbo_frame: "#{dom_id(task)}_show" },
-                  class: "block rounded-lg hover:bg-gray-50 transition-colors -mx-2 px-2 py-2" do %>
+                  class: "block rounded-lg hover:bg-paper transition-colors -mx-2 px-2 py-2" do %>
         <% if task.notes.present? %>
-          <div class="prose prose-sm max-w-none text-gray-800">
+          <div class="prose prose-sm max-w-none text-ink/80">
             <%= task.notes %>
           </div>
         <% else %>
-          <p class="text-sm text-gray-400 italic">Añade una descripción a esta tarea…</p>
+          <p class="text-sm text-ink/40 italic">Añade una descripción a esta tarea…</p>
         <% end %>
       <% end %>
     <% end %>

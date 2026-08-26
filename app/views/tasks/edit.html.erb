@@ -11,7 +11,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="lg:col-span-2 space-y-4">
         <div>
-          <%= link_to project_todo_task_path(@project, @todo, @task), class: "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-purple-600 transition-colors mb-2" do %>
+          <%= link_to project_todo_task_path(@project, @todo, @task), class: "inline-flex items-center gap-1.5 text-sm text-ink/70 hover:text-brand transition-colors mb-2" do %>
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
             <span>Cancelar edición</span>
           <% end %>

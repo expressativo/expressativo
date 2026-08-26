@@ -23,13 +23,13 @@
   tabs << { id: :custom_fields, label: "Campos", href: project_custom_fields_path(project),
             icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h10M4 18h6"/>' }
 %>
-<nav class="bg-white border border-gray-200 rounded-2xl mb-4 px-2 overflow-x-auto">
+<nav class="bg-surface border-2 border-ink rounded-xl mb-4 px-2 overflow-x-auto">
   <ul class="flex items-center gap-1 min-w-max">
     <% tabs.each do |tab| %>
       <% is_active = tab[:id] == active %>
       <li>
         <%= link_to tab[:href],
-              class: "inline-flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap #{is_active ? 'text-purple-600 border-purple-500' : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'}" do %>
+              class: "inline-flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap #{is_active ? 'text-brand border-brand' : 'text-ink/70 border-transparent hover:text-ink hover:border-ink'}" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><%= tab[:icon].html_safe %></svg>
           <%= tab[:label] %>
         <% end %>

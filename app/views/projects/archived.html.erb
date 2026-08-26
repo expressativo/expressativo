@@ -7,20 +7,20 @@
   <% if @projects.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @projects.each do |project| %>
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div class="card-interactive p-6">
           <div class="flex justify-between items-start mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">
-              <%= link_to project.title, project_path(project), class: "hover:text-indigo-600" %>
+            <h2 class="text-xl font-display font-bold text-ink/80">
+              <%= link_to project.title, project_path(project), class: "hover:text-brand" %>
             </h2>
-            <span class="inline-block bg-gray-500 text-white text-xs px-2 py-1 rounded">Archivado</span>
+            <span class="inline-block bg-warning text-ink text-xs font-bold px-2 py-1 rounded border border-ink">Archivado</span>
           </div>
           
           <% if project.description.present? %>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-2"><%= project.description %></p>
+            <p class="text-ink/70 text-sm mb-4 line-clamp-2"><%= project.description %></p>
           <% end %>
           
-          <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-            <div class="text-sm text-gray-500">
+          <div class="flex items-center justify-between mt-4 pt-4 border-t-2 border-ink">
+            <div class="text-sm text-ink/50">
               <%= project.users.count %> miembro<%= project.users.count != 1 ? 's' : '' %>
             </div>
             
@@ -37,15 +37,15 @@
       <% end %>
     </div>
   <% else %>
-    <div class="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400">
+    <div class="bg-surface border-2 border-ink rounded-xl p-12 text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-ink/40">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
         <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
         <path d="M10 12l4 0" />
       </svg>
-      <p class="text-lg text-gray-600 mb-2">No tienes proyectos archivados</p>
-      <p class="text-sm text-gray-500">Los proyectos que archives aparecerán aquí</p>
+      <p class="text-lg text-ink/70 mb-2">No tienes proyectos archivados</p>
+      <p class="text-sm text-ink/50">Los proyectos que archives aparecerán aquí</p>
     </div>
   <% end %>
 </div>

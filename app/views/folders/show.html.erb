@@ -2,12 +2,12 @@
 <% folders, documents = @items.partition { |i| i.is_a?(Folder) } %>
 
 <%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
-  <section class="bg-white border border-gray-200 rounded-2xl p-5" data-controller="drive-filter">
+  <section class="bg-surface border-2 border-ink rounded-xl p-5" data-controller="drive-filter">
     <% back_url = @folder.parent_folder ? project_folder_path(@project, @folder.parent_folder) : project_folders_path(@project) %>
     <% back_label = @folder.parent_folder ? @folder.parent_folder.name : "Documentos" %>
     <div class="flex items-center justify-between mb-4 gap-3">
       <div class="flex items-center gap-2 min-w-0">
-        <%= link_to back_url, class: "p-1.5 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors flex-shrink-0", title: "Volver a #{back_label}", "aria-label": "Volver a #{back_label}" do %>
+        <%= link_to back_url, class: "p-1.5 rounded-full text-ink/50 hover:bg-accent/30 hover:text-ink/80 transition-colors flex-shrink-0", title: "Volver a #{back_label}", "aria-label": "Volver a #{back_label}" do %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -17,10 +17,10 @@
             <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
           </svg>
         </span>
-        <h2 class="text-lg font-semibold text-gray-900 truncate"><%= @folder.name %></h2>
+        <h2 class="text-lg font-semibold text-ink truncate"><%= @folder.name %></h2>
       </div>
       <div class="flex items-center gap-2">
-        <%= link_to edit_project_folder_path(@project, @folder), class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+        <%= link_to edit_project_folder_path(@project, @folder), class: "button-outline" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
           </svg>
@@ -28,7 +28,7 @@
         <% end %>
         <%= button_to project_folder_path(@project, @folder), method: :delete,
                       data: { turbo_confirm: "¿Eliminar la carpeta y todo su contenido?" },
-                      class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 transition-colors" do %>
+                      class: "button-outline text-danger" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
           </svg>
@@ -41,7 +41,7 @@
 
     <% if @items.any? %>
       <% if folders.any? %>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Carpetas</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-ink/50 mb-2">Carpetas</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6" data-drive-grid>
           <% folders.each do |folder| %>
             <%= render folder %>
@@ -50,7 +50,7 @@
       <% end %>
 
       <% if documents.any? %>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Archivos</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-ink/50 mb-2">Archivos</h3>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" data-drive-grid>
           <% documents.each do |document| %>
             <%= render document %>
@@ -59,10 +59,10 @@
       <% end %>
     <% else %>
       <div class="text-center py-16">
-        <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-16 h-16 mx-auto text-ink/30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
         </svg>
-        <p class="text-gray-500">Esta carpeta está vacía.</p>
+        <p class="text-ink/50">Esta carpeta está vacía.</p>
       </div>
     <% end %>
   </section>

@@ -20,7 +20,7 @@
  <%# Botón de descarga en la esquina superior derecha - siempre visible %>
  <div class="flex items-center justify-center gap-2">
 
-  <div class="inline-block underline rounded text-purple-500 hover:text-purple-700" style="padding-left: 5px; padding-right: 5px;">
+  <div class="inline-block underline rounded text-brand hover:text-brand-dark" style="padding-left: 5px; padding-right: 5px;">
         <%= link_to rails_blob_path(blob, disposition: "attachment"), 
             title: "Descargar #{blob.filename}",
             download: blob.filename do %>

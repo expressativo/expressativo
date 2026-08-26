@@ -1,6 +1,6 @@
 <%= render layout: 'projects/layout', locals: { project: @project, active: :todos } do %>
   <div class="mb-3">
-    <%= link_to project_todos_path(@project), class: "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-purple-600 transition-colors" do %>
+    <%= link_to project_todos_path(@project), class: "inline-flex items-center gap-1.5 text-sm text-ink/70 hover:text-brand transition-colors" do %>
       <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
       Volver a To-dos
     <% end %>
@@ -9,28 +9,28 @@
     <% completed = @todo.tasks.done.count %>
     <% total = @todo.tasks.count %>
     <% pct = total.positive? ? (completed * 100.0 / total).round : 0 %>
-    <section class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-      <header class="px-6 py-4 border-b border-gray-200">
+    <section class="bg-surface border-2 border-ink rounded-xl overflow-hidden">
+      <header class="px-6 py-4 border-b-2 border-ink">
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="flex items-center gap-2 min-w-0">
-            <span class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></span>
+            <span class="status-dot w-3 h-3"></span>
             <%= link_to @todo.name, edit_project_todo_path(@project, @todo),
                   data: { turbo_frame: "modal", turbo: false },
-                  class: "text-lg font-semibold text-gray-900 hover:text-purple-600 truncate" %>
+                  class: "text-lg font-semibold text-ink hover:text-brand truncate" %>
           </div>
-          <span class="text-xs font-medium text-gray-600 bg-gray-100 rounded-full px-2 py-0.5 flex-shrink-0">
+          <span class="text-xs font-medium text-ink/70 bg-accent/30 rounded-full px-2 py-0.5 flex-shrink-0">
             <%= completed %>/<%= total %> completadas
           </span>
         </div>
-        <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-          <div class="h-1.5 bg-green-500 rounded-full transition-all" style="width: <%= pct %>%"></div>
+        <div class="w-full h-1.5 bg-accent/30 rounded-full overflow-hidden">
+          <div class="h-1.5 bg-success rounded-full transition-all" style="width: <%= pct %>%"></div>
         </div>
       </header>
 
       <div class="p-6">
         <%= turbo_frame_tag "#{dom_id(@todo)}_tasks" do %>
           <% if total.zero? %>
-            <p class="text-sm text-gray-500 italic mb-3">Aún no hay tareas en esta lista.</p>
+            <p class="text-sm text-ink/50 italic mb-3">Aún no hay tareas en esta lista.</p>
           <% else %>
             <ul class="space-y-1.5 mb-1"
                 data-controller="task-sortable"
@@ -42,7 +42,7 @@
               <% if completed > 5 %>
                 <li class="pl-6">
                   <%= link_to "Ver completadas (#{completed})", completed_tasks_project_todo_path(@project, @todo),
-                        class: "text-xs font-medium text-purple-600 hover:text-purple-700",
+                        class: "text-xs font-medium text-brand hover:text-brand-dark",
                         data: { turbo_frame: "_top" } %>
                 </li>
               <% end %>
@@ -51,10 +51,10 @@
         <% end %>
 
         <%= turbo_frame_tag "#{dom_id(@todo)}_task_form" do %>
-          <div class="pt-3 border-t border-gray-100">
+          <div class="pt-3 border-t-2 border-ink/10">
             <%= link_to new_project_todo_task_path(@project, @todo),
                   data: { turbo_frame: "#{dom_id(@todo)}_task_form" },
-                  class: "inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-purple-600 transition" do %>
+                  class: "inline-flex items-center gap-1.5 text-sm font-medium text-ink/70 hover:text-brand transition" do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>

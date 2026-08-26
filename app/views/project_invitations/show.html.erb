@@ -1,20 +1,20 @@
-<div class="bg-white border border-gray-200 rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto mt-10">
+<div class="bg-surface border-2 border-ink rounded-xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto mt-10">
   <div class="text-center mb-6">
     <h1 class="text-3xl font-semibold mb-2">
       Invitación al proyecto
     </h1>
-    <h2 class="text-2xl text-gray-700">
+    <h2 class="text-2xl text-ink/80">
       <%= @project.title %>
     </h2>
   </div>
 
-  <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-    <p class="text-gray-700 text-center mb-4">
+  <div class="bg-info-light border border-info/40 rounded-lg p-6 mb-6">
+    <p class="text-ink/80 text-center mb-4">
       Has sido invitado a unirte a este proyecto.
     </p>
     
     <% if @project.owner %>
-      <p class="text-sm text-gray-600 text-center">
+      <p class="text-sm text-ink/70 text-center">
         Propietario: <strong><%= @project.owner.email %></strong>
       </p>
     <% end %>
@@ -30,9 +30,9 @@
     <%= link_to "Cancelar", root_path, class: "button-outline" %>
   </div>
 
-  <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+  <div class="mt-6 p-4 bg-paper rounded-lg">
     <h3 class="font-semibold mb-2 text-sm">Información:</h3>
-    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1">
+    <ul class="text-sm text-ink/80 list-disc list-inside space-y-1">
       <li>Al aceptar, serás agregado como miembro del proyecto</li>
       <li>Tendrás acceso a todos los documentos, tareas y anuncios</li>
       <li>Podrás colaborar con el equipo del proyecto</li>

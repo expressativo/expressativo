@@ -6,17 +6,17 @@
   <%= render "channels/sidebar", project: @project, current_channel: @channel %>
 
   <main class="flex-1 flex flex-col min-w-0 bg-white">
-    <header class="px-6 py-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+    <header class="px-6 py-3 border-b-2 border-ink flex items-center justify-between flex-shrink-0">
       <div class="min-w-0">
-        <h1 class="font-semibold text-gray-900 text-base flex items-center gap-2">
-          <span class="text-gray-400">#</span>
+        <h1 class="font-semibold text-ink text-base flex items-center gap-2">
+          <span class="text-ink/40">#</span>
           <%= @channel.name %>
         </h1>
         <% if @channel.description.present? %>
-          <p class="text-xs text-gray-500 truncate"><%= @channel.description %></p>
+          <p class="text-xs text-ink/50 truncate"><%= @channel.description %></p>
         <% end %>
       </div>
-      <div class="text-xs text-gray-500"><%= pluralize(@channel.members.count, "miembro") %></div>
+      <div class="text-xs text-ink/50"><%= pluralize(@channel.members.count, "miembro") %></div>
     </header>
 
     <section
@@ -29,7 +29,7 @@
       id="<%= dom_id(@channel, :messages) %>"
     >
       <% if @messages.empty? %>
-        <div class="text-center text-sm text-gray-400 py-12">No hay mensajes todavía. ¡Empieza la conversación!</div>
+        <div class="text-center text-sm text-ink/40 py-12">No hay mensajes todavía. ¡Empieza la conversación!</div>
       <% else %>
         <% unread_divider_rendered = false %>
         <% @messages.each do |message| %>

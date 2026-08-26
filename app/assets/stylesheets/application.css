@@ -20,11 +20,9 @@ h1 {
 
 
 blockquote {
-  border-left: 4px solid #d1d5db;
-  /* Gray-300 */
+  border-left: 4px solid var(--color-ink);
   padding-left: 1em;
-  color: #6b7280;
-  /* Gray-500 */
+  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
   margin: 1em 0;
 }
 
@@ -53,7 +51,7 @@ blockquote {
 /* Estilos para drag & drop de columnas */
 .column-ghost {
   opacity: 0.4;
-  background: #e5e7eb;
+  background: var(--color-accent);
 }
 
 .column-drag {
@@ -65,8 +63,8 @@ blockquote {
 
 /* Resaltado de columnas de destino al arrastrar tareas */
 .drop-target-highlight {
-  background-color: var(--color-purple-100) !important; /* bg-blue-100 */
-  border: 2px dashed var(--color-purple-700) !important; /* border-blue-500 */
+  background-color: var(--color-brand-light) !important;
+  border: 2px dashed var(--color-brand) !important;
   transition: all 0.2s ease;
 }
 
@@ -76,7 +74,7 @@ blockquote {
 }
 
 .mention-suggestion:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-accent);
 }
 
 /* Estilos para Tribute.js (autocompletado tipo Twitter) */
@@ -90,10 +88,10 @@ blockquote {
   overflow: auto;
   display: block;
   z-index: 999999;
-  background-color: #ffffff;
-  border: 1px solid #d1d5db;
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-ink);
   border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 4px 4px 0 0 var(--color-ink);
 }
 
 .tribute-container ul {
@@ -105,7 +103,8 @@ blockquote {
 .tribute-container li {
   padding: 8px 12px;
   cursor: pointer;
-  border-bottom: 1px solid #f3f4f6;
+  font-weight: 600;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
 }
 
 .tribute-container li:last-child {
@@ -114,7 +113,7 @@ blockquote {
 
 .tribute-container li.highlight,
 .tribute-container li:hover {
-  background-color: #eef2ff;
+  background-color: var(--color-accent);
 }
 
 .tribute-container li.no-match {
@@ -124,7 +123,7 @@ blockquote {
 }
 
 .tribute-container .menu-highlighted {
-  background-color: #eef2ff;
+  background-color: var(--color-accent);
 }
 
 lexxy-toolbar {

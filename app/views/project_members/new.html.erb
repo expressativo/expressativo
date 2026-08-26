@@ -1,5 +1,5 @@
-<div class="bg-white border border-gray-200 rounded-2xl px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
-  <h1 class="text-2xl font-semibold mb-6">
+<div class="card px-6 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
+  <h1 class="text-2xl font-display font-bold mb-6 text-ink">
     Agregar persona a <%= @project.title %>
   </h1>
 
@@ -11,7 +11,7 @@
           placeholder: "correo@ejemplo.com",
           required: true,
           autocomplete: "email" %>
-      <p class="text-sm text-gray-600 mt-1">
+      <p class="text-sm text-ink/60 mt-1">
         Ingresa el email de un usuario registrado en Tivo
       </p>
     </div>
@@ -19,18 +19,18 @@
     <div class="mb-6">
       <label class="label mb-2">Rol</label>
       <div class="space-y-3">
-        <label class="flex items-start gap-3 p-3 rounded-xl border border-gray-200 hover:border-purple-300 cursor-pointer has-[:checked]:border-purple-500 has-[:checked]:bg-purple-50 transition-colors">
-          <input type="radio" name="role" value="member" checked class="mt-0.5 accent-purple-600">
+        <label class="flex items-start gap-3 p-3 rounded-xl border-2 border-ink cursor-pointer has-[:checked]:bg-brand-light transition-colors">
+          <input type="radio" name="role" value="member" checked class="mt-0.5 accent-brand">
           <div>
-            <div class="text-sm font-semibold text-gray-900">Miembro</div>
-            <div class="text-xs text-gray-500 mt-0.5">Acceso completo al proyecto: tareas, tableros, documentos, anuncios, chat.</div>
+            <div class="text-sm font-bold text-ink">Miembro</div>
+            <div class="text-xs text-ink/50 mt-0.5">Acceso completo al proyecto: tareas, tableros, documentos, anuncios, chat.</div>
           </div>
         </label>
-        <label class="flex items-start gap-3 p-3 rounded-xl border border-gray-200 hover:border-amber-300 cursor-pointer has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 transition-colors">
-          <input type="radio" name="role" value="viewer" class="mt-0.5 accent-amber-600">
+        <label class="flex items-start gap-3 p-3 rounded-xl border-2 border-ink cursor-pointer has-[:checked]:bg-warning/40 transition-colors">
+          <input type="radio" name="role" value="viewer" class="mt-0.5 accent-warning">
           <div>
-            <div class="text-sm font-semibold text-gray-900">Observador</div>
-            <div class="text-xs text-gray-500 mt-0.5">Solo puede ver las tareas que tiene asignadas y dejar comentarios en ellas.</div>
+            <div class="text-sm font-bold text-ink">Observador</div>
+            <div class="text-xs text-ink/50 mt-0.5">Solo puede ver las tareas que tiene asignadas y dejar comentarios en ellas.</div>
           </div>
         </label>
       </div>

@@ -7,7 +7,7 @@
            placeholder: "Escribe un mensaje. Enter envía, Shift+Enter nueva línea. Usa @ para mencionar.",
            submit_title: "Enviar mensaje (Enter)" %>
 <% if message.errors.any? %>
-  <div class="px-4 -mt-2 mb-2 text-xs text-red-600">
+  <div class="px-4 -mt-2 mb-2 text-xs text-danger">
     <%= message.errors.full_messages.to_sentence %>
   </div>
 <% end %>

@@ -1,29 +1,29 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Notificaciones</h1>
+    <h1 class="text-3xl font-bold text-ink">Notificaciones</h1>
     
     <% if current_user.notifications.unread.any? %>
       <%= button_to "Marcar todas como leídas", 
           mark_all_as_read_notifications_path,
           method: :post,
-          class: "text-sm text-indigo-600 hover:text-indigo-800" %>
+          class: "text-sm text-brand hover:text-brand-dark" %>
     <% end %>
   </div>
 
   <!-- Configuración de notificaciones push -->
-  <div data-push-notifications-target="settingsRow" class="hidden mb-6 bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+  <div data-push-notifications-target="settingsRow" class="hidden mb-6 bg-surface border-2 border-ink rounded-xl p-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="p-2 bg-purple-50 rounded-lg">
-        <svg data-push-notifications-target="settingsIconOn" class="hidden w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-        <svg data-push-notifications-target="settingsIconOff" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      <div class="p-2 bg-brand-light rounded-lg">
+        <svg data-push-notifications-target="settingsIconOn" class="hidden w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <svg data-push-notifications-target="settingsIconOff" class="w-5 h-5 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
       </div>
       <div>
-        <h3 class="text-sm font-semibold text-gray-900">Notificaciones push</h3>
-        <p data-push-notifications-target="settingsText" class="text-xs text-gray-500">Recibí alertas incluso cuando no estés en la app</p>
+        <h3 class="text-sm font-semibold text-ink">Notificaciones push</h3>
+        <p data-push-notifications-target="settingsText" class="text-xs text-ink/50">Recibí alertas incluso cuando no estés en la app</p>
       </div>
     </div>
     <button type="button" data-action="click->push-notifications#toggle" class="flex items-center gap-2 cursor-pointer focus:outline-none">
-      <div data-push-notifications-target="track" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+      <div data-push-notifications-target="track" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-ink/10 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
         <span data-push-notifications-target="knob" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
       </div>
     </button>
@@ -39,11 +39,11 @@
     <%= paginate @notifications if @notifications.respond_to?(:current_page) %>
   <% else %>
     <div class="text-center py-12">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mx-auto text-gray-300 mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mx-auto text-ink/30 mb-4">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
       </svg>
-      <p class="text-gray-500">No tienes notificaciones</p>
+      <p class="text-ink/50">No tienes notificaciones</p>
     </div>
   <% end %>
 </div>
