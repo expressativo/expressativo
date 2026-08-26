@@ -46,7 +46,10 @@ export default class extends Controller {
 
   async handleDrop(event) {
     const taskElement = event.item;
-    const taskId = taskElement.dataset.taskId;
+    const taskLink = taskElement.matches('.publication-item')
+      ? taskElement
+      : taskElement.querySelector('.publication-item');
+    const taskId = taskLink?.dataset.taskId;
     const newDayElement = event.to.closest('[data-calendar-target="day"]');
     const newDate = newDayElement.dataset.date;
 
