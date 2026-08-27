@@ -64,6 +64,8 @@ class TasksController < ApplicationController
     if @task.update(tasks_params)
       if params[:from] == "full_form" || params[:from] == "show"
         redirect_to project_todo_task_path(@project, @todo, @task), notice: "Tarea actualizada correctamente."
+      elsif params[:from] == "my_task"
+        redirect_to my_task_path, notice: "Tarea actualizada correctamente."
       else
         redirect_to project_todos_path(@project), notice: "Tarea actualizada correctamente."
       end
@@ -130,7 +132,7 @@ class TasksController < ApplicationController
   def my_task
     @tasks = current_user.tasks
       .not_done
-      .includes(todo: :project)
+      .includes(:assigned_users, todo: :project)
       .order(Arel.sql("CASE WHEN due_date IS NULL THEN 1 ELSE 0 END, due_date ASC"))
 
     respond_to do |format|

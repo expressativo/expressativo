@@ -1,0 +1,86 @@
+<% if tasks.any? %>
+    <% tasks.group_by { |t| t.todo.project }.each do |project, project_tasks| %>
+        <div class="mb-6">
+            <div class="inline-flex items-center gap-1.5 mb-3 px-3 py-1 bg-accent border-2 border-ink rounded-full shadow-brutal-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M3 7m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                    <path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                <span class="text-sm font-display font-bold text-ink"><%= project.title %></span>
+            </div>
+
+            <div class="card overflow-hidden">
+                <% project_tasks.group_by(&:todo).each.with_index do |(todo, todo_tasks), index| %>
+                    <div class="px-5 py-4 <%= 'border-t-2 border-ink/10' if index.positive? %>">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-ink/40 mb-2">
+                            <%= todo.name %>
+                        </h4>
+
+                        <ul class="divide-y divide-ink/10">
+                            <% todo_tasks.each do |task| %>
+                                <li class="flex items-center gap-3 py-2 group/task">
+                                    <%= form_with model: [project, todo, task], method: :patch, data: { turbo_frame: "my_tasks_list" }, class: "flex-shrink-0 flex items-center" do |f| %>
+                                        <%= hidden_field_tag :from, "my_task" %>
+                                        <%= f.check_box :completed, {
+                                              class: "w-4 h-4 text-brand focus:ring-0 border-2 border-ink rounded cursor-pointer",
+                                              onchange: "this.form.requestSubmit()"
+                                            } %>
+                                    <% end %>
+
+                                    <%= link_to task.title, project_todo_task_path(project, todo, task),
+                                          class: "flex-1 min-w-0 truncate text-sm font-medium text-ink hover:text-brand transition",
+                                          data: { turbo_frame: "_top" } %>
+
+                                    <% if task.due_date.present? %>
+                                        <% days_until = (task.due_date.to_date - Date.today).to_i %>
+                                        <% is_overdue = days_until < 0 %>
+                                        <% is_today = days_until == 0 %>
+                                        <% is_soon = days_until > 0 && days_until <= 3 %>
+                                        <span class="flex-shrink-0 text-xs font-semibold <%=
+                                            if is_overdue
+                                                'text-danger'
+                                            elsif is_today
+                                                'text-warning'
+                                            elsif is_soon
+                                                'text-ink'
+                                            else
+                                                'text-ink/40'
+                                            end
+                                        %>">
+                                            <%= l(task.due_date, format: :short) %>
+                                        </span>
+                                    <% end %>
+
+                                    <% if task.assigned_users.any? %>
+                                        <div class="flex-shrink-0 flex items-center -space-x-2">
+                                            <% task.assigned_users.first(3).each do |user| %>
+                                                <%= user_avatar(user, class: "w-6 h-6 rounded-full object-cover border-2 border-surface") %>
+                                            <% end %>
+                                            <% if task.assigned_users.size > 3 %>
+                                                <span class="w-6 h-6 rounded-full border-2 border-surface bg-ink text-surface text-[10px] font-bold flex items-center justify-center">
+                                                    +<%= task.assigned_users.size - 3 %>
+                                                </span>
+                                            <% end %>
+                                        </div>
+                                    <% end %>
+                                </li>
+                            <% end %>
+                        </ul>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+<% else %>
+    <div class="bg-surface border-2 border-ink rounded-xl p-12 text-center shadow-brutal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-ink/40">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+            <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+            <path d="M9 12l2 2l4 -4" />
+        </svg>
+        <p class="text-lg font-display font-bold text-ink mb-2">No tienes tareas pendientes</p>
+        <p class="text-sm text-ink/60">¡Buen trabajo! Todas tus tareas están completadas</p>
+    </div>
+<% end %>
