@@ -3,7 +3,9 @@ const links = [
   { href: "#features", label: "Features" },
   { href: "#workflow", label: "Workflow" },
   { href: "#pricing", label: "Pricing" },
-];
+  ];
+
+import { register_url } from "./constants.js"
 ---
 
 <header class="sticky top-0 z-50 border-b-2 border-ink bg-paper/95 backdrop-blur">
@@ -31,7 +33,7 @@ const links = [
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href="#get-started" class="btn-brutal !px-4 !py-2">
+      <a href={register_url} class="btn-brutal !px-4 !py-2" target="_blank">
         Get Started
       </a>
 
