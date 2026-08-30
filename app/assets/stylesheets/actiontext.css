@@ -1,4 +1,4 @@
-/*
+/*/*
  * Styles for rendering Action Text content (read-only display).
  * The .lexxy-content class is applied by app/views/layouts/action_text/contents/_content.html.erb
  * Uses the neo-brutalist design tokens defined in app/assets/tailwind/application.css
@@ -88,7 +88,6 @@
   background-color: var(--color-accent);
   color: var(--color-ink);
   padding: 0.15em 0.4em;
-  border-radius: 4px;
   border: 1px solid var(--color-ink);
 }
 
@@ -178,4 +177,9 @@
   font-size: 0.8125rem;
   padding: 8px 10px;
   cursor: default;
+}
+
+
+lexxy-toolbar {
+    border-radius: .5rem .5rem 0rem 0rem !important
 }
