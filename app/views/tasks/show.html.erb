@@ -1,25 +1,10 @@
 <%= render layout: 'projects/layout', locals: { project: @project, active: :todos } do %>
-  <%
-    case params[:from]
-    when 'board'
-      back_url = :back
-      back_label = "Volver al tablero"
-    when 'calendar'
-      calendar_date = @task.due_date&.to_date || Date.today
-      back_url = project_calendar_path(@project, year: calendar_date.year, month: calendar_date.month)
-      back_label = "Volver al calendario"
-    else
-      back_url = :back
-      back_label = "Volver"
-    end
-  %>
-
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <div class="lg:col-span-2 space-y-4">
       <div>
-        <%= link_to back_url, class: "inline-flex items-center gap-1.5 text-sm text-ink/70 hover:text-brand transition-colors mb-2" do %>
+        <%= link_to @back_url, class: "inline-flex items-center gap-1.5 text-sm text-ink/70 hover:text-brand transition-colors mb-2" do %>
           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
-          <span class="truncate max-w-[280px]"><%= back_label %></span>
+          <span class="truncate max-w-[280px]"><%= @back_label %></span>
         <% end %>
       </div>
       <%= turbo_frame_tag "#{dom_id(@task)}_show" do %>

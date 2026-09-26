@@ -27,7 +27,13 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    redirect_to comment_back_path(@commentable), notice: "Comentario eliminado correctamente.", status: :see_other
+    # El botón vive dentro del turbo-frame del comentario: una redirección HTML
+    # dejaría el frame sin contenido ("Content missing"). Con turbo_stream se
+    # quita el comentario del DOM sin recargar.
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to comment_back_path(@commentable), notice: "Comentario eliminado correctamente.", status: :see_other }
+    end
   end
 
   private
