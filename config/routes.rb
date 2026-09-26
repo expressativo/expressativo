@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :folders do
       resources :documents, only: %i[new create]
     end
+    resources :folder_uploads, only: %i[create]
     resources :documents, only: %i[index new create] do
       collection do
         get :archived
