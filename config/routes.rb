@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
 
+  # Back office (solo administradores)
+  namespace :admin do
+    resources :users, only: [ :index ]
+    root to: "users#index"
+  end
+
   # Perfil de usuario
   resource :profile, only: [ :show, :edit, :update ]
 

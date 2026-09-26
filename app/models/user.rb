@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :omniauthable
+         :recoverable, :rememberable, :validatable, :trackable, :omniauthable
   has_one_attached :avatar
   has_many :project_users, dependent: :destroy
   has_many :projects, through: :project_users
@@ -18,10 +18,25 @@ class User < ApplicationRecord
   has_many :message_mentions, dependent: :destroy
   has_many :quick_notes, dependent: :destroy
 
+  # Un usuario se considera activo si inició sesión dentro de esta ventana.
+  ACTIVE_WINDOW = 30.days
+
+  scope :active, -> { where(current_sign_in_at: ACTIVE_WINDOW.ago..) }
+  scope :inactive, -> { where(current_sign_in_at: nil).or(where(current_sign_in_at: ...ACTIVE_WINDOW.ago)) }
+
   after_create_commit :notify_admin_of_registration
 
   # Validaciones de avatar movidas al controller para evitar errores en producción
   # validates :avatar, content_type: [ "image/png", "image/jpeg" ], size: { less_than: 5.megabytes }
+
+  def admin?
+    superadmin = ENV["EMAIL_SUPERADMIN"].to_s.strip
+    superadmin.present? && email.to_s.casecmp?(superadmin)
+  end
+
+  def active?
+    current_sign_in_at.present? && current_sign_in_at >= ACTIVE_WINDOW.ago
+  end
 
   def full_name
     "#{first_name} #{last_name}"
