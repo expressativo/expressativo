@@ -2,7 +2,7 @@
          class="drive-folder card-interactive group relative flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-brand-light/40"
          data-drive-filter-target="item"
          data-name="<%= folder.name.to_s.downcase %>">
-  <%= link_to project_folder_path(folder.project, folder), class: "flex items-center gap-3 min-w-0 flex-1" do %>
+  <%= link_to project_folder_path(folder.project, folder), class: "drive-card-link flex items-center gap-3 min-w-0 flex-1" do %>
     <span class="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
       <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
@@ -16,7 +16,7 @@
     </div>
   <% end %>
 
-  <div class="relative" data-controller="dropdown">
+  <div class="relative z-10" data-controller="dropdown">
     <button type="button"
             data-dropdown-target="button"
             data-action="click->dropdown#toggle"
