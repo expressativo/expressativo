@@ -10,6 +10,33 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uexpressativo", "-pexpressativo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # App en modo desarrollo: docker compose -f local.yml up
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      # db:prepare en development también toca test, que no tiene adapter
+      SKIP_TEST_DATABASE: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
 
 volumes:
   mysql_data:
+  bundle:
