@@ -5,6 +5,9 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
       </svg>
       <span class="text-ink/40">TASK-<%= task.id %></span>
+      <% if task.public? %>
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded border border-info/40 bg-info-light text-info font-sans font-semibold" title="Cualquiera con el link público puede ver esta tarea">Pública</span>
+      <% end %>
       <span class="text-ink/30">·</span>
       <%= link_to @todo.name, project_todo_path(@project, @todo),
             class: "text-ink/50 hover:text-brand transition-colors truncate max-w-[200px]" %>
@@ -12,6 +15,7 @@
         <button type="button"
                 data-action="click->clipboard#copy"
                 title="Copiar link de la tarea"
+                aria-label="Copiar link de la tarea"
                 class="p-1 rounded-lg text-ink/40 hover:text-brand hover:bg-brand-light transition-colors">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 4h8a2 2 0 012 2v8a2 2 0 01-2 2h-8a2 2 0 01-2-2v-8a2 2 0 012-2z"/>
@@ -20,12 +24,14 @@
       </div>
     </div>
 
-    <% is_viewer = @project.viewer?(current_user) %>
+    <% is_viewer = project_viewer? %>
     <div data-controller="dropdown" class="relative flex-shrink-0">
       <button
         data-dropdown-target="button"
         data-action="click->dropdown#toggle"
         title="Acciones"
+        aria-label="Acciones de la tarea"
+        aria-haspopup="menu"
         class="cursor-pointer p-1.5 rounded-md border-2 border-transparent hover:border-ink hover:bg-accent text-ink/60 hover:text-ink"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
@@ -33,11 +39,6 @@
 
       <div data-dropdown-target="menu" class="dropdown-menu hidden absolute right-0 z-10 divide-y divide-ink/10 w-56">
         <ul class="py-2">
-          <li data-controller="clipboard" data-clipboard-url-value="<%= project_todo_task_url(@project, @todo, task) %>">
-            <button type="button" data-action="click->clipboard#copy" class="dropdown-menu-item w-full">
-              Copiar link de la tarea
-            </button>
-          </li>
           <% if task.public? %>
             <li data-controller="clipboard" data-clipboard-url-value="<%= public_task_url(task.public_token) %>">
               <button type="button" data-action="click->clipboard#copy" class="dropdown-menu-item w-full">
@@ -82,62 +83,57 @@
     </div>
   </div>
 
-  <% if is_viewer %>
-    <div class="flex items-center gap-3">
+  <% title_classes = "text-2xl md:text-3xl font-bold text-ink leading-tight #{'line-through text-ink/40' if task.completed?}" %>
+  <div class="flex items-center gap-3">
+    <% if is_viewer %>
       <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-success border-emerald-500 text-white' : 'border-ink bg-white' %>">
         <% if task.completed? %>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
           </svg>
         <% end %>
       </span>
-      <h1 class="text-2xl md:text-3xl font-bold text-ink leading-tight <%= 'line-through text-ink/40' if task.completed? %>">
-        <%= task.title %>
-      </h1>
-    </div>
-  <% else %>
-    <%= link_to edit_project_todo_task_path(@project, @todo, task),
-                data: { turbo_frame: "#{dom_id(task)}_show" },
-                class: "block group" do %>
-      <div class="flex items-center gap-3">
-        <span class="inline-flex w-7 h-7 items-center justify-center rounded-md border-2 flex-shrink-0 <%= task.completed? ? 'bg-success border-emerald-500 text-white' : 'border-ink group-hover:border-brand bg-white' %> transition-colors">
-          <% if task.completed? %>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-            </svg>
-          <% end %>
-        </span>
-        <h1 class="text-2xl md:text-3xl font-bold text-ink leading-tight group-hover:text-brand-dark transition-colors <%= 'line-through text-ink/40 group-hover:text-ink/50' if task.completed? %>">
-          <%= task.title %>
-        </h1>
-      </div>
-    <% end %>
-  <% end %>
-
-  <div class="mt-6">
-    <h2 class="text-xs font-semibold text-ink/50 uppercase tracking-wider mb-2">Descripción</h2>
-    <% if is_viewer %>
-      <div class="rounded-lg -mx-2 px-2 py-2">
-        <% if task.notes.present? %>
-          <div class="prose prose-sm max-w-none text-ink/80">
-            <%= task.notes %>
-          </div>
-        <% else %>
-          <p class="text-sm text-ink/40 italic">Sin descripción.</p>
-        <% end %>
-      </div>
+      <h1 class="<%= title_classes %>"><%= task.title %></h1>
     <% else %>
+      <%# El check completa/reabre la tarea; el título abre la edición. %>
+      <%= button_to project_todo_task_path(@project, @todo, task),
+            method: :patch,
+            params: { from: "show", "task[completed]" => !task.completed? },
+            form: { data: { turbo_frame: "_top" }, class: "flex-shrink-0" },
+            title: task.completed? ? "Marcar como pendiente" : "Marcar como hecha",
+            "aria-label": task.completed? ? "Marcar como pendiente" : "Marcar como hecha",
+            class: "inline-flex w-7 h-7 items-center justify-center rounded-md border-2 cursor-pointer transition-colors #{task.completed? ? 'bg-success border-emerald-500 text-white hover:opacity-80' : 'border-ink bg-white text-transparent hover:border-success hover:text-success'}" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+          </svg>
+      <% end %>
       <%= link_to edit_project_todo_task_path(@project, @todo, task),
                   data: { turbo_frame: "#{dom_id(task)}_show" },
-                  class: "block rounded-lg hover:bg-paper transition-colors -mx-2 px-2 py-2" do %>
-        <% if task.notes.present? %>
-          <div class="prose prose-sm max-w-none text-ink/80">
-            <%= task.notes %>
-          </div>
-        <% else %>
-          <p class="text-sm text-ink/40 italic">Añade una descripción a esta tarea…</p>
-        <% end %>
+                  title: "Editar tarea",
+                  class: "group block min-w-0" do %>
+        <h1 class="<%= title_classes %> group-hover:text-brand-dark transition-colors"><%= task.title %></h1>
       <% end %>
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-xs font-semibold text-ink/50 uppercase tracking-wider">Descripción</h2>
+      <% if !is_viewer && task.notes.present? %>
+        <%= link_to "Editar", edit_project_todo_task_path(@project, @todo, task),
+                    data: { turbo_frame: "#{dom_id(task)}_show" },
+                    class: "text-xs font-semibold text-ink/50 hover:text-brand transition-colors" %>
+      <% end %>
+    </div>
+    <%# El contenido no va dentro de un link: así sus propios links funcionan y se puede seleccionar texto. %>
+    <% if task.notes.present? %>
+      <div class="text-[15px]"><%= task.notes %></div>
+    <% elsif is_viewer %>
+      <p class="text-sm text-ink/40 italic">Sin descripción.</p>
+    <% else %>
+      <%= link_to "Añade una descripción a esta tarea…", edit_project_todo_task_path(@project, @todo, task),
+                  data: { turbo_frame: "#{dom_id(task)}_show" },
+                  class: "block rounded-lg hover:bg-paper transition-colors -mx-2 px-2 py-2 text-sm text-ink/40 italic" %>
     <% end %>
   </div>
 </section>

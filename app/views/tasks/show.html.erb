@@ -3,7 +3,7 @@
     <div class="lg:col-span-2 space-y-4">
       <div>
         <%= link_to @back_url, class: "inline-flex items-center gap-1.5 text-sm text-ink/70 hover:text-brand transition-colors mb-2" do %>
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+          <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           <span class="truncate max-w-[280px]"><%= @back_label %></span>
         <% end %>
       </div>
@@ -11,28 +11,33 @@
         <%= render 'tasks/tasks_info', task: @task %>
       <% end %>
 
+      <%# Ya vienen precargados; se excluye el comentario sin guardar si add_comment falló. %>
+      <% comments = @task.comments.select(&:persisted?).sort_by(&:created_at) %>
       <section
         class="bg-surface border-2 border-ink rounded-xl p-6"
         data-controller="create-task-modal"
         data-create-task-modal-project-id-value="<%= @project.id %>"
-        data-create-task-modal-todos-value="<%= @project.todos.active.map { |t| { id: t.id, name: t.name } }.to_json %>"
+        data-create-task-modal-todos-value="<%= @project.todos.active.pluck(:id, :name).map { |id, name| { id: id, name: name } }.to_json %>"
         data-create-task-modal-enable-selection-value="true"
       >
         <div class="flex items-center gap-2 mb-4">
-          <svg class="w-5 h-5 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
           <h2 class="text-base font-semibold text-ink">Comentarios</h2>
-          <% if @task.comments.any? %>
-            <span class="text-xs text-ink/50 bg-accent/30 px-2 py-0.5 rounded-full"><%= @task.comments.size %></span>
+          <% if comments.any? %>
+            <span class="text-xs text-ink/50 bg-accent/30 px-2 py-0.5 rounded-full"><%= comments.size %></span>
           <% end %>
         </div>
 
-        <div class="mb-4">
+        <%# Orden cronológico, con el editor al final como en un hilo. %>
+        <% if comments.any? %>
+          <%= render partial: "comments/list", locals: { commentable: @task, comments: comments, show_heading: false } %>
+        <% end %>
+
+        <div class="mt-4">
           <%= render partial: "comments/new_form", locals: { commentable: @task } %>
         </div>
-
-        <%= render partial: "comments/list", locals: { commentable: @task, comments: @task.comments.includes(:user).order(created_at: :desc) } %>
 
         <%= render "shared/create_task_modal",
               modal_title: "Crear tarea desde selección",

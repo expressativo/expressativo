@@ -105,15 +105,15 @@ export default class extends Controller {
 
   addAssignedUser(user) {
     const assignedItem = document.createElement("div");
-    assignedItem.className = "inline-block px-2 py-1 bg-purple-50 border border-purple-500 rounded-3xl";
+    assignedItem.className = "inline-block px-2 py-1 bg-brand-light border-2 border-ink rounded-3xl";
     assignedItem.dataset.userId = user.id;
-    console.log(`${Boolean(user.name.trim())}`)
     assignedItem.innerHTML = `
       <div class="flex items-center gap-2 justify-between">
-        <div class="font-medium text-gray-900 truncate">${Boolean(user.name.trim()) ? user.name : user.email}</div>
+        <div class="font-medium text-ink truncate">${Boolean(user.name.trim()) ? user.name : user.email}</div>
         <button
         type="button"
-        class="flex-shrink-0 text-red-600 hover:text-red-800"
+        class="flex-shrink-0 text-danger hover:text-danger"
+        aria-label="Desasignar"
         data-action="click->task-assignee#unassign"
         data-user-id="${user.id}"
         >
@@ -135,7 +135,6 @@ export default class extends Controller {
       return;
     }
     
-    console.log(userId)
 
     try {
       const url = `${this.unassignBaseUrlValue}/${userId}.json`;
@@ -145,7 +144,6 @@ export default class extends Controller {
           "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
         }
       });
-      console.log(response)
 
       const data = await response.json();
 

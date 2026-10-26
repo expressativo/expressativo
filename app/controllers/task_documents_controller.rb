@@ -1,6 +1,7 @@
 class TaskDocumentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task
+  before_action :require_editor!
 
   def create
     @document = @project.documents.not_archived.visible_to(current_user).find(params[:document_id])
@@ -55,6 +56,11 @@ class TaskDocumentsController < ApplicationController
       name: document.name,
       url: document_path(document)
     }
+  end
+
+  # Los viewers solo pueden ver la tarea; asignar o enlazar es de miembros.
+  def require_editor!
+    head :forbidden if @project.viewer?(current_user)
   end
 
   def set_task

@@ -17,22 +17,30 @@
             <div class="font-medium text-ink truncate"><%= user.email %></div>
           <% end %>
 
-          <%= link_to project_todo_task_assignment_path(@project, @todo, task, user.id), 
+          <% unless project_viewer? %>
+          <%= link_to project_todo_task_assignment_path(@project, @todo, task, user.id),
                     method: :delete,
                     data: { 
                       turbo_method: :delete,
                       turbo_confirm: "¿Desasignar este usuario de la tarea?"
                     },
+                    "aria-label": "Desasignar a #{user.full_name.presence || user.email}",
                     class: "flex-shrink-0 text-danger hover:text-danger" do %>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
+          <% end %>
         <% end %>
         </div>        
       </div>
     <% end %>
   </div>
 
+  <% if project_viewer? %>
+    <% if task.assigned_users.empty? %>
+      <span class="text-xs text-ink/50 italic">No hay personas asignadas a esta tarea</span>
+    <% end %>
+  <% else %>
   <!-- Buscador de usuarios -->
   <div class="relative">
     <div class="relative">
@@ -41,6 +49,7 @@
         data-task-assignee-target="input"
         data-action="input->task-assignee#search blur->task-assignee#hideResults"
         placeholder="Buscar personas del proyecto..."
+        aria-label="Asignar persona"
         class="input"
       />
       <svg class="absolute right-3 top-3 w-5 h-5 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,4 +71,5 @@
       <!-- Los resultados se insertan aquí dinámicamente -->
     </div>
   </div>
+<% end %>
 </div>
