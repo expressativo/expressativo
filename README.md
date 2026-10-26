@@ -2,9 +2,21 @@
 
 A collaborative project management app built with Rails 8. Create projects, manage tasks on kanban boards, chat with your team, and keep everything in one place.
 
-<img width="1920" height="1045" alt="Dashboard" src="https://github.com/user-attachments/assets/6000f88d-43a9-4219-82fb-47a8aa7e8463" />
+![Resumen del proyecto](docs/screenshots/project.png)
 
-<img width="1920" height="1045" alt="Kanban board" src="https://github.com/user-attachments/assets/f067208d-8a91-4f78-a9d9-dea6f91053d5" />
+## Screenshots
+
+| Kanban board | Task lists |
+|---|---|
+| ![Kanban board](docs/screenshots/board.png) | ![Task lists](docs/screenshots/todos.png) |
+
+| Task detail | Documents & folders |
+|---|---|
+| ![Task detail](docs/screenshots/task.png) | ![Documents and folders](docs/screenshots/documents.png) |
+
+| Team chat | Projects |
+|---|---|
+| ![Team chat](docs/screenshots/chat.png) | ![Projects](docs/screenshots/projects.png) |
 
 ## Features
 
@@ -50,6 +62,28 @@ bin/dev
 ```
 
 Then visit [http://localhost:3000/users/sign_up](http://localhost:3000/users/sign_up) to register the first user.
+
+### Running everything with Docker
+
+If you'd rather not install Ruby or the MySQL client locally, `local.yml` also runs the app (Rails + Tailwind watcher) in a container:
+
+```bash
+docker compose -f local.yml up --build
+```
+
+The app is served at [http://localhost:3000](http://localhost:3000). The first boot installs gems into a named volume and runs `db:prepare`.
+
+### Regenerating the README screenshots
+
+The screenshots in `docs/screenshots` come from fictional demo data. With the Docker setup running:
+
+```bash
+docker compose -f local.yml exec web bin/rails runner script/screenshots/demo_seed.rb
+docker compose -f local.yml exec web gem install ferrum
+docker compose -f local.yml exec web ruby script/screenshots/capture.rb projects /projects project /projects/2 board /projects/2/boards/1 todos /projects/2/todos task /projects/2/todos/2/tasks/7 documents /projects/2/folders chat /projects/2/channels/1
+```
+
+`demo_seed.rb` prints the project, board, task and channel ids to use in the paths. Captures are taken at 2x; they were resized to 1600px wide with `sips -Z 1600`. Turn off `annotate_rendered_view_with_filenames` in `config/environments/development.rb` while capturing, or rich-text previews show the template comments.
 
 ### Environment Variables
 

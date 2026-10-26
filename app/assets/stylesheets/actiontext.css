@@ -209,43 +209,113 @@ lexxy-toolbar {
 /* ─── Editor de documentos (documents/_form) ──────────────────────────────── */
 
 /*
- * El editor ocupa todo el ancho de la tarjeta, sin borde propio: la barra de
- * herramientas queda fija arriba al hacer scroll y el texto se lee en una
- * columna centrada, como una hoja.
+ * La hoja (tarjeta de max-w-4xl) tiene un único margen interior compartido
+ * por título, barra de formato y cuerpo, así todo queda alineado a la misma
+ * línea. La barra de acciones del formulario y la de formato quedan fijas
+ * arriba al hacer scroll, una debajo de la otra.
  */
+:root {
+  --document-sheet-pad: 1.25rem;
+  --document-form-bar-height: 4rem;
+}
+
+@media (min-width: 640px) {
+  :root { --document-sheet-pad: 3rem; }
+}
+
+.document-sheet-pad {
+  padding-inline: var(--document-sheet-pad);
+}
+
+/* Título del documento (input en el form, h1 en show). Sin capa a propósito:
+   así gana a la regla global de h1 de application.css. */
+.document-title {
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .document-title { font-size: 2.5rem; }
+}
+
+.document-form-bar {
+  height: var(--document-form-bar-height);
+}
+
 .document-editor lexxy-editor {
-  --lexxy-editor-rows: 24lh;
+  --lexxy-editor-rows: 22lh;
   --lexxy-editor-padding: 0;
   border: 0;
-  border-radius: 0;
+  border-radius: 0 0 0.625rem 0.625rem;
   background-color: transparent;
 }
 
 .document-editor lexxy-toolbar {
   position: sticky;
-  top: 0;
+  top: var(--document-form-bar-height);
   z-index: 20;
-  padding: 0.375rem 1rem;
-  background-color: var(--color-surface);
+  padding: 0.375rem calc(var(--document-sheet-pad) - 0.5rem);
+  background-color: var(--color-paper);
   border-block: 2px solid var(--color-ink);
   border-radius: 0 !important;
 }
 
+.document-editor .lexxy-editor__toolbar-button {
+  background-color: transparent;
+}
+
+.document-editor .lexxy-editor__toolbar-button:hover:not([aria-disabled="true"]) {
+  background-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+
+.document-editor .lexxy-editor__toolbar-button[aria-pressed="true"] {
+  background-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1.5px var(--color-ink);
+}
+
 .document-editor .lexxy-editor__content {
-  max-width: 48rem;
-  margin-inline: auto;
-  padding: 2rem 1rem 4rem;
+  padding: 2rem var(--document-sheet-pad) 5rem;
   font-size: 1.0625rem;
   line-height: 1.75;
 }
 
-@media (min-width: 640px) {
-  .document-editor .lexxy-editor__content {
-    padding-inline: 1.5rem;
-  }
+/* Indicador de autoguardado: punto de color + texto */
+.autosave-status {
+  align-items: center;
+  color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 0.375rem;
+  white-space: nowrap;
 }
 
-/* Lectura del documento (documents/show): columna centrada, texto más cómodo. */
+.autosave-status__dot {
+  background-color: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 9999px;
+  height: 0.625rem;
+  width: 0.625rem;
+}
+
+.autosave-status[data-state="saved"] .autosave-status__dot { background-color: var(--color-success); }
+.autosave-status[data-state="pending"] .autosave-status__dot { background-color: var(--color-accent); }
+.autosave-status[data-state="saving"] .autosave-status__dot {
+  animation: autosave-pulse 0.9s ease-in-out infinite alternate;
+  background-color: var(--color-brand);
+}
+.autosave-status[data-state="error"] { color: var(--color-danger); }
+.autosave-status[data-state="error"] .autosave-status__dot { background-color: var(--color-danger); }
+
+@keyframes autosave-pulse {
+  to { opacity: 0.3; }
+}
+
+/* Lectura del documento (documents/show) */
 .document-reading .lexxy-content {
   font-size: 1.0625rem;
   line-height: 1.75;

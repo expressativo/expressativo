@@ -7,96 +7,98 @@
   else
     folder ? project_folder_path(@project, folder) : project_folders_path(@project)
   end
-  heading = if document.persisted?
-    is_file ? "Editando archivo" : "Editando documento"
-  else
+  back_label = document.persisted? ? document.name : (folder&.name || "Documentos")
+  # Autoguardado solo en borradores de texto: lo publicado se guarda a mano.
+  autosave = !is_file && document.draft?
+  status_label = if document.new_record?
     is_file ? "Nuevo archivo" : "Nuevo documento"
+  else
+    { "draft" => "Borrador", "published" => "Publicado", "archived" => "Archivado" }[document.status]
   end
 %>
 
-<%= form_with(model: document, url: form_url, class: "block",
-              data: { controller: "document-form", action: "keydown.meta+s@document->document-form#save keydown.ctrl+s@document->document-form#save" }) do |form| %>
+<%= form_with(model: document, url: form_url, class: "block max-w-4xl mx-auto",
+              data: { controller: "document-form",
+                      document_form_autosave_value: autosave,
+                      action: "keydown.meta+s@document->document-form#save keydown.ctrl+s@document->document-form#save submit->document-form#submit lexxy:change->document-form#changed lexxy:upload-start->document-form#uploadStarted lexxy:upload-end->document-form#uploadEnded" }) do |form| %>
   <%= form.hidden_field :document_type %>
 
-  <section class="bg-surface border-2 border-ink rounded-xl shadow-brutal">
-    <%# Barra superior: migas + acciones %>
-    <header class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b-2 border-ink bg-paper rounded-t-[10px]">
-      <div class="flex items-center gap-2 min-w-0">
-        <%= link_to cancel_url, class: "p-1.5 rounded-full text-ink/50 hover:bg-accent/30 hover:text-ink/80 transition-colors flex-shrink-0", title: "Volver", "aria-label": "Volver" do %>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        <% end %>
-        <nav class="flex items-center gap-1.5 text-sm text-ink/50 min-w-0" aria-label="Ubicación">
-          <%= link_to "Documentos", project_folders_path(@project), class: "hover:text-ink hover:underline flex-shrink-0" %>
-          <% if folder %>
-            <span aria-hidden="true">/</span>
-            <%= link_to folder.name, project_folder_path(@project, folder), class: "hover:text-ink hover:underline truncate" %>
-          <% end %>
-          <span aria-hidden="true">/</span>
-          <span class="badge bg-accent flex-shrink-0"><%= heading %></span>
-        </nav>
-      </div>
-
-      <div class="flex items-center gap-2 flex-shrink-0">
-        <span class="hidden lg:inline text-xs text-ink/40 mr-1">
-          <kbd class="px-1.5 py-0.5 border border-ink/20 rounded bg-surface font-sans">⌘ S</kbd> para guardar
-        </span>
-        <%= link_to "Cancelar", cancel_url, class: "button-outline" %>
-        <%= form.button type: "submit", class: "button" do %>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-          </svg>
-          <%= document.persisted? ? "Guardar cambios" : "Guardar" %>
-        <% end %>
-      </div>
-    </header>
-
-    <% if document.errors.any? %>
-      <div id="error_explanation" class="errors mx-4 sm:mx-6 mt-5" role="alert">
-        <p class="mb-1">No pudimos guardar <%= is_file ? "el archivo" : "el documento" %>:</p>
-        <ul class="list-disc ml-5 font-medium">
-          <% document.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
+  <%# Barra de acciones: queda fija arriba al hacer scroll %>
+  <div class="document-form-bar sticky top-0 z-30 -mx-2 px-2 bg-paper flex items-center justify-between gap-3">
+    <%= link_to cancel_url, class: "inline-flex items-center gap-1.5 min-w-0 text-sm text-ink/70 hover:text-brand transition-colors" do %>
+      <svg class="w-4 h-4 flex-shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+      <span class="truncate max-w-[220px]"><%= back_label %></span>
     <% end %>
 
-    <%# Título %>
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10">
-      <div class="flex items-start gap-3">
-        <div class="hidden sm:block flex-shrink-0 mt-1">
-          <%= document_kind_icon(document, css_class: "w-11 h-11 border-2 border-ink") %>
-        </div>
-        <div class="flex-1 min-w-0">
-          <%= form.label :name, "Título", class: "sr-only" %>
-          <%= form.text_field :name,
-                              class: "w-full bg-transparent border-0 p-0 text-3xl sm:text-4xl font-display font-bold text-ink placeholder:text-ink/25 focus:outline-none focus:ring-0",
-                              placeholder: is_file ? "Nombre del archivo" : "Sin título",
-                              autofocus: document.new_record?,
-                              autocomplete: "off",
-                              data: { action: ("keydown.enter->document-form#focusBody" unless is_file) } %>
-          <p class="mt-2 text-xs text-ink/50">
-            <% if document.new_record? %>
-              Se guardará como <span class="font-bold text-ink/70">borrador</span>. Podrás publicarlo cuando esté listo.
-            <% else %>
-              Última edición hace <%= time_ago_in_words(document.updated_at) %>
-            <% end %>
-          </p>
-        </div>
+    <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      <% if autosave %>
+        <span class="autosave-status" data-document-form-target="status" data-state="<%= document.persisted? ? "saved" : "idle" %>" role="status" aria-live="polite">
+          <span class="autosave-status__dot" aria-hidden="true"></span>
+          <span data-label class="hidden sm:inline"><%= document.persisted? ? "Guardado" : "Se guarda solo" %></span>
+        </span>
+      <% end %>
+      <span class="hidden lg:inline text-xs text-ink/40">
+        <kbd class="px-1.5 py-0.5 border border-ink/20 rounded bg-surface font-sans">⌘ S</kbd>
+      </span>
+      <%= link_to "Cancelar", cancel_url, class: "button-ghost hidden sm:inline-flex" %>
+      <%= form.button type: "submit", class: "button" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+        <%= autosave ? "Listo" : (document.persisted? ? "Guardar cambios" : "Guardar") %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if document.errors.any? %>
+    <div id="error_explanation" class="errors mb-4" role="alert">
+      <p class="mb-1">No pudimos guardar <%= is_file ? "el archivo" : "el documento" %>:</p>
+      <ul class="list-disc ml-5 font-medium">
+        <% document.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="bg-surface border-2 border-ink rounded-xl shadow-brutal">
+    <%# Título: comparte margen izquierdo con el cuerpo %>
+    <div class="document-sheet-pad pt-8 sm:pt-12 pb-6">
+      <div class="flex flex-wrap items-center gap-2 mb-4 text-xs text-ink/50">
+        <span class="badge <%= document.published? ? "bg-success-light" : "bg-accent" %>"><%= status_label %></span>
+        <% if folder %>
+          <span class="inline-flex items-center gap-1 min-w-0">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            <span class="truncate"><%= folder.name %></span>
+          </span>
+        <% end %>
+        <% if document.persisted? %>
+          <span aria-hidden="true">·</span>
+          <span>Editado hace <%= time_ago_in_words(document.updated_at) %></span>
+        <% elsif autosave %>
+          <span aria-hidden="true">·</span>
+          <span>Se guarda como borrador mientras escribes</span>
+        <% end %>
       </div>
+
+      <%= form.label :name, "Título", class: "sr-only" %>
+      <%= form.text_field :name,
+                          class: "w-full bg-transparent border-0 p-0 document-title text-ink placeholder:text-ink/25 focus:outline-none focus:ring-0",
+                          placeholder: is_file ? "Nombre del archivo" : "Sin título",
+                          autofocus: document.new_record?,
+                          autocomplete: "off",
+                          data: { action: ["input->document-form#changed", ("keydown.enter->document-form#focusBody" unless is_file)].compact.join(" ") } %>
     </div>
 
     <% if is_file %>
       <%# Subida de archivo %>
-      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8" data-controller="file-upload">
+      <div class="document-sheet-pad pb-10" data-controller="file-upload">
         <%= form.label :file, "Archivo", class: "label mb-2" %>
         <div data-file-upload-target="dropZone"
              data-action="click->file-upload#openFileSelector"
              class="border-2 border-dashed border-ink rounded-xl px-6 py-12 text-center transition-colors cursor-pointer bg-paper hover:bg-brand-light">
           <div class="mx-auto mb-4 w-14 h-14 flex items-center justify-center rounded-xl border-2 border-ink bg-accent shadow-brutal-sm">
-            <svg class="w-7 h-7 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-7 h-7 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
             </svg>
           </div>
@@ -117,7 +119,7 @@
                               action: "change->file-upload#fileSelected"
                             } %>
         <% if document.file.attached? %>
-          <div class="mt-4 flex items-center gap-3 px-4 py-3 border-2 border-ink rounded-lg bg-surface">
+          <div class="mt-4 flex items-center gap-3 px-4 py-3 border-2 border-ink rounded-lg bg-paper">
             <%= document_kind_icon(document, css_class: "w-9 h-9") %>
             <div class="min-w-0">
               <p class="text-sm font-semibold text-ink truncate"><%= document.file.filename %></p>
@@ -128,16 +130,9 @@
       </div>
     <% else %>
       <%# Cuerpo del documento %>
-      <div class="document-editor mt-6">
+      <div class="document-editor">
         <%= form.rich_text_area :body, placeholder: "Empieza a escribir… usa la barra para dar formato, insertar imágenes o tablas." %>
       </div>
     <% end %>
-
-    <footer class="flex items-center justify-end gap-2 px-4 sm:px-6 py-3 border-t-2 border-ink bg-paper rounded-b-[10px]">
-      <%= link_to "Cancelar", cancel_url, class: "button-outline" %>
-      <%= form.button type: "submit", class: "button" do %>
-        <%= document.persisted? ? "Guardar cambios" : "Guardar" %>
-      <% end %>
-    </footer>
   </section>
 <% end %>

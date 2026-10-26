@@ -4,326 +4,353 @@
 <%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
   <% back_url = @document.folder ? project_folder_path(@project, @document.folder) : project_folders_path(@project) %>
   <% back_label = @document.folder ? @document.folder.name : "Documentos" %>
+  <% status_label = { "draft" => "Borrador", "published" => "Publicado", "archived" => "Archivado" }[@document.status] %>
+  <% status_class = { "draft" => "bg-accent", "published" => "bg-success-light", "archived" => "bg-warning-light" }[@document.status] %>
 
-  <section class="bg-surface border-2 border-ink rounded-xl overflow-hidden">
-    <header class="flex items-start justify-between gap-4 px-6 py-4 border-b-2 border-ink/10">
-      <div class="flex items-start gap-3 min-w-0">
-        <%= link_to back_url, class: "p-1.5 rounded-full text-ink/50 hover:bg-accent/30 hover:text-ink/80 transition-colors flex-shrink-0 mt-1.5", title: "Volver a #{back_label}", "aria-label": "Volver a #{back_label}" do %>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        <% end %>
-        <%= document_kind_icon(@document, css_class: "w-12 h-12 flex-shrink-0 border-2 border-ink") %>
-        <div class="min-w-0">
-          <nav class="flex items-center gap-1.5 text-xs text-ink/50 mb-0.5 min-w-0" aria-label="Ubicación">
-            <%= link_to "Documentos", project_folders_path(@project), class: "hover:text-ink hover:underline flex-shrink-0" %>
-            <% if @document.folder %>
-              <span aria-hidden="true">/</span>
-              <%= link_to @document.folder.name, project_folder_path(@project, @document.folder), class: "hover:text-ink hover:underline truncate" %>
-            <% end %>
-          </nav>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl font-display font-bold text-ink truncate"><%= @document.name %></h1>
-            <% unless @document.published? %>
-              <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border border-ink
-                    <%= @document.draft? ? 'bg-surface text-ink/70' : 'bg-warning text-ink' %>">
-                <%= @document.draft? ? 'Borrador' : 'Archivado' %>
-              </span>
-            <% end %>
-          </div>
-          <p class="text-xs text-ink/50 mt-0.5">
-            <%= document_kind_label(@document) %>
-            <% if @document.file.attached? %>
-              · <%= document_size(@document) %>
-            <% end %>
-            · <%= @document.created_by&.full_name %>
-            · <time datetime="<%= @document.updated_at.iso8601 %>" title="<%= l(@document.updated_at, format: :long) rescue @document.updated_at.strftime("%d/%m/%Y") %>">editado hace <%= time_ago_in_words(@document.updated_at) %></time>
-          </p>
-        </div>
-      </div>
+  <%# Barra superior: volver + acciones %>
+  <div class="flex items-center justify-between gap-3 mb-4 min-h-10">
+    <%= link_to back_url, class: "inline-flex items-center gap-1.5 min-w-0 text-sm text-ink/70 hover:text-brand transition-colors" do %>
+      <svg class="w-4 h-4 flex-shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+      <span class="truncate max-w-[220px]"><%= back_label %></span>
+    <% end %>
 
-      <div class="flex items-center gap-2 flex-shrink-0">
-        <% can_change_status = @document.can_be_published_by?(current_user) %>
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <% can_change_status = @document.can_be_published_by?(current_user) %>
 
-        <%= link_to edit_document_path(@document), class: "button-outline", title: "Editar" do %>
+      <%= link_to edit_document_path(@document), class: "button-outline", title: "Editar" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+        <span class="hidden sm:inline">Editar</span>
+      <% end %>
+
+      <% if @document.draft? && can_change_status %>
+        <%= button_to publish_document_path(@document), method: :patch,
+                      class: "button bg-success hover:bg-success" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
-          <span class="hidden sm:inline">Editar</span>
+          Publicar
         <% end %>
+      <% end %>
 
-        <% if @document.draft? && can_change_status %>
-          <%= button_to publish_document_path(@document), method: :patch,
-                        class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-display font-bold text-white bg-success rounded-lg border-2 border-ink transition-colors shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-ink)]" do %>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            Publicar
-          <% end %>
+      <% if @document.published? && can_change_status %>
+        <% confirm_message = @document.public? ? "¿Mover este documento a borrador? El link público también será revocado." : "¿Mover este documento a borrador?" %>
+        <%= button_to unpublish_document_path(@document), method: :patch,
+                      data: { turbo_confirm: confirm_message },
+                      class: "button-outline",
+                      title: "Mover a borrador" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+          Despublicar
         <% end %>
+      <% end %>
 
-        <% if @document.published? && can_change_status %>
-          <% confirm_message = @document.public? ? "¿Mover este documento a borrador? El link público también será revocado." : "¿Mover este documento a borrador?" %>
-          <%= button_to unpublish_document_path(@document), method: :patch,
-                        data: { turbo_confirm: confirm_message },
-                        class: "button-outline",
-                        title: "Mover a borrador" do %>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-            </svg>
-            Despublicar
-          <% end %>
-        <% end %>
+      <div data-controller="dropdown" class="relative">
+        <button type="button"
+                data-dropdown-target="button"
+                data-action="click->dropdown#toggle"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Más acciones"
+                class="button-outline px-2.5">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/>
+          </svg>
+        </button>
 
-        <div data-controller="dropdown" class="relative">
-          <button type="button"
-                  data-dropdown-target="button"
-                  data-action="click->dropdown#toggle"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  aria-label="Más acciones"
-                  class="inline-flex items-center justify-center w-9 h-9 text-ink/50 bg-surface border-2 border-ink rounded-lg hover:bg-accent hover:text-ink transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01"/>
-            </svg>
-          </button>
+        <div data-dropdown-target="menu" class="dropdown-menu hidden absolute right-0 z-20 mt-2 w-56">
+          <ul class="py-1 text-sm text-ink/80">
+            <li>
+              <%= link_to edit_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
+                <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+              <% end %>
+            </li>
 
-          <div data-dropdown-target="menu" class="dropdown-menu hidden absolute right-0 z-20 mt-2 w-56">
-            <ul class="py-1 text-sm text-ink/80">
+            <% if @document.file.attached? %>
               <li>
-                <%= link_to edit_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
+                <%= link_to download_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
                   <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                   </svg>
-                  Editar
+                  Descargar
                 <% end %>
               </li>
+            <% end %>
 
-              <% if @document.file.attached? %>
-                <li>
-                  <%= link_to download_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
+            <% if kind == :rich_text || kind == :pdf %>
+              <li>
+                <% if kind == :pdf %>
+                  <%= link_to export_pdf_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
                     <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
-                    Descargar
+                    Exportar a PDF
                   <% end %>
-                </li>
-              <% end %>
-
-              <% if kind == :rich_text || kind == :pdf %>
-                <li>
-                  <% if kind == :pdf %>
-                    <%= link_to export_pdf_document_path(@document), class: "flex items-center gap-2.5 px-4 py-2 hover:bg-accent/30 transition-colors" do %>
+                <% else %>
+                  <div data-controller="pdf-export"
+                       data-pdf-export-url-value="<%= export_pdf_document_path(@document) %>"
+                       data-pdf-export-document-id-value="<%= @document.id %>">
+                    <button type="button"
+                            data-action="click->pdf-export#start"
+                            class="flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors">
                       <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                       </svg>
                       Exportar a PDF
-                    <% end %>
-                  <% else %>
-                    <div data-controller="pdf-export"
-                         data-pdf-export-url-value="<%= export_pdf_document_path(@document) %>"
-                         data-pdf-export-document-id-value="<%= @document.id %>">
-                      <button type="button"
-                              data-action="click->pdf-export#start"
-                              class="flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors">
-                        <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        Exportar a PDF
-                      </button>
+                    </button>
 
-                      <div data-pdf-export-target="overlay" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-ink/50 backdrop-blur-sm">
-                        <div class="bg-surface border-2 border-ink rounded-xl px-10 py-8 flex flex-col items-center gap-4 shadow-brutal-lg">
-                          <svg class="animate-spin w-10 h-10 text-brand" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          <p class="text-sm font-bold text-ink/80">Exportando a PDF...</p>
-                        </div>
+                    <div data-pdf-export-target="overlay" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-ink/50 backdrop-blur-sm">
+                      <div class="bg-surface border-2 border-ink rounded-xl px-10 py-8 flex flex-col items-center gap-4 shadow-brutal-lg">
+                        <svg class="animate-spin w-10 h-10 text-brand" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-sm font-bold text-ink/80">Exportando a PDF...</p>
                       </div>
                     </div>
-                  <% end %>
-                </li>
-              <% end %>
-
-              <% if can_change_status %>
-                <li class="border-t-2 border-ink/10">
-                  <% if @document.public? %>
-                    <%= button_to unpublish_public_document_path(@document), method: :patch,
-                                  form: { data: { turbo_confirm: "¿Revocar el link público? Cualquiera que lo tenga dejará de poder ver el documento." }, class: "w-full" },
-                                  class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
-                      <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                      </svg>
-                      Hacer privado
-                    <% end %>
-                  <% else %>
-                    <%= button_to publish_public_document_path(@document), method: :patch,
-                                  form: { class: "w-full" },
-                                  class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
-                      <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
-                      </svg>
-                      Compartir público
-                    <% end %>
-                  <% end %>
-                </li>
-
-                <li>
-                  <% if @document.archived? %>
-                    <%= button_to unarchive_document_path(@document), method: :patch,
-                                  form: { class: "w-full" },
-                                  class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
-                      <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-                      </svg>
-                      Restaurar
-                    <% end %>
-                  <% else %>
-                    <%= button_to archive_document_path(@document), method: :patch,
-                                  form: { data: { turbo_confirm: "¿Archivar este documento?" }, class: "w-full" },
-                                  class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
-                      <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                      </svg>
-                      Archivar
-                    <% end %>
-                  <% end %>
-                </li>
-              <% end %>
-
-              <li class="border-t-2 border-ink/10">
-                <%= button_to document_path(@document), method: :delete,
-                              form: { data: { turbo_confirm: "¿Eliminar este documento?" }, class: "w-full" },
-                              class: "flex items-center gap-2.5 w-full px-4 py-2 text-left text-danger hover:bg-danger-light transition-colors" do %>
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
-                  </svg>
-                  Eliminar
+                  </div>
                 <% end %>
               </li>
-            </ul>
-          </div>
+            <% end %>
+
+            <% if can_change_status %>
+              <li class="border-t-2 border-ink/10">
+                <% if @document.public? %>
+                  <%= button_to unpublish_public_document_path(@document), method: :patch,
+                                form: { data: { turbo_confirm: "¿Revocar el link público? Cualquiera que lo tenga dejará de poder ver el documento." }, class: "w-full" },
+                                class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
+                    <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Hacer privado
+                  <% end %>
+                <% else %>
+                  <%= button_to publish_public_document_path(@document), method: :patch,
+                                form: { class: "w-full" },
+                                class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
+                    <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
+                    </svg>
+                    Compartir público
+                  <% end %>
+                <% end %>
+              </li>
+
+              <li>
+                <% if @document.archived? %>
+                  <%= button_to unarchive_document_path(@document), method: :patch,
+                                form: { class: "w-full" },
+                                class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
+                    <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                    </svg>
+                    Restaurar
+                  <% end %>
+                <% else %>
+                  <%= button_to archive_document_path(@document), method: :patch,
+                                form: { data: { turbo_confirm: "¿Archivar este documento?" }, class: "w-full" },
+                                class: "flex items-center gap-2.5 w-full px-4 py-2 text-left hover:bg-accent/30 transition-colors" do %>
+                    <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+                    Archivar
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+
+            <li class="border-t-2 border-ink/10">
+              <%= button_to document_path(@document), method: :delete,
+                            form: { data: { turbo_confirm: "¿Eliminar este documento?" }, class: "w-full" },
+                            class: "flex items-center gap-2.5 w-full px-4 py-2 text-left text-danger hover:bg-danger-light transition-colors" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
+                </svg>
+                Eliminar
+              <% end %>
+            </li>
+          </ul>
         </div>
       </div>
-    </header>
+    </div>
+  </div>
 
-    <% if @document.public? %>
-      <% public_url = public_document_url(@document.public_token) %>
-      <div class="px-6 py-3 bg-info-light border-b-2 border-ink" data-controller="clipboard">
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 text-info flex-shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <%# El texto se lee en una hoja del mismo ancho que el editor; los archivos usan todo el ancho. %>
+  <div class="grid grid-cols-1 <%= kind == :rich_text ? 'xl:grid-cols-[minmax(0,56rem)_20rem] xl:justify-center' : 'xl:grid-cols-[minmax(0,1fr)_20rem]' %> gap-4 xl:gap-6 items-start">
+    <div class="space-y-4 min-w-0">
+      <article class="bg-surface border-2 border-ink rounded-xl shadow-brutal">
+        <header class="<%= kind == :rich_text ? 'document-sheet-pad pt-8 sm:pt-12 pb-6' : 'px-6 pt-6 pb-5' %> border-b-2 border-ink/10">
+          <div class="flex flex-wrap items-center gap-2 mb-3 text-xs text-ink/50">
+            <span class="badge <%= status_class %>"><%= status_label %></span>
+            <% if @document.public? %>
+              <span class="badge bg-info-light">Público</span>
+            <% end %>
+            <span><%= document_kind_label(@document) %><%= " · #{document_size(@document)}" if @document.file.attached? %></span>
+          </div>
+          <h1 class="document-title text-ink break-words"><%= @document.name %></h1>
+          <p class="mt-3 text-sm text-ink/50">
+            <span class="font-semibold text-ink/70"><%= @document.created_by&.full_name %></span>
+            · <time datetime="<%= @document.updated_at.iso8601 %>" title="<%= @document.updated_at.strftime("%d/%m/%Y %H:%M") %>">editado hace <%= time_ago_in_words(@document.updated_at) %></time>
+          </p>
+        </header>
+
+        <div class="<%= kind == :rich_text ? 'document-sheet-pad pt-8 pb-12 sm:pb-16' : 'p-6' %>">
+          <% if kind == :rich_text %>
+            <% if @document.body.blank? %>
+              <div class="text-center py-12 px-6 border-2 border-dashed border-ink/30 rounded-xl">
+                <p class="font-display font-bold text-ink/70">Este documento está vacío</p>
+                <p class="text-sm text-ink/50 mt-1">Agrégale contenido para que tu equipo lo pueda leer.</p>
+                <%= link_to "Empezar a escribir", edit_document_path(@document), class: "button mt-4" %>
+              </div>
+            <% else %>
+              <div class="document-reading" id="document-content" data-controller="document-images">
+                <%= @document.body %>
+              </div>
+            <% end %>
+
+          <% elsif kind == :image %>
+            <div class="flex justify-center bg-paper rounded-xl p-4">
+              <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
+            </div>
+
+          <% elsif kind == :pdf %>
+            <div class="rounded-xl overflow-hidden border border-ink">
+              <iframe src="<%= url_for(@document.file) %>" class="w-full h-[80vh]" frameborder="0"></iframe>
+            </div>
+
+          <% elsif kind == :video %>
+            <div class="flex justify-center bg-black rounded-xl overflow-hidden">
+              <video controls class="max-w-full max-h-[80vh]">
+                <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+                Tu navegador no soporta video HTML5.
+              </video>
+            </div>
+
+          <% elsif kind == :audio %>
+            <div class="flex justify-center py-8">
+              <audio controls class="w-full max-w-xl">
+                <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
+                Tu navegador no soporta audio HTML5.
+              </audio>
+            </div>
+
+          <% elsif kind == :text %>
+            <pre class="bg-paper border border-ink rounded-xl p-4 text-sm text-ink overflow-auto max-h-[70vh] whitespace-pre-wrap"><%= @document.file.download.force_encoding("UTF-8") rescue "(No se pudo leer el contenido)" %></pre>
+
+          <% else %>
+            <div class="text-center py-12 border-2 border-dashed border-ink rounded-xl">
+              <%= document_kind_icon(@document, css_class: "w-20 h-20 mx-auto") %>
+              <p class="mt-3 font-semibold text-ink/80"><%= @document.file.filename %></p>
+              <p class="text-sm text-ink/50"><%= document_size(@document) %></p>
+              <p class="text-xs text-ink/40 mt-2">Vista previa no disponible para este tipo de archivo.</p>
+              <%= link_to "Descargar archivo", download_document_path(@document), class: "button mt-4" %>
+            </div>
+          <% end %>
+        </div>
+      </article>
+
+      <section
+        class="bg-surface border-2 border-ink rounded-xl p-6" id="comments"
+        data-controller="create-task-modal"
+        data-create-task-modal-project-id-value="<%= @project.id %>"
+        data-create-task-modal-todos-value="<%= @project.todos.active.map { |t| { id: t.id, name: t.name } }.to_json %>"
+        data-create-task-modal-enable-selection-value="false"
+      >
+        <div class="flex items-center gap-2 mb-4">
+          <svg class="w-5 h-5 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <h2 class="text-base font-display font-bold text-ink">Comentarios</h2>
+          <% if @document.comments.any? %>
+            <span class="text-xs font-bold text-ink bg-accent px-2 py-0.5 rounded-full border border-ink"><%= @document.comments.size %></span>
+          <% end %>
+        </div>
+
+        <div class="mb-4">
+          <%= render partial: "comments/new_form", locals: { commentable: @document } %>
+        </div>
+
+        <%= render partial: "comments/list", locals: { commentable: @document, comments: @comments } %>
+      </section>
+    </div>
+
+    <aside class="space-y-4 min-w-0">
+      <% if @document.public? %>
+        <% public_url = public_document_url(@document.public_token) %>
+        <section class="bg-info-light border-2 border-ink rounded-xl p-5" data-controller="clipboard">
+          <div class="flex items-center gap-2 mb-3 text-info">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 015.656 0l1.414 1.414a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656 0l-1.414-1.414M10.172 13.828a4 4 0 01-5.656 0L3.1 12.414a4 4 0 010-5.656L6.636 3.222a4 4 0 015.656 0l1.414 1.414"/>
             </svg>
-            <span class="text-xs font-bold uppercase tracking-wider">Link público</span>
+            <h2 class="text-xs font-display font-bold uppercase tracking-wider">Link público</h2>
           </div>
-          <input type="text"
-                 value="<%= public_url %>"
-                 readonly
-                 data-clipboard-target="source"
-                 class="input flex-1 min-w-0 py-1.5">
-          <button type="button"
-                  data-action="click->clipboard#copy"
-                  data-clipboard-target="button"
-                  class="button flex-shrink-0">
-            Copiar
-          </button>
-        </div>
-      </div>
-    <% end %>
-
-    <div class="<%= kind == :rich_text ? 'px-4 sm:px-6 py-8 sm:py-12' : 'p-6' %>">
-      <% if kind == :rich_text %>
-        <% if @document.body.blank? %>
-          <div class="max-w-3xl mx-auto text-center py-12 border-2 border-dashed border-ink/30 rounded-xl">
-            <p class="font-display font-bold text-ink/70">Este documento está vacío</p>
-            <p class="text-sm text-ink/50 mt-1">Agrégale contenido para que tu equipo lo pueda leer.</p>
-            <%= link_to "Empezar a escribir", edit_document_path(@document), class: "button mt-4" %>
+          <p class="text-xs text-ink/60 mb-3">Cualquiera con este link puede leer el documento.</p>
+          <div class="flex items-center gap-2">
+            <input type="text"
+                   value="<%= public_url %>"
+                   readonly
+                   data-clipboard-target="source"
+                   class="input flex-1 min-w-0 py-1.5 text-xs">
+            <button type="button"
+                    data-action="click->clipboard#copy"
+                    data-clipboard-target="button"
+                    class="button flex-shrink-0 px-3 py-1.5">
+              Copiar
+            </button>
           </div>
-        <% else %>
-          <article class="document-reading max-w-3xl mx-auto" id="document-content" data-controller="document-images">
-            <%= @document.body %>
-          </article>
-        <% end %>
-
-      <% elsif kind == :image %>
-        <div class="flex justify-center bg-paper rounded-xl p-4">
-          <%= image_tag url_for(@document.file), class: "max-w-full max-h-[80vh] rounded shadow" %>
-        </div>
-
-      <% elsif kind == :pdf %>
-        <div class="rounded-xl overflow-hidden border border-ink">
-          <iframe src="<%= url_for(@document.file) %>" class="w-full h-[80vh]" frameborder="0"></iframe>
-        </div>
-
-      <% elsif kind == :video %>
-        <div class="flex justify-center bg-black rounded-xl overflow-hidden">
-          <video controls class="max-w-full max-h-[80vh]">
-            <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
-            Tu navegador no soporta video HTML5.
-          </video>
-        </div>
-
-      <% elsif kind == :audio %>
-        <div class="flex justify-center py-8">
-          <audio controls class="w-full max-w-xl">
-            <source src="<%= url_for(@document.file) %>" type="<%= @document.file.content_type %>">
-            Tu navegador no soporta audio HTML5.
-          </audio>
-        </div>
-
-      <% elsif kind == :text %>
-        <pre class="bg-paper border border-ink rounded-xl p-4 text-sm text-ink overflow-auto max-h-[70vh] whitespace-pre-wrap"><%= @document.file.download.force_encoding("UTF-8") rescue "(No se pudo leer el contenido)" %></pre>
-
-      <% else %>
-        <div class="text-center py-12 border-2 border-dashed border-ink rounded-xl">
-          <%= document_kind_icon(@document, css_class: "w-20 h-20 mx-auto") %>
-          <p class="mt-3 font-semibold text-ink/80"><%= @document.file.filename %></p>
-          <p class="text-sm text-ink/50"><%= document_size(@document) %></p>
-          <p class="text-xs text-ink/40 mt-2">Vista previa no disponible para este tipo de archivo.</p>
-          <%= link_to "Descargar archivo", download_document_path(@document), class: "button mt-4" %>
-        </div>
+        </section>
       <% end %>
-    </div>
-  </section>
 
-  <section class="bg-surface border-2 border-ink rounded-xl p-6 mt-4">
-    <div class="flex items-center gap-2 mb-4">
-      <svg class="w-5 h-5 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-      </svg>
-      <h2 class="text-base font-display font-bold text-ink">Tareas enlazadas</h2>
-      <% if @document.tasks.any? %>
-        <span class="text-xs font-bold text-ink bg-accent px-2 py-0.5 rounded-full border border-ink"><%= @document.tasks.size %></span>
-      <% end %>
-    </div>
+      <section class="bg-surface border-2 border-ink rounded-xl p-5">
+        <h2 class="text-xs font-display font-bold uppercase tracking-wider text-ink mb-3">Detalles</h2>
+        <dl class="text-sm divide-y-2 divide-ink/5">
+          <div class="flex items-center justify-between gap-3 py-2">
+            <dt class="text-ink/50">Estado</dt>
+            <dd><span class="badge <%= status_class %>"><%= status_label %></span></dd>
+          </div>
+          <div class="flex items-center justify-between gap-3 py-2">
+            <dt class="text-ink/50">Ubicación</dt>
+            <dd class="min-w-0 truncate font-semibold text-ink/80"><%= link_to back_label, back_url, class: "hover:text-brand hover:underline" %></dd>
+          </div>
+          <div class="flex items-center justify-between gap-3 py-2">
+            <dt class="text-ink/50">Autor</dt>
+            <dd class="min-w-0 truncate font-semibold text-ink/80"><%= @document.created_by&.full_name %></dd>
+          </div>
+          <div class="flex items-center justify-between gap-3 py-2">
+            <dt class="text-ink/50">Creado</dt>
+            <dd class="text-ink/80"><%= @document.created_at.strftime("%d/%m/%Y") %></dd>
+          </div>
+          <div class="flex items-center justify-between gap-3 py-2">
+            <dt class="text-ink/50">Editado</dt>
+            <dd class="text-ink/80">hace <%= time_ago_in_words(@document.updated_at) %></dd>
+          </div>
+          <% if @document.file.attached? %>
+            <div class="flex items-center justify-between gap-3 py-2">
+              <dt class="text-ink/50">Tamaño</dt>
+              <dd class="text-ink/80"><%= document_size(@document) %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </section>
 
-    <%= render "documents/tasks", document: @document %>
-  </section>
+      <section class="bg-surface border-2 border-ink rounded-xl p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-4 h-4 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+          <h2 class="text-xs font-display font-bold uppercase tracking-wider text-ink">Tareas enlazadas</h2>
+          <% if @document.tasks.any? %>
+            <span class="text-xs font-bold text-ink bg-accent px-2 py-0.5 rounded-full border border-ink"><%= @document.tasks.size %></span>
+          <% end %>
+        </div>
 
-  <section
-    class="bg-surface border-2 border-ink rounded-xl p-6 mt-4"
-    data-controller="create-task-modal"
-    data-create-task-modal-project-id-value="<%= @project.id %>"
-    data-create-task-modal-todos-value="<%= @project.todos.active.map { |t| { id: t.id, name: t.name } }.to_json %>"
-    data-create-task-modal-enable-selection-value="false"
-  >
-    <div class="flex items-center gap-2 mb-4">
-      <svg class="w-5 h-5 text-ink/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-      <h2 class="text-base font-display font-bold text-ink">Comentarios</h2>
-      <% if @document.comments.any? %>
-        <span class="text-xs font-bold text-ink bg-accent px-2 py-0.5 rounded-full border border-ink"><%= @document.comments.size %></span>
-      <% end %>
-    </div>
-
-    <div class="mb-4">
-      <%= render partial: "comments/new_form", locals: { commentable: @document } %>
-    </div>
-
-    <%= render partial: "comments/list", locals: { commentable: @document, comments: @comments } %>
-  </section>
+        <%= render "documents/tasks", document: @document %>
+      </section>
+    </aside>
+  </div>
 <% end %>
-

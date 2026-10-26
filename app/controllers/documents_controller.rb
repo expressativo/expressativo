@@ -34,12 +34,19 @@ class DocumentsController < ApplicationController
     @document = @project.documents.build(document_params)
     @document.folder = @folder
     @document.created_by = current_user
+    @document.name = untitled_name if autosave? && @document.name.blank?
 
     respond_to do |format|
       if @document.save
         redirect_path = @folder ? project_folder_path(@project, @folder) : project_folders_path(@project)
         format.html { redirect_to redirect_path, notice: "Documento creado." }
-        format.json { render :show, status: :created, location: @document }
+        format.json do
+          if autosave?
+            render json: autosave_payload, status: :created
+          else
+            render :show, status: :created, location: @document
+          end
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @document.errors, status: :unprocessable_entity }
@@ -49,10 +56,23 @@ class DocumentsController < ApplicationController
 
   # PATCH/PUT /documents/1 or /documents/1.json
   def update
+    # El autoguardado solo aplica a borradores: un documento publicado lo ve
+    # todo el equipo, así que sus cambios se guardan a mano.
+    return head :conflict if autosave? && !@document.draft?
+
+    attributes = document_params
+    attributes = attributes.except(:name) if autosave? && attributes[:name].blank?
+
     respond_to do |format|
-      if @document.update(document_params)
+      if @document.update(attributes)
         format.html { redirect_to @document, notice: "Documento actualizado exitosamente", status: :see_other }
-        format.json { render :show, status: :ok, location: @document }
+        format.json do
+          if autosave?
+            render json: autosave_payload
+          else
+            render :show, status: :ok, location: @document
+          end
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @document.errors, status: :unprocessable_entity }
@@ -208,6 +228,27 @@ class DocumentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def document_params
       params.require(:document).permit(:name, :body, :file, :document_type)
+    end
+
+    def autosave?
+      params[:autosave].present?
+    end
+
+    def autosave_payload
+      {
+        id: @document.id,
+        url: document_path(@document),
+        edit_url: edit_document_path(@document),
+        updated_at: @document.updated_at.iso8601
+      }
+    end
+
+    # "Sin título", "Sin título 2"… sin chocar con otro documento de la carpeta.
+    def untitled_name
+      taken = @project.documents.where(folder_id: @folder&.id).where("name LIKE ?", "Sin título%").pluck(:name)
+      return "Sin título" unless taken.include?("Sin título")
+
+      (2..).each { |n| return "Sin título #{n}" unless taken.include?("Sin título #{n}") }
     end
 
     def comment_params

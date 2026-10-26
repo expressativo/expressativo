@@ -1,0 +1,27 @@
+# Imagen de desarrollo: el código se monta como volumen desde local.yml
+ARG RUBY_VERSION=3.3.4
+FROM docker.io/library/ruby:$RUBY_VERSION-slim
+
+WORKDIR /rails
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+      build-essential \
+      chromium \
+      curl \
+      default-libmysqlclient-dev \
+      default-mysql-client \
+      fonts-noto-color-emoji \
+      git \
+      libvips \
+      libyaml-dev \
+      pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+ENV RAILS_ENV="development" \
+    BUNDLE_PATH="/usr/local/bundle"
+
+EXPOSE 3000
+
+# Instala gems si faltan, prepara la BD y arranca Rails + el watcher de Tailwind
+CMD ["bash", "-c", "(bundle check || bundle install) && bin/rails db:prepare && rm -f tmp/pids/server.pid && (bin/rails 'tailwindcss:watch[always]' &) && bin/rails server -b 0.0.0.0"]
