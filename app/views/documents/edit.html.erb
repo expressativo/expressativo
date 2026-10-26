@@ -1,5 +1,5 @@
-<% content_for :title, "Editing document" %>
+<% content_for :title, "Editar · #{@document.name}" %>
 
-<div class="app_container">
+<%= render layout: "projects/layout", locals: { project: @project, active: :documents } do %>
   <%= render "form", document: @document %>
-</div>
+<% end %>
