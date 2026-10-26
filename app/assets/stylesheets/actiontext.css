@@ -205,3 +205,48 @@
 lexxy-toolbar {
     border-radius: .5rem .5rem 0rem 0rem !important
 }
+
+/* ─── Editor de documentos (documents/_form) ──────────────────────────────── */
+
+/*
+ * El editor ocupa todo el ancho de la tarjeta, sin borde propio: la barra de
+ * herramientas queda fija arriba al hacer scroll y el texto se lee en una
+ * columna centrada, como una hoja.
+ */
+.document-editor lexxy-editor {
+  --lexxy-editor-rows: 24lh;
+  --lexxy-editor-padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.document-editor lexxy-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 0.375rem 1rem;
+  background-color: var(--color-surface);
+  border-block: 2px solid var(--color-ink);
+  border-radius: 0 !important;
+}
+
+.document-editor .lexxy-editor__content {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: 2rem 1rem 4rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+@media (min-width: 640px) {
+  .document-editor .lexxy-editor__content {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Lectura del documento (documents/show): columna centrada, texto más cómodo. */
+.document-reading .lexxy-content {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}

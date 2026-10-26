@@ -13,8 +13,15 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
         <% end %>
-        <%= document_kind_icon(@document, css_class: "w-12 h-12") %>
+        <%= document_kind_icon(@document, css_class: "w-12 h-12 flex-shrink-0 border-2 border-ink") %>
         <div class="min-w-0">
+          <nav class="flex items-center gap-1.5 text-xs text-ink/50 mb-0.5 min-w-0" aria-label="Ubicación">
+            <%= link_to "Documentos", project_folders_path(@project), class: "hover:text-ink hover:underline flex-shrink-0" %>
+            <% if @document.folder %>
+              <span aria-hidden="true">/</span>
+              <%= link_to @document.folder.name, project_folder_path(@project, @document.folder), class: "hover:text-ink hover:underline truncate" %>
+            <% end %>
+          </nav>
           <div class="flex items-center gap-2">
             <h1 class="text-xl font-display font-bold text-ink truncate"><%= @document.name %></h1>
             <% unless @document.published? %>
@@ -30,13 +37,20 @@
               · <%= document_size(@document) %>
             <% end %>
             · <%= @document.created_by&.full_name %>
-            · <%= l(@document.updated_at, format: :long) rescue @document.updated_at.strftime("%d/%m/%Y") %>
+            · <time datetime="<%= @document.updated_at.iso8601 %>" title="<%= l(@document.updated_at, format: :long) rescue @document.updated_at.strftime("%d/%m/%Y") %>">editado hace <%= time_ago_in_words(@document.updated_at) %></time>
           </p>
         </div>
       </div>
 
       <div class="flex items-center gap-2 flex-shrink-0">
         <% can_change_status = @document.can_be_published_by?(current_user) %>
+
+        <%= link_to edit_document_path(@document), class: "button-outline", title: "Editar" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span class="hidden sm:inline">Editar</span>
+        <% end %>
 
         <% if @document.draft? && can_change_status %>
           <%= button_to publish_document_path(@document), method: :patch,
@@ -219,11 +233,19 @@
       </div>
     <% end %>
 
-    <div class="p-6">
+    <div class="<%= kind == :rich_text ? 'px-4 sm:px-6 py-8 sm:py-12' : 'p-6' %>">
       <% if kind == :rich_text %>
-        <div class="prose max-w-none" id="document-content" data-controller="document-images">
-          <%= @document.body %>
-        </div>
+        <% if @document.body.blank? %>
+          <div class="max-w-3xl mx-auto text-center py-12 border-2 border-dashed border-ink/30 rounded-xl">
+            <p class="font-display font-bold text-ink/70">Este documento está vacío</p>
+            <p class="text-sm text-ink/50 mt-1">Agrégale contenido para que tu equipo lo pueda leer.</p>
+            <%= link_to "Empezar a escribir", edit_document_path(@document), class: "button mt-4" %>
+          </div>
+        <% else %>
+          <article class="document-reading max-w-3xl mx-auto" id="document-content" data-controller="document-images">
+            <%= @document.body %>
+          </article>
+        <% end %>
 
       <% elsif kind == :image %>
         <div class="flex justify-center bg-paper rounded-xl p-4">
