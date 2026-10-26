@@ -5,6 +5,8 @@ class TasksController < ApplicationController
   before_action :require_non_viewer_for_task!, only: %i[edit update destroy update_position publish_public unpublish_public]
   before_action :require_assigned_task_for_viewer!, only: %i[show add_comment]
 
+  helper_method :project_viewer?
+
   def index
     @tasks = @todo.tasks
   end
@@ -225,6 +227,12 @@ class TasksController < ApplicationController
     redirect_to projects_path, alert: "El recurso solicitado no existe o no tienes acceso."
   end
 
+  def project_viewer?
+    return @project_viewer if defined?(@project_viewer)
+
+    @project_viewer = @project.viewer?(current_user)
+  end
+
   def require_non_viewer_for_task!
     require_non_viewer!(@project)
   end
@@ -237,7 +245,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = @todo.tasks.includes(:assigned_users, :created_by, :custom_field_values, :documents, comments: :user).find(params[:id])
+    @task = @todo.tasks.includes(:assigned_users, :created_by, :documents, custom_field_values: :project_custom_field, comments: :user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to project_todos_path(@project), alert: "La tarea que buscas no existe o fue eliminada."
   end

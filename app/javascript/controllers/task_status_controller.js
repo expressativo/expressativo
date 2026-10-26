@@ -51,7 +51,7 @@ export default class extends Controller {
     event.preventDefault();
     event.stopPropagation();
     
-    if (confirm("¿Estás seguro de que quieres quitar el estatus de esta tarea?")) {
+    if (confirm("¿Quitar esta tarea del tablero?")) {
       // Limpiar el column_id
       this.columnInputTarget.value = "";
       

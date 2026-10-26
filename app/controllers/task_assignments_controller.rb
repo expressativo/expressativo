@@ -1,6 +1,7 @@
 class TaskAssignmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task
+  before_action :require_editor!
 
   def create
     @user = @project.users.find(params[:user_id])
@@ -54,6 +55,11 @@ class TaskAssignmentsController < ApplicationController
   end
 
   private
+
+  # Los viewers solo pueden ver la tarea; asignar o enlazar es de miembros.
+  def require_editor!
+    head :forbidden if @project.viewer?(current_user)
+  end
 
   def set_task
     @project = Project.for_user(current_user).find(params[:project_id])

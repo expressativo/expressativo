@@ -120,7 +120,8 @@ export default class extends Controller {
       </a>
       <button
         type="button"
-        class="flex-shrink-0 text-red-600 hover:text-red-800"
+        class="flex-shrink-0 text-danger hover:text-danger"
+        aria-label="Desenlazar"
         data-action="click->task-document#unlink"
         data-document-id="${doc.id}"
       >

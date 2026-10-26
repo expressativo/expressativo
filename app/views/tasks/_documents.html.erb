@@ -16,21 +16,29 @@
           <span class="truncate"><%= doc.name %></span>
         <% end %>
 
+        <% unless project_viewer? %>
         <%= link_to project_todo_task_task_document_path(@project, @todo, task, doc.id),
                   method: :delete,
                   data: {
                     turbo_method: :delete,
                     turbo_confirm: "¿Desenlazar este documento de la tarea?"
                   },
+                  "aria-label": "Desenlazar #{doc.name}",
                   class: "flex-shrink-0 text-danger hover:text-danger" do %>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
+        <% end %>
         <% end %>
       </div>
     <% end %>
   </div>
 
+  <% if project_viewer? %>
+    <% if task.documents.empty? %>
+      <span class="text-xs text-ink/50 italic">No hay documentos enlazados a esta tarea</span>
+    <% end %>
+  <% else %>
   <!-- Buscador de documentos -->
   <div class="relative">
     <div class="relative">
@@ -39,6 +47,7 @@
         data-task-document-target="input"
         data-action="input->task-document#search blur->task-document#hideResults"
         placeholder="Buscar documentos del proyecto..."
+        aria-label="Enlazar documento"
         class="input"
       />
       <svg class="absolute right-3 top-3 w-5 h-5 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,4 +69,5 @@
       <!-- Los resultados se insertan aquí dinámicamente -->
     </div>
   </div>
+<% end %>
 </div>

@@ -1,105 +1,170 @@
 <%
+  is_viewer = project_viewer?
   boards = @project.boards.includes(:columns)
   current_column = task.column
   current_board = current_column&.board
-  status_color = if task.completed?
-    { bg: "bg-success-light", text: "text-success", dot: "bg-success", border: "border-ink" }
-  elsif current_column.present?
-    { bg: "bg-info-light", text: "text-info", dot: "bg-info", border: "border-ink" }
-  else
-    { bg: "bg-paper", text: "text-ink/70", dot: "bg-ink/30", border: "border-ink" }
-  end
+  status_styles = {
+    "pending" => { active: "bg-paper text-ink", dot: "bg-ink/40" },
+    "in_progress" => { active: "bg-info-light text-info", dot: "bg-info" },
+    "done" => { active: "bg-success-light text-success", dot: "bg-success" }
+  }
 %>
 
 <section class="bg-surface border-2 border-ink rounded-xl p-6 shadow-brutal">
   <h3 class="label mb-4">Detalles</h3>
 
   <div class="space-y-5">
-    <%# Estado %>
+    <%# Estado (pending / in_progress / done). Es independiente de la columna del tablero. %>
     <div>
       <div class="text-xs text-ink/50 mb-2">Estado</div>
-      <% if boards.any? %>
-        <%= form_with model: [@project, @todo, task], class: "block" do |form| %>
+      <% if is_viewer %>
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-ink text-sm font-semibold <%= status_styles.dig(task.status, :active) %>">
+          <span class="w-2 h-2 rounded-full <%= status_styles.dig(task.status, :dot) %>"></span>
+          <%= task_status_label(task.status) %>
+        </span>
+      <% else %>
+        <%= form_with model: [@project, @todo, task], class: "grid grid-cols-3 gap-1.5" do |form| %>
           <%= hidden_field_tag :from, "show" %>
-          <div data-controller="task-status">
-            <div class="relative">
-              <button
-                type="button"
-                data-action="click->task-status#toggleDropdown"
-                data-task-status-target="button"
-                class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm font-bold rounded-lg border-2 <%= status_color[:border] %> <%= status_color[:bg] %> hover:opacity-90 focus:outline-none transition-colors">
-                <span class="inline-flex items-center gap-2 min-w-0">
-                  <span class="w-2 h-2 rounded-full <%= status_color[:dot] %>"></span>
-                  <span class="font-medium <%= status_color[:text] %> truncate" data-task-status-target="selectedText">
-                    <% if current_column.present? %>
-                      <%= current_column.title %>
-                    <% else %>
-                      Sin estatus
+          <% Task::STATUSES.each do |status| %>
+            <% active = task.status == status %>
+            <button type="submit"
+                    name="task[status]"
+                    value="<%= status %>"
+                    aria-pressed="<%= active %>"
+                    <%= "disabled" if active %>
+                    class="inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg border-2 text-xs font-semibold transition-colors <%= active ? "border-ink #{status_styles.dig(status, :active)} cursor-default" : 'border-ink/20 text-ink/60 hover:border-ink hover:text-ink cursor-pointer' %>">
+              <span class="w-2 h-2 rounded-full flex-shrink-0 <%= status_styles.dig(status, :dot) %>"></span>
+              <span class="truncate"><%= task_status_label(status) %></span>
+            </button>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Columna del tablero %>
+    <% if boards.any? %>
+      <div>
+        <div class="text-xs text-ink/50 mb-2">Columna del tablero</div>
+        <% if is_viewer %>
+          <span class="text-sm text-ink/80">
+            <%= current_column ? "#{current_column.title} · #{current_board.title}" : "Sin columna" %>
+          </span>
+        <% else %>
+          <%= form_with model: [@project, @todo, task], class: "block" do |form| %>
+            <%= hidden_field_tag :from, "show" %>
+            <div data-controller="task-status">
+              <div class="relative">
+                <button
+                  type="button"
+                  data-action="click->task-status#toggleDropdown"
+                  data-task-status-target="button"
+                  aria-haspopup="listbox"
+                  class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm rounded-lg border-2 border-ink bg-paper hover:opacity-90 focus:outline-none transition-colors">
+                  <span class="inline-flex items-center gap-2 min-w-0">
+                    <span class="font-medium <%= current_column ? 'text-ink' : 'text-ink/50' %> truncate" data-task-status-target="selectedText">
+                      <%= current_column&.title || "Sin columna" %>
+                    </span>
+                    <% if current_board.present? %>
+                      <span class="text-xs text-ink/40 truncate">· <%= current_board.title %></span>
                     <% end %>
                   </span>
-                  <% if current_board.present? %>
-                    <span class="text-xs text-ink/40 truncate">· <%= current_board.title %></span>
-                  <% end %>
-                </span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-ink/50 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </button>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-ink/50 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
+                </button>
 
-              <div
-                data-task-status-target="dropdown"
-                class="dropdown-menu hidden absolute z-50 w-full mt-1 max-h-72 overflow-auto">
-                <% boards.each do |board| %>
-                  <div class="p-2 border-b border-ink/10 last:border-b-0">
-                    <div class="text-[10px] font-semibold text-ink/50 uppercase tracking-wider px-2 py-1">
-                      <%= board.title %>
+                <div
+                  data-task-status-target="dropdown"
+                  class="dropdown-menu hidden absolute z-50 w-full mt-1 max-h-72 overflow-auto">
+                  <% boards.each do |board| %>
+                    <div class="p-2 border-b border-ink/10 last:border-b-0">
+                      <div class="text-[10px] font-semibold text-ink/50 uppercase tracking-wider px-2 py-1">
+                        <%= board.title %>
+                      </div>
+                      <% board.columns.each do |column| %>
+                        <button
+                          type="button"
+                          data-action="click->task-status#selectColumn"
+                          data-column-id="<%= column.id %>"
+                          data-column-title="<%= column.title %>"
+                          data-board-title="<%= board.title %>"
+                          class="w-full text-left px-3 py-2 hover:bg-brand-light rounded text-sm <%= 'bg-brand-light font-medium text-brand-dark' if current_column&.id == column.id %>">
+                          <%= column.title %>
+                          <% if current_column&.id == column.id %>
+                            <span class="text-xs text-brand ml-1">✓</span>
+                          <% end %>
+                        </button>
+                      <% end %>
                     </div>
-                    <% board.columns.each do |column| %>
+                  <% end %>
+
+                  <% if current_column.present? %>
+                    <div class="p-2 border-t border-ink">
                       <button
                         type="button"
-                        data-action="click->task-status#selectColumn"
-                        data-column-id="<%= column.id %>"
-                        data-column-title="<%= column.title %>"
-                        data-board-title="<%= board.title %>"
-                        class="w-full text-left px-3 py-2 hover:bg-brand-light rounded text-sm <%= 'bg-brand-light font-medium text-brand-dark' if task.column&.id == column.id %>">
-                        <%= column.title %>
-                        <% if task.column&.id == column.id %>
-                          <span class="text-xs text-brand ml-1">✓</span>
-                        <% end %>
+                        data-action="click->task-status#clearStatus"
+                        class="w-full text-left px-3 py-2 text-danger hover:bg-danger-light rounded text-sm flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" aria-hidden="true">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M18 6l-12 12" />
+                          <path d="M6 6l12 12" />
+                        </svg>
+                        Quitar del tablero
                       </button>
-                    <% end %>
-                  </div>
-                <% end %>
+                    </div>
+                  <% end %>
+                </div>
 
-                <% if task.column.present? %>
-                  <div class="p-2 border-t border-ink">
-                    <button
-                      type="button"
-                      data-action="click->task-status#clearStatus"
-                      class="w-full text-left px-3 py-2 text-danger hover:bg-danger-light rounded text-sm flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M18 6l-12 12" />
-                        <path d="M6 6l12 12" />
-                      </svg>
-                      Quitar estatus
-                    </button>
-                  </div>
-                <% end %>
+                <%= form.hidden_field :column_id, data: { task_status_target: "columnInput" } %>
               </div>
-
-              <%= form.hidden_field :column_id, data: { task_status_target: "columnInput" } %>
             </div>
-          </div>
+          <% end %>
         <% end %>
-      <% else %>
-        <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-paper border-2 border-ink text-sm font-semibold text-ink/50">
-            <span class="w-2 h-2 rounded-full bg-ink/30"></span>
-            Sin tableros
+      </div>
+    <% end %>
+
+    <%# Fecha de vencimiento %>
+    <div>
+      <div class="text-xs text-ink/50 mb-2">Vence el</div>
+      <% unless is_viewer %>
+        <%= form_with model: [@project, @todo, task],
+                      data: { controller: "auto-submit", auto_submit_delay_value: 1200, action: "change->auto-submit#submit" },
+                      class: "mb-2" do |form| %>
+          <%= hidden_field_tag :from, "show" %>
+          <%= form.datetime_local_field :due_date, class: "input py-1", "aria-label": "Fecha de vencimiento" %>
+        <% end %>
+      <% end %>
+      <% if task.due_date.present? %>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-sm font-medium <%= task_due_pill_classes(task) %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <%= task_due_label(task) %>
           </span>
+
+          <%= link_to task_google_calendar_url(task, project_todo_task_url(@project, @todo, task)),
+                target: "_blank", rel: "noopener",
+                title: "Agregar a Google Calendar",
+                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-info bg-info-light border-2 border-ink rounded-lg hover:bg-info-light/70 transition-colors" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z M12 13v4m-2-2h4" />
+            </svg>
+            Google Calendar
+          <% end %>
+
+          <%= link_to calendar_project_todo_task_path(@project, @todo, task),
+                title: "Descargar .ics para cualquier calendario",
+                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-ink/70 bg-paper border-2 border-ink rounded-lg hover:bg-accent/40 transition-colors" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            .ics
+          <% end %>
         </div>
+      <% elsif is_viewer %>
+        <span class="text-sm text-ink/40 italic">Sin fecha</span>
       <% end %>
     </div>
 
@@ -147,12 +212,13 @@
                   </svg>
                   Abrir en Google Maps
                 <% end %>
-              <% elsif @project.viewer?(current_user) %>
+              <% elsif is_viewer %>
                 <span class="text-sm text-ink/80"><%= current_value.presence || "—" %></span>
               <% end %>
-              <% unless @project.viewer?(current_user) %>
+              <% unless is_viewer %>
                 <%= form_with url: project_todo_task_custom_field_value_path(@project, @todo, task, value_id),
                               method: :patch,
+                              data: { controller: "auto-submit", auto_submit_delay_value: 600, action: "change->auto-submit#submit" },
                               class: "flex items-center gap-1.5 #{"mt-1" if %w[link map].include?(field.field_type) && current_value.present?}" do |f| %>
                   <input type="hidden" name="project_custom_field_id" value="<%= field.id %>" />
                   <% case field.field_type %>
@@ -161,20 +227,24 @@
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="—"
+                           aria-label="<%= field.name %>"
                            class="input flex-1 min-w-0 py-1" />
                   <% when "number" %>
                     <input type="number"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="—"
+                           aria-label="<%= field.name %>"
                            class="input flex-1 min-w-0 py-1" />
                   <% when "date" %>
                     <input type="date"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
+                           aria-label="<%= field.name %>"
                            class="input flex-1 min-w-0 py-1" />
                   <% when "select" %>
                     <select name="task_custom_field_value[value]"
+                            aria-label="<%= field.name %>"
                             class="input flex-1 min-w-0 py-1">
                       <option value="">— Sin valor —</option>
                       <% field.options_list.each do |opt| %>
@@ -186,19 +256,16 @@
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder="https://"
+                           aria-label="<%= field.name %>"
                            class="input flex-1 min-w-0 py-1" />
                   <% when "map" %>
                     <input type="text"
                            name="task_custom_field_value[value]"
                            value="<%= current_value %>"
                            placeholder='Pega el iframe de Google Maps o una URL'
+                           aria-label="<%= field.name %>"
                            class="input flex-1 min-w-0 py-1" />
                   <% end %>
-                  <button type="submit" class="flex-shrink-0 p-1 rounded text-brand hover:bg-brand-light transition-colors" title="Guardar">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                  </button>
                 <% end %>
               <% end %>
             </div>
@@ -234,103 +301,14 @@
       </div>
     </div>
 
-    <%# Fecha de vencimiento %>
-    <div>
-      <div class="text-xs text-ink/50 mb-2">Vence el</div>
-      <% if task.due_date.present? %>
-        <%
-          today = Date.current
-          days = (task.due_date.to_date - today).to_i
-          if task.completed?
-            pill = { bg: "bg-paper", text: "text-ink/70", border: "border-ink" }
-          elsif days < 0
-            pill = { bg: "bg-danger-light", text: "text-danger", border: "border-danger/40" }
-          elsif days <= 3
-            pill = { bg: "bg-warning-light", text: "text-warning", border: "border-warning/40" }
-          else
-            pill = { bg: "bg-paper", text: "text-ink/70", border: "border-ink" }
-          end
-
-          due_dt = task.due_date
-          has_time = due_dt.hour != 0 || due_dt.min != 0
-          due_label = if has_time
-            l(due_dt.to_date, format: :long) + " · " + due_dt.strftime("%H:%M")
-          else
-            l(due_dt.to_date, format: :long)
-          end
-        %>
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border <%= pill[:border] %> <%= pill[:bg] %> <%= pill[:text] %> text-sm font-medium">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <%= due_label %>
-          </span>
-
-          <%
-            cfv_map       = task.custom_field_values.includes(:project_custom_field).index_by { |v| v.project_custom_field.key }
-            duration_h    = cfv_map["duration"]&.value.to_f.positive? ? cfv_map["duration"].value.to_f : nil
-
-            if has_time
-              gcal_start = due_dt.utc.strftime('%Y%m%dT%H%M%SZ')
-              gcal_end   = duration_h ? (due_dt.utc + duration_h.hours).strftime('%Y%m%dT%H%M%SZ') : (due_dt.utc + 1.hour).strftime('%Y%m%dT%H%M%SZ')
-            else
-              gcal_start = due_dt.to_date.strftime('%Y%m%d')
-              gcal_end   = (due_dt.to_date + 1).strftime('%Y%m%d')
-            end
-            gcal_url = "https://calendar.google.com/calendar/render?" + {
-              action:  "TEMPLATE",
-              text:    task.title,
-              dates:   "#{gcal_start}/#{gcal_end}",
-              details: "#{task.title}\n#{project_todo_task_url(@project, @todo, task)}"
-            }.to_query
-          %>
-          <%= link_to gcal_url, target: "_blank", rel: "noopener",
-                title: "Agregar a Google Calendar",
-                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-info bg-info-light border-2 border-ink rounded-lg hover:bg-info-light/70 transition-colors" do %>
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
-            </svg>
-            Google Calendar
-          <% end %>
-
-          <%= link_to calendar_project_todo_task_path(@project, @todo, task),
-                title: "Descargar .ics para cualquier calendario",
-                class: "inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-ink/70 bg-paper border-2 border-ink rounded-lg hover:bg-accent/40 transition-colors" do %>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            .ics
-          <% end %>
-        </div>
-      <% else %>
-        <span class="text-sm text-ink/40 italic">Sin fecha</span>
-      <% end %>
-    </div>
-
-    <%# Lista (Todo) %>
-    <div>
-      <div class="text-xs text-ink/50 mb-2">Lista</div>
-      <%= link_to project_todo_path(@project, @todo), class: "inline-flex items-center gap-1.5 text-sm font-semibold text-ink/80 hover:text-brand transition-colors" do %>
-        <svg class="w-4 h-4 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-        </svg>
-        <span class="truncate"><%= @todo.name %></span>
-      <% end %>
-    </div>
-
     <div class="pt-4 border-t border-ink/10 space-y-1.5">
       <div class="flex items-center justify-between text-xs text-ink/50">
         <span>Creada</span>
-        <span><%= l(task.created_at.to_date, format: :long) rescue task.created_at.strftime("%d/%m/%Y") %></span>
+        <span><%= l(task.created_at.to_date, format: :long) %></span>
       </div>
       <div class="flex items-center justify-between text-xs text-ink/50">
         <span>Actualizada</span>
-        <span><%= time_ago_in_words(task.updated_at) %> atrás</span>
-      </div>
-      <div class="flex items-center justify-between text-xs text-ink/40">
-        <span>ID</span>
-        <span class="font-mono">TASK-<%= task.id %></span>
+        <span>hace <%= time_ago_in_words(task.updated_at) %></span>
       </div>
     </div>
   </div>

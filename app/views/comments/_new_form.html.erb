@@ -1,6 +1,6 @@
 <%# New comment form with mention support via lexxy-prompt. Requires locals: commentable %>
 <% commentable ||= @commentable %>
-<div class="border border-2 border-ink rounded-lg p-4" data-controller="show-comment-section">
+<div data-controller="show-comment-section">
   <%= form_for :comment, url: comment_create_path(commentable), class: "hidden", method: :post do |f| %>
     <div class="comment" data-controller="mention-form">
       <div class="input-wrapper">
@@ -18,7 +18,9 @@
     </div>
   <% end %>
 
-  <button id="toggle-add-comment" class="button" data-action="click->show-comment-section#toggle">
-    Agregar comentario
+  <button id="toggle-add-comment" type="button"
+          class="w-full text-left px-3 py-2.5 text-sm text-ink/50 bg-surface border-2 border-ink/20 rounded-lg hover:border-ink cursor-text transition-colors"
+          data-action="click->show-comment-section#toggle">
+    Escribe un comentario… usa @ para mencionar
   </button>
 </div>

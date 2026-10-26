@@ -12,8 +12,9 @@ export default class extends Controller {
   }
 
   handleKeyDown(event) {
-    // Si se presiona Escape
-    if (event.key === "Escape") {
+    // Escape solo cierra el formulario; nunca lo abre.
+    const form = this.element.querySelector("form");
+    if (event.key === "Escape" && form && !form.classList.contains("hidden")) {
       event.preventDefault();
       this.toggle();
     }
