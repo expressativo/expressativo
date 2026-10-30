@@ -1,8 +1,15 @@
 <article id="<%= dom_id folder %>"
          class="drive-folder card-interactive group relative flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-brand-light/40"
+         draggable="true"
          data-drive-filter-target="item"
+         data-drive-move-target="dropzone"
+         data-folder-id="<%= folder.id %>"
+         data-move-url="<%= move_project_folder_path(folder.project, folder) %>"
+         data-move-kind="folder"
+         data-move-id="<%= folder.id %>"
+         data-action="dragstart->drive-move#dragStart dragend->drive-move#dragEnd dragover->drive-move#dragOver dragleave->drive-move#dragLeave drop->drive-move#drop"
          data-name="<%= folder.name.to_s.downcase %>">
-  <%= link_to project_folder_path(folder.project, folder), class: "drive-card-link flex items-center gap-3 min-w-0 flex-1" do %>
+  <%= link_to project_folder_path(folder.project, folder), class: "drive-card-link flex items-center gap-3 min-w-0 flex-1", draggable: "false" do %>
     <span class="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
       <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
@@ -30,6 +37,13 @@
          data-dropdown-target="menu">
       <%= link_to "Abrir", project_folder_path(folder.project, folder), class: "dropdown-menu-item" %>
       <%= link_to "Renombrar", edit_project_folder_path(folder.project, folder), class: "dropdown-menu-item" %>
+      <button type="button" class="dropdown-menu-item w-full text-left"
+              data-action="drive-move#open"
+              data-drive-move-url-param="<%= move_project_folder_path(folder.project, folder) %>"
+              data-drive-move-kind-param="folder"
+              data-drive-move-id-param="<%= folder.id %>"
+              data-drive-move-folder-id-param="<%= folder.parent_folder_id %>"
+              data-drive-move-name-param="<%= folder.name %>">Mover a…</button>
       <%= button_to "Eliminar", project_folder_path(folder.project, folder), method: :delete,
                     data: { turbo_confirm: "¿Eliminar la carpeta y todo su contenido?" },
                     class: "dropdown-menu-item text-danger hover:bg-danger-light" %>

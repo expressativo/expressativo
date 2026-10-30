@@ -9,10 +9,15 @@
 <article id="<%= dom_id document %>"
          class="drive-document card-interactive group relative flex flex-col rounded-lg"
          data-controller="document-preview"
+         draggable="true"
          data-drive-filter-target="item"
+         data-move-url="<%= move_document_path(document) %>"
+         data-move-kind="document"
+         data-move-id="<%= document.id %>"
+         data-action="dragstart->drive-move#dragStart dragend->drive-move#dragEnd"
          data-name="<%= document.name.to_s.downcase %>">
 
-  <%= link_to document_path(document), class: "drive-card-link flex flex-col flex-1 min-w-0" do %>
+  <%= link_to document_path(document), class: "drive-card-link flex flex-col flex-1 min-w-0 [&_img]:[-webkit-user-drag:none]", draggable: "false" do %>
     <div class="relative aspect-[4/3] bg-accent/10 flex items-center justify-center overflow-hidden rounded-t-md border-b-2 border-ink">
       <% if thumb %>
         <%= thumb %>
@@ -78,6 +83,13 @@
       <% if document.file.attached? %>
         <%= link_to "Descargar", download_document_path(document), class: "block px-3 py-2 text-sm font-semibold text-ink hover:bg-accent/40" %>
       <% end %>
+      <button type="button" class="block w-full text-left px-3 py-2 text-sm font-semibold text-ink hover:bg-accent/40"
+              data-action="drive-move#open"
+              data-drive-move-url-param="<%= move_document_path(document) %>"
+              data-drive-move-kind-param="document"
+              data-drive-move-id-param="<%= document.id %>"
+              data-drive-move-folder-id-param="<%= document.folder_id %>"
+              data-drive-move-name-param="<%= document.name %>">Mover a…</button>
       <%= button_to "Duplicar", duplicate_document_path(document), method: :post, class: "block w-full text-left px-3 py-2 text-sm font-semibold text-ink hover:bg-accent/40" %>
       <%= button_to "Archivar", archive_document_path(document), method: :patch, class: "block w-full text-left px-3 py-2 text-sm font-semibold text-ink hover:bg-accent/40" %>
       <%= button_to "Eliminar", document_path(document), method: :delete,

@@ -279,6 +279,11 @@
         @apply hidden;
     }
 
+    /* Carpeta (o botón "Volver") bajo una tarjeta que se está arrastrando */
+    .drive-drop-target {
+        @apply ring-4 ring-brand bg-brand-light;
+    }
+
     /* ===== Inline SVG previews ===== */
     .svg-inline-preview {
         @apply flex items-center justify-center overflow-hidden;

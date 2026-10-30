@@ -1,9 +1,11 @@
 class DocumentsController < ApplicationController
+  include DriveMoves
+
   before_action :authenticate_user!
-  before_action :set_document, only: %i[ show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members ]
+  before_action :set_document, only: %i[ show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public move add_comment search_members ]
   before_action :set_project, only: %i[index new create archived]
   before_action :set_folder, only: %i[new create]
-  before_action :set_project_from_document, only: %i[show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public add_comment search_members]
+  before_action :set_project_from_document, only: %i[show edit update destroy download export_pdf duplicate archive unarchive publish unpublish publish_public unpublish_public move add_comment search_members]
   before_action -> { require_non_viewer!(@project) }
   before_action :authorize_status_change!, only: %i[archive unarchive publish unpublish publish_public unpublish_public]
 
@@ -90,6 +92,11 @@ class DocumentsController < ApplicationController
       format.html { redirect_to redirect_path, notice: "Documento eliminado exitosamente", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  # PATCH /documents/1/move
+  def move
+    move_drive_item(@document, :folder)
   end
 
   def download
