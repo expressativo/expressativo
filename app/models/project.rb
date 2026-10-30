@@ -3,7 +3,7 @@ class Project < ApplicationRecord
   has_many :users, through: :project_users
   has_many :todos, dependent: :destroy
   has_many :announcements, dependent: :destroy
-  has_many :documents, dependent: :nullify
+  has_many :documents, dependent: :destroy
   has_many :folders, dependent: :destroy
   has_many :activities, dependent: :destroy
   has_many :boards, dependent: :destroy

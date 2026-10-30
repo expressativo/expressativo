@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :message_mentions, dependent: :destroy
   has_many :quick_notes, dependent: :destroy
+  has_many :cli_access_tokens, dependent: :destroy
 
   # Un usuario se considera activo si inició sesión dentro de esta ventana.
   ACTIVE_WINDOW = 30.days

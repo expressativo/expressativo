@@ -1,0 +1,139 @@
+<% content_for :title, "Conectar con IA" %>
+
+<%
+  steps_by_client = [
+    {
+      name: "Claude Code (terminal)",
+      steps: [
+        "Corré este comando en tu terminal:",
+        :command,
+        "Abrí Claude Code, escribí /mcp, elegí «tivo» y «Authenticate».",
+        "Se abre el navegador: iniciá sesión en Tivo si hace falta y apretá «Autorizar acceso». ¡Listo!"
+      ]
+    },
+    {
+      name: "Claude Desktop / claude.ai",
+      steps: [
+        "Andá a Configuración → Conectores → «Agregar conector personalizado».",
+        "Nombre: Tivo. URL: la URL del servidor de abajo.",
+        "Apretá «Conectar» y autorizá en la ventana de Tivo."
+      ]
+    },
+    {
+      name: "Cursor, VS Code y otros clientes MCP",
+      steps: [
+        "Agregá un servidor MCP de tipo HTTP con la URL del servidor.",
+        "El cliente abre el navegador para autorizar; no hace falta copiar ningún token."
+      ]
+    }
+  ]
+
+  tools = [
+    [ "list_projects", "Ver tus proyectos y sus listas" ],
+    [ "list_tasks / get_task", "Ver tareas de una lista y su detalle" ],
+    [ "create_task / update_task", "Crear y editar tareas: título, notas, fecha y estado" ],
+    [ "list_documents / get_document", "Ver documentos y carpetas de un proyecto" ],
+    [ "create_document / update_document", "Crear y editar documentos (en Markdown), publicarlos o archivarlos" ]
+  ]
+
+  examples = [
+    "¿Qué tareas tengo pendientes en el proyecto Lanzamiento?",
+    "Creá una tarea «Revisar contrato» para el viernes en la lista Legal.",
+    "Marcá como hecha la tarea de la landing y agregale una nota con lo que hicimos.",
+    "Escribí un documento con el resumen de la reunión de hoy en el proyecto Marketing."
+  ]
+%>
+
+<div class="max-w-3xl mx-auto space-y-6">
+  <div class="bg-surface border-2 border-ink rounded-xl shadow-brutal-lg overflow-hidden">
+    <div class="bg-brand border-b-2 border-ink px-6 py-6">
+      <h1 class="text-2xl font-display font-bold text-white">Conectar Tivo con IA</h1>
+      <p class="text-white/80 text-sm mt-1">
+        Usá Claude (u otro asistente compatible con MCP) para consultar y editar tus tareas y documentos conversando.
+      </p>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">URL del servidor MCP</label>
+        <div class="mt-2 flex items-center gap-2" data-controller="clipboard" data-clipboard-url-value="<%= @mcp_url %>">
+          <code class="flex-1 min-w-0 truncate bg-paper border-2 border-ink rounded-lg px-3 py-2 text-sm"><%= @mcp_url %></code>
+          <button type="button" class="button-outline text-sm" data-action="clipboard#copy">Copiar</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Comando para Claude Code</label>
+        <div class="mt-2 flex items-center gap-2" data-controller="clipboard" data-clipboard-url-value="claude mcp add --transport http tivo <%= @mcp_url %>">
+          <pre class="flex-1 min-w-0 overflow-x-auto bg-ink text-white rounded-lg px-3 py-2 text-sm"><code>claude mcp add --transport http tivo <%= @mcp_url %></code></pre>
+          <button type="button" class="button-outline text-sm" data-action="clipboard#copy">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-surface border-2 border-ink rounded-xl p-6">
+    <h2 class="text-lg font-display font-bold text-ink">Cómo conectarlo</h2>
+    <div class="mt-4 grid gap-4">
+      <% steps_by_client.each do |client| %>
+        <div class="bg-paper border-2 border-ink rounded-lg p-4">
+          <h3 class="font-semibold text-ink"><%= client[:name] %></h3>
+          <ol class="mt-2 space-y-1 text-sm text-ink/80 list-decimal list-inside">
+            <% client[:steps].each do |step| %>
+              <% if step == :command %>
+                <li class="list-none"><pre class="ml-5 my-1 overflow-x-auto bg-ink text-white rounded px-2 py-1 text-xs"><code>claude mcp add --transport http tivo <%= @mcp_url %></code></pre></li>
+              <% else %>
+                <li><%= step %></li>
+              <% end %>
+            <% end %>
+          </ol>
+        </div>
+      <% end %>
+    </div>
+    <p class="mt-4 text-xs text-ink/50">
+      La IA actúa con tus permisos: solo ve los proyectos donde sos owner o miembro, y los borradores ajenos no son visibles.
+    </p>
+  </div>
+
+  <div class="bg-surface border-2 border-ink rounded-xl p-6">
+    <h2 class="text-lg font-display font-bold text-ink">Qué puede hacer</h2>
+    <ul class="mt-3 space-y-2 text-sm">
+      <% tools.each do |name, description| %>
+        <li class="flex flex-col sm:flex-row sm:gap-3">
+          <code class="text-brand-dark font-medium sm:w-64 shrink-0"><%= name %></code>
+          <span class="text-ink/80"><%= description %></span>
+        </li>
+      <% end %>
+    </ul>
+
+    <h3 class="mt-6 font-semibold text-ink">Probá pedirle</h3>
+    <ul class="mt-2 space-y-1 text-sm text-ink/80">
+      <% examples.each do |example| %>
+        <li>«<%= example %>»</li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="bg-surface border-2 border-ink rounded-xl p-6">
+    <h2 class="text-lg font-display font-bold text-ink">Aplicaciones conectadas</h2>
+    <% if @connected_apps.any? %>
+      <ul class="mt-3 divide-y-2 divide-ink/10">
+        <% @connected_apps.each do |app| %>
+          <li class="flex items-center justify-between gap-3 py-2">
+            <div class="min-w-0">
+              <p class="font-medium text-ink truncate"><%= app.name %></p>
+              <p class="text-xs text-ink/50">
+                <%= app.last_used_at ? "Último uso hace #{time_ago_in_words(app.last_used_at)}" : "Sin usar todavía" %>
+              </p>
+            </div>
+            <%= button_to "Revocar", connected_app_path(app), method: :delete,
+                  class: "button-outline text-sm",
+                  form: { data: { turbo_confirm: "¿Revocar el acceso de #{app.name}?" } } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-sm text-ink/60">Todavía no conectaste ninguna aplicación.</p>
+    <% end %>
+  </div>
+</div>
