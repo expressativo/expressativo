@@ -1,7 +1,9 @@
 class FoldersController < ApplicationController
+  include DriveMoves
+
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_folder, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_folder, only: [ :show, :edit, :update, :destroy, :move ]
   before_action :set_parent_folder, only: [ :new, :create ]
 
   def index
@@ -53,6 +55,11 @@ class FoldersController < ApplicationController
     @folder.destroy
     redirect_to parent ? project_folder_path(@project, parent) : project_folders_path(@project),
                 notice: "Folder was successfully deleted."
+  end
+
+  # PATCH /projects/1/folders/1/move
+  def move
+    move_drive_item(@folder, :parent_folder)
   end
 
   private

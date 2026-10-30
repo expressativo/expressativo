@@ -155,4 +155,19 @@ module DocumentsHelper
       '<path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>'
     end
   end
+
+  # Carpetas del proyecto en orden de árbol (para el selector "Mover a…").
+  # Devuelve [folder, profundidad, ids del camino desde la raíz incluida ella].
+  def drive_folder_tree(project)
+    children = project.folders.order(:name).group_by(&:parent_folder_id)
+
+    walk = lambda do |parent_id, depth, path_ids|
+      (children[parent_id] || []).flat_map do |folder|
+        ids = path_ids + [ folder.id ]
+        [ [ folder, depth, ids ] ] + walk.call(folder.id, depth + 1, ids)
+      end
+    end
+
+    walk.call(nil, 0, [])
+  end
 end

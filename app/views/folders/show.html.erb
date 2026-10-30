@@ -3,7 +3,7 @@
 
 <%= render layout: 'projects/layout', locals: { project: @project, active: :documents } do %>
   <section class="relative bg-surface border-2 border-ink rounded-xl p-5"
-           data-controller="drive-filter folder-upload"
+           data-controller="drive-filter folder-upload drive-move"
            data-folder-upload-url-value="<%= project_folder_uploads_path(@project) %>"
            data-folder-upload-parent-folder-id-value="<%= @folder.id %>"
            data-action="dragenter->folder-upload#dragenter dragover->folder-upload#dragover dragleave->folder-upload#dragleave drop->folder-upload#drop">
@@ -16,7 +16,10 @@
     <% back_label = @folder.parent_folder ? @folder.parent_folder.name : "Documentos" %>
     <div class="flex items-center justify-between mb-4 gap-3">
       <div class="flex items-center gap-2 min-w-0">
-        <%= link_to back_url, class: "p-1.5 rounded-full text-ink/50 hover:bg-accent/30 hover:text-ink/80 transition-colors flex-shrink-0", title: "Volver a #{back_label}", "aria-label": "Volver a #{back_label}" do %>
+        <%= link_to back_url, class: "p-1.5 rounded-full text-ink/50 hover:bg-accent/30 hover:text-ink/80 transition-colors flex-shrink-0", title: "Volver a #{back_label} (suelta aquí para mover)", "aria-label": "Volver a #{back_label}",
+              draggable: "false",
+              data: { drive_move_target: "dropzone", folder_id: @folder.parent_folder_id.to_s,
+                      action: "dragover->drive-move#dragOver dragleave->drive-move#dragLeave drop->drive-move#drop" } do %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -46,6 +49,7 @@
       </div>
     </div>
 
+    <%= render 'folders/move_dialog', project: @project %>
     <%= render 'folders/toolbar', parent_folder: @folder %>
 
     <% if @items.any? %>

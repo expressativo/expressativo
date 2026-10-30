@@ -1,0 +1,42 @@
+<%# Modal "Mover a…": el controller drive-move fija la URL del form y oculta
+    los destinos inválidos (la carpeta que se mueve y sus subcarpetas). %>
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+     data-drive-move-target="modal"
+     data-action="click->drive-move#backdropClick keydown.esc@window->drive-move#close">
+  <div class="bg-surface border-2 border-ink rounded-xl p-6 max-w-md w-full mx-4 shadow-brutal-lg">
+    <div class="flex items-center justify-between mb-4 gap-3">
+      <h3 class="text-base font-display font-bold text-ink truncate" data-drive-move-target="title">Mover a…</h3>
+      <button type="button" class="text-ink/50 hover:text-ink transition-colors" data-action="click->drive-move#close" aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <%= form_with url: "#", method: :patch,
+                  data: { drive_move_target: "form", action: "change->drive-move#selectionChanged turbo:submit-end->drive-move#submitted" } do %>
+      <div class="max-h-80 overflow-y-auto border-2 border-ink rounded-lg py-1 mb-4">
+        <% options = [ [ nil, 0, [] ] ] + drive_folder_tree(project) %>
+        <% options.each do |folder, depth, path_ids| %>
+          <label class="flex items-center gap-2 py-2 pr-3 text-sm text-ink cursor-pointer hover:bg-accent/30 has-[:checked]:bg-brand-light has-[:focus-visible]:bg-accent/30 has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed"
+                 style="padding-left: <%= 0.75 + depth * 1.25 %>rem"
+                 data-drive-move-target="option"
+                 data-folder-id="<%= folder&.id %>"
+                 data-path-ids="<%= path_ids.join(" ") %>">
+            <input type="radio" name="folder_id" value="<%= folder&.id %>" class="sr-only">
+            <svg class="w-4 h-4 text-yellow-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+            </svg>
+            <span class="truncate <%= "font-semibold" if folder.nil? %>"><%= folder&.name || "Documentos" %></span>
+            <span class="hidden ml-auto text-xs text-ink/50 flex-shrink-0" data-current-label>Ubicación actual</span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" class="button-outline" data-action="click->drive-move#close">Cancelar</button>
+        <button type="submit" class="button" data-drive-move-target="submit" disabled>Mover aquí</button>
+      </div>
+    <% end %>
+  </div>
+</div>

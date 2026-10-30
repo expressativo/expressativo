@@ -60,6 +60,9 @@ Rails.application.routes.draw do
 
   resources :projects do
     resources :folders do
+      member do
+        patch :move
+      end
       resources :documents, only: %i[new create]
     end
     resources :folder_uploads, only: %i[create]
@@ -189,6 +192,7 @@ Rails.application.routes.draw do
       patch :unpublish
       patch :publish_public
       patch :unpublish_public
+      patch :move
       post :add_comment
       get :search_members
     end

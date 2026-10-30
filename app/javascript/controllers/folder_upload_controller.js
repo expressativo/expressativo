@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { DirectUpload } from "@rails/activestorage"
+import { DRAG_TYPE } from "controllers/drive_move_controller"
 
 const DIRECT_UPLOAD_URL = "/rails/active_storage/direct_uploads"
 const CONCURRENCY = 3
@@ -77,7 +78,9 @@ export default class extends Controller {
   }
 
   hasFiles(event) {
-    return Array.from(event.dataTransfer?.types || []).includes("Files")
+    const types = Array.from(event.dataTransfer?.types || [])
+    // Arrastrar una tarjeta del propio drive (drive-move) no es una subida.
+    return types.includes("Files") && !types.includes(DRAG_TYPE)
   }
 
   toggleOverlay(show) {
