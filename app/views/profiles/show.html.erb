@@ -70,6 +70,17 @@
           <% end %>
         </div>
       </div>
+
+      <!-- Conectar con IA (MCP) -->
+      <div class="bg-paper border-2 border-ink rounded-lg p-4 md:col-span-2">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <label class="text-sm font-semibold text-ink/70 uppercase tracking-wide">Conectar con IA</label>
+            <p class="mt-2 text-sm text-ink/70">Usá Claude para ver y editar tus tareas y documentos.</p>
+          </div>
+          <%= link_to "Ver cómo", ai_connection_path, class: "button-outline" %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

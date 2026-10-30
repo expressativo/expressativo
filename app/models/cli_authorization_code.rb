@@ -55,8 +55,13 @@ class CliAuthorizationCode < ApplicationRecord
   def redirect_uri_must_be_local
     return if redirect_uri.blank?
 
+    # Loopback (CLI y clientes MCP locales) o https (clientes MCP web, como claude.ai).
     uri = URI.parse(redirect_uri)
-    errors.add(:redirect_uri, "debe usar http") unless uri.scheme == "http"
+    return if uri.scheme == "https" && uri.host.present?
+
+    errors.add(:redirect_uri, "debe usar http o https") unless uri.scheme == "http"
     errors.add(:redirect_uri, "debe apuntar a localhost o 127.0.0.1") unless ALLOWED_HOSTS.include?(uri.host)
+  rescue URI::InvalidURIError
+    errors.add(:redirect_uri, "no es una URL válida")
   end
 end

@@ -98,10 +98,10 @@ bin/rails assets:precompile
 - Access project owner via `project.owner` helper method
 - Filter projects for a user: `Project.for_user(user)`
 
-**Project Dependencies (all use `dependent: :destroy` or `:nullify`)**:
+**Project Dependencies (all use `dependent: :destroy`)**:
 - `has_many :todos` → each Todo `has_many :tasks`
 - `has_many :announcements` → each Announcement `has_many :announcement_comments`
-- `has_many :documents` (dependent: :nullify)
+- `has_many :documents` (dependent: :destroy; `documents.project_id` is NOT NULL)
 
 **User Model**
 - Uses Devise for authentication (`:database_authenticatable, :registerable, :recoverable, :rememberable, :validatable`)

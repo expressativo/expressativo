@@ -30,6 +30,18 @@ A collaborative project management app built with Rails 8. Create projects, mana
 - **Quick Notes** — personal sticky notes per user
 - **Google OAuth** — sign in with Google in addition to email/password
 
+## Connect with AI (MCP)
+
+Tivo ships a remote [MCP](https://modelcontextprotocol.io) server so Claude (or any MCP client) can read and edit your tasks and documents. Authorization uses OAuth with dynamic client registration, so there's no token to copy:
+
+```bash
+claude mcp add --transport http tivo https://<your-tivo-host>/mcp
+```
+
+Then run `/mcp` in Claude Code, pick **tivo** → **Authenticate**, and click **Autorizar acceso** in the browser. In Claude Desktop / claude.ai, add a custom connector with the same URL. Every URL is derived from the app's own host, and the in-app guide lives at `/conectar-ia`, where users can also revoke connected apps.
+
+Tools: `list_projects`, `list_tasks`, `get_task`, `create_task`, `update_task`, `list_documents`, `get_document`, `create_document`, `update_document`. Notes and document content are written in Markdown.
+
 ## Tech Stack
 
 - **Rails 8** with Hotwire (Turbo + Stimulus) — no Node.js build step

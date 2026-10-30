@@ -9,11 +9,26 @@ Rails.application.routes.draw do
 
   # Perfil de usuario
   resource :profile, only: [ :show, :edit, :update ]
+  resources :connected_apps, only: [ :destroy ]
+  get "conectar-ia", to: "ai_connections#show", as: :ai_connection
 
   # === CLI OAuth-like flow ===
   get  "cli/authorize", to: "cli#authorize", as: :cli_authorize
   post "cli/grant",     to: "cli#grant",     as: :cli_grant
   post "cli/deny",      to: "cli#deny",      as: :cli_deny
+
+  # === MCP (Model Context Protocol) + OAuth para conectar clientes de IA ===
+  post   "mcp", to: "mcp#create", as: :mcp
+  get    "mcp", to: "mcp#stream"
+  delete "mcp", to: "mcp#stream"
+
+  get  ".well-known/oauth-protected-resource(/mcp)", to: "oauth#protected_resource", as: :oauth_protected_resource
+  get  ".well-known/oauth-authorization-server",     to: "oauth#metadata",           as: :oauth_metadata
+  post "oauth/register",  to: "oauth#register",  as: :oauth_register
+  get  "oauth/authorize", to: "oauth#authorize", as: :oauth_authorize
+  post "oauth/authorize", to: "oauth#grant",     as: :oauth_grant
+  post "oauth/deny",      to: "oauth#deny",      as: :oauth_deny
+  post "oauth/token",     to: "oauth#token",     as: :oauth_token
 
   # === API v1 (para la CLI y futuros clientes) ===
   namespace :api, defaults: { format: :json } do
